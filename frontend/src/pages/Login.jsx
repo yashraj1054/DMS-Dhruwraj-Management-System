@@ -29,7 +29,7 @@ export default function Login() {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:5001/api/auth/login",
+        "https://dms-backend-amber.vercel.app/api/auth/login",
         form,
       );
 
