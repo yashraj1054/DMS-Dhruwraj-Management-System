@@ -90,9 +90,9 @@
 //   const fetchData = async () => {
 //     try {
 //       const [staffRes, clinicRes] = await Promise.all([
-//         axios.get("http://localhost:5001/api/staff"),
+//         axios.get("https://dms-backend-amber.vercel.app/api/staff"),
 
-//         axios.get("http://localhost:5001/api/clinics"),
+//         axios.get("https://dms-backend-amber.vercel.app/api/clinics"),
 //       ]);
 
 //       setStaff(staffRes.data);
@@ -180,7 +180,6 @@
 //   const openAddModal = () => {
 //     setEditingId(null);
 
-
 //     setPreview(null);
 
 //     setCertificatePreview(null);
@@ -231,7 +230,7 @@
 
 //     setCertificatePreview(
 //   s.certificateImage
-//     ? `http://localhost:5001/uploads/${s.certificateImage}`
+//     ? `https://dms-backend-amber.vercel.app/uploads/${s.certificateImage}`
 //     : null,
 // );
 
@@ -270,7 +269,7 @@
 
 //     setPreview(
 //       s.profileImage
-//         ? `http://localhost:5001/uploads/${s.profileImage}`
+//         ? `https://dms-backend-amber.vercel.app/uploads/${s.profileImage}`
 //         : null,
 //     );
 
@@ -297,12 +296,12 @@
 
 //       if (editingId) {
 //         await axios.put(
-//           `http://localhost:5001/api/staff/${editingId}`,
+//           `https://dms-backend-amber.vercel.app/api/staff/${editingId}`,
 //           data,
 //         );
 //       } else {
 //         await axios.post(
-//           "http://localhost:5001/api/staff",
+//           "https://dms-backend-amber.vercel.app/api/staff",
 //           data,
 //         );
 //       }
@@ -333,7 +332,7 @@
 //     }
 
 //     await axios.delete(
-//       `http://localhost:5001/api/staff/${selectedStaff._id}`,
+//       `https://dms-backend-amber.vercel.app/api/staff/${selectedStaff._id}`,
 //     );
 
 //     setConfirmBox(false);
@@ -419,7 +418,7 @@
 //             <div className="flex items-start gap-4 mb-6">
 //               <div className="relative">
 //                 <img
-//                   src={`http://localhost:5001/uploads/${s.profileImage}`}
+//                   src={`https://dms-backend-amber.vercel.app/uploads/${s.profileImage}`}
 //                   alt={s.name}
 //                   className="w-20 h-20 rounded-2xl object-cover ring-4 ring-slate-50"
 //                   onError={(e) => {
@@ -522,7 +521,7 @@
 
 //             {s.certificateImage && (
 //   <a
-//     href={`http://localhost:5001/uploads/${s.certificateImage}`}
+//     href={`https://dms-backend-amber.vercel.app/uploads/${s.certificateImage}`}
 //     target="_blank"
 //     rel="noreferrer"
 //     className="inline-flex items-center gap-2 text-sm text-blue-600 font-semibold mt-3"
@@ -991,7 +990,6 @@
 //   );
 // }
 
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -1013,9 +1011,9 @@ import {
   Target,
   Trophy,
   Eye,
-EyeOff,
-RefreshCcw,
-Copy,
+  EyeOff,
+  RefreshCcw,
+  Copy,
 } from "lucide-react";
 
 import Modal from "../components/Modal";
@@ -1033,22 +1031,17 @@ export default function Staff() {
 
   const [confirmBox, setConfirmBox] = useState(false);
 
-  const [selectedStaff, setSelectedStaff] =
-    useState(null);
+  const [selectedStaff, setSelectedStaff] = useState(null);
 
   const [preview, setPreview] = useState(null);
 
-  const [certificatePreview, setCertificatePreview] =
-    useState(null);
+  const [certificatePreview, setCertificatePreview] = useState(null);
 
-  const [generatedId, setGeneratedId] =
-    useState("");
+  const [generatedId, setGeneratedId] = useState("");
 
-  const [showPassword, setShowPassword] =
-  useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-const [generatedPassword, setGeneratedPassword] =
-  useState("");
+  const [generatedPassword, setGeneratedPassword] = useState("");
 
   /*
   FORM STATE
@@ -1078,8 +1071,6 @@ const [generatedPassword, setGeneratedPassword] =
     da: "",
     other: "",
 
-    
-
     bonus: "",
 
     password: "",
@@ -1091,16 +1082,11 @@ const [generatedPassword, setGeneratedPassword] =
 
   const fetchData = async () => {
     try {
-      const [staffRes, clinicRes] =
-        await Promise.all([
-          axios.get(
-            "http://localhost:5001/api/staff",
-          ),
+      const [staffRes, clinicRes] = await Promise.all([
+        axios.get("https://dms-backend-amber.vercel.app/api/staff"),
 
-          axios.get(
-            "http://localhost:5001/api/clinics",
-          ),
-        ]);
+        axios.get("https://dms-backend-amber.vercel.app/api/clinics"),
+      ]);
 
       setStaff(staffRes.data);
 
@@ -1121,28 +1107,22 @@ const [generatedPassword, setGeneratedPassword] =
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-setForm((prev) => ({
-  ...prev,
-  [name]: value,
-}));
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
     /*
     AUTO STAFF ID
     */
 
     if (name === "clinic") {
-      const clinic = clinics.find(
-        (c) => c._id === value,
-      );
+      const clinic = clinics.find((c) => c._id === value);
 
       if (clinic) {
-        const count = staff.filter(
-          (s) => s.clinic?._id === clinic._id,
-        ).length;
+        const count = staff.filter((s) => s.clinic?._id === clinic._id).length;
 
-        const id =
-          clinic.staffPrefix +
-          String(count + 1).padStart(3, "0");
+        const id = clinic.staffPrefix + String(count + 1).padStart(3, "0");
 
         setGeneratedId(id);
       }
@@ -1157,10 +1137,10 @@ setForm((prev) => ({
     const file = e.target.files[0];
 
     setForm((prev) => ({
-  ...prev,
+      ...prev,
 
-  profileImage: file,
-}));
+      profileImage: file,
+    }));
 
     setPreview(URL.createObjectURL(file));
   };
@@ -1173,14 +1153,12 @@ setForm((prev) => ({
     const file = e.target.files[0];
 
     setForm((prev) => ({
-  ...prev,
+      ...prev,
 
-  certificateImage: file,
-}));
+      certificateImage: file,
+    }));
 
-    setCertificatePreview(
-      URL.createObjectURL(file),
-    );
+    setCertificatePreview(URL.createObjectURL(file));
   };
 
   /*
@@ -1196,9 +1174,7 @@ setForm((prev) => ({
 
     setGeneratedId("");
 
-    const autoPassword = Math.random()
-  .toString(36)
-  .slice(-8);
+    const autoPassword = Math.random().toString(36).slice(-8);
 
     setForm({
       profileImage: null,
@@ -1224,9 +1200,6 @@ setForm((prev) => ({
       da: "",
       other: "",
 
-      
-    
-
       bonus: "",
 
       password: autoPassword,
@@ -1244,7 +1217,7 @@ setForm((prev) => ({
 
     setCertificatePreview(
       s.certificateImage
-        ? `http://localhost:5001/uploads/${s.certificateImage}`
+        ? `https://dms-backend-amber.vercel.app/uploads/${s.certificateImage}`
         : null,
     );
 
@@ -1257,8 +1230,7 @@ setForm((prev) => ({
       aadhaar: s.aadhaar,
       address: s.address,
       dob: s.dob,
-      certificateNumber:
-        s.certificateNumber,
+      certificateNumber: s.certificateNumber,
 
       gender: s.gender,
 
@@ -1268,17 +1240,13 @@ setForm((prev) => ({
 
       ctc: s.ctc,
 
-      base:
-        s.salaryStructure?.base || "",
+      base: s.salaryStructure?.base || "",
 
       hra: s.salaryStructure?.hra || "",
 
       da: s.salaryStructure?.da || "",
 
-      other:
-        s.salaryStructure?.other || "",
-
-      
+      other: s.salaryStructure?.other || "",
 
       bonus: s.bonus || "",
 
@@ -1287,7 +1255,7 @@ setForm((prev) => ({
 
     setPreview(
       s.profileImage
-        ? `http://localhost:5001/uploads/${s.profileImage}`
+        ? `https://dms-backend-amber.vercel.app/uploads/${s.profileImage}`
         : null,
     );
 
@@ -1314,12 +1282,12 @@ setForm((prev) => ({
 
       if (editingId) {
         await axios.put(
-          `http://localhost:5001/api/staff/${editingId}`,
+          `https://dms-backend-amber.vercel.app/api/staff/${editingId}`,
           data,
         );
       } else {
         await axios.post(
-          "http://localhost:5001/api/staff",
+          "https://dms-backend-amber.vercel.app/api/staff",
           data,
         );
       }
@@ -1350,7 +1318,7 @@ setForm((prev) => ({
     }
 
     await axios.delete(
-      `http://localhost:5001/api/staff/${selectedStaff._id}`,
+      `https://dms-backend-amber.vercel.app/api/staff/${selectedStaff._id}`,
     );
 
     setConfirmBox(false);
@@ -1362,60 +1330,45 @@ setForm((prev) => ({
 RESET PASSWORD
 */
 
-const resetPassword = async (staffData) => {
-  try {
-    const res = await axios.post(
-      "http://localhost:5001/api/staff/forgot-password",
-      {
-        phone: staffData.phone,
-      },
-    );
+  const resetPassword = async (staffData) => {
+    try {
+      const res = await axios.post(
+        "https://dms-backend-amber.vercel.app/api/staff/forgot-password",
+        {
+          phone: staffData.phone,
+        },
+      );
 
-    setGeneratedPassword(
-      res.data.password,
-    );
+      setGeneratedPassword(res.data.password);
 
-    alert(
-      `New Password: ${res.data.password}`,
-    );
+      alert(`New Password: ${res.data.password}`);
 
-    fetchData();
-  } catch (err) {
-    console.log(err);
+      fetchData();
+    } catch (err) {
+      console.log(err);
 
-    alert("Password reset failed");
-  }
-};
+      alert("Password reset failed");
+    }
+  };
   /*
   SEARCH
   */
 
   const filteredStaff = staff.filter(
     (s) =>
-      s.name
-        ?.toLowerCase()
-        .includes(search.toLowerCase()) ||
-
-      s.role
-        ?.toLowerCase()
-        .includes(search.toLowerCase()) ||
-
+      s.name?.toLowerCase().includes(search.toLowerCase()) ||
+      s.role?.toLowerCase().includes(search.toLowerCase()) ||
       s.phone?.includes(search) ||
-
-      s.clinic?.name
-        ?.toLowerCase()
-        .includes(search.toLowerCase()),
+      s.clinic?.name?.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <div className="min-h-screen ">
       <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 py-4 sm:py-6 space-y-6">
-
         {/* HEADER */}
 
         <div className="bg-white/80 backdrop-blur-xl border border-white shadow-sm rounded-3xl p-4 sm:p-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-
             <div>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-teal-500/20">
@@ -1428,15 +1381,13 @@ const resetPassword = async (staffData) => {
                   </h2>
 
                   <p className="text-sm text-slate-500 mt-1">
-                    Manage employees,
-                    payroll & targets
+                    Manage employees, payroll & targets
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-
               {/* SEARCH */}
 
               <div className="relative flex-1 sm:w-80">
@@ -1445,9 +1396,7 @@ const resetPassword = async (staffData) => {
                 <input
                   placeholder="Search staff..."
                   value={search}
-                  onChange={(e) =>
-                    setSearch(e.target.value)
-                  }
+                  onChange={(e) => setSearch(e.target.value)}
                   className="w-full h-12 bg-slate-50 border border-slate-200 rounded-2xl pl-11 pr-4 text-sm font-medium focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 focus:bg-white outline-none transition-all"
                 />
               </div>
@@ -1468,13 +1417,11 @@ const resetPassword = async (staffData) => {
         {/* STAFF GRID */}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-5">
-
           {filteredStaff.map((s) => (
             <div
               key={s._id}
               className="group relative overflow-hidden bg-white/90 backdrop-blur-xl border border-white rounded-[28px] p-5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
             >
-
               {/* TOP LINE */}
 
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 via-emerald-500 to-cyan-500"></div>
@@ -1482,22 +1429,19 @@ const resetPassword = async (staffData) => {
               {/* PROFILE */}
 
               <div className="flex items-start gap-4 mb-6">
-
                 <div className="relative">
                   <img
-                    src={`http://localhost:5001/uploads/${s.profileImage}`}
+                    src={`https://dms-backend-amber.vercel.app/uploads/${s.profileImage}`}
                     alt={s.name}
                     className="w-20 h-20 rounded-3xl object-cover ring-4 ring-white shadow-lg"
                     onError={(e) => {
                       e.target.src =
-                        "https://ui-avatars.com/api/?name=" +
-                        s.name;
+                        "https://ui-avatars.com/api/?name=" + s.name;
                     }}
                   />
                 </div>
 
                 <div className="flex-1">
-
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-sm">
                     {s.role}
                   </span>
@@ -1506,22 +1450,17 @@ const resetPassword = async (staffData) => {
                     {s.name}
                   </h3>
 
-                  <p className="text-xs text-slate-400 mt-1">
-                    {s.staffId}
-                  </p>
+                  <p className="text-xs text-slate-400 mt-1">{s.staffId}</p>
                 </div>
               </div>
 
               {/* DETAILS */}
 
               <div className="space-y-3 mb-5 bg-slate-50/80 border border-slate-100 p-4 rounded-3xl">
-
                 <div className="flex items-center gap-3 text-sm">
                   <Building2 className="w-4 h-4 text-slate-400" />
 
-                  <span>
-                    {s.clinic?.name}
-                  </span>
+                  <span>{s.clinic?.name}</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-sm">
@@ -1533,9 +1472,7 @@ const resetPassword = async (staffData) => {
                 <div className="flex items-center gap-3 text-sm">
                   <MapPin className="w-4 h-4 text-slate-400" />
 
-                  <span>
-                    {s.clinic?.location}
-                  </span>
+                  <span>{s.clinic?.location}</span>
                 </div>
               </div>
 
@@ -1598,7 +1535,7 @@ const resetPassword = async (staffData) => {
 
               {s.certificateImage && (
                 <a
-                  href={`http://localhost:5001/uploads/${s.certificateImage}`}
+                  href={`https://dms-backend-amber.vercel.app/uploads/${s.certificateImage}`}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 text-sm text-blue-600 font-semibold mb-5"
@@ -1640,11 +1577,8 @@ const resetPassword = async (staffData) => {
               {/* ACTIONS */}
 
               <div className="flex gap-3">
-
                 <button
-                  onClick={() =>
-                    openEditModal(s)
-                  }
+                  onClick={() => openEditModal(s)}
                   className="flex-1 h-11 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold flex items-center justify-center gap-2 transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
@@ -1652,9 +1586,7 @@ const resetPassword = async (staffData) => {
                 </button>
 
                 <button
-                  onClick={() =>
-                    askDelete(s)
-                  }
+                  onClick={() => askDelete(s)}
                   className="flex-1 h-11 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white text-sm font-bold flex items-center justify-center gap-2 transition-all"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -1662,14 +1594,12 @@ const resetPassword = async (staffData) => {
                 </button>
 
                 <button
-  onClick={() =>
-    resetPassword(s)
-  }
-  className="flex-2 h-11 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:bg-gradient-to-r hover:from-amber-600 hover:to-orange-600 text-white text-sm font-bold flex items-center justify-center gap-2 transition-all"
->
-  <RefreshCcw className="w-4 h-4" />
-  Reset Password
-</button>
+                  onClick={() => resetPassword(s)}
+                  className="flex-2 h-11 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:bg-gradient-to-r hover:from-amber-600 hover:to-orange-600 text-white text-sm font-bold flex items-center justify-center gap-2 transition-all"
+                >
+                  <RefreshCcw className="w-4 h-4" />
+                  Reset Password
+                </button>
               </div>
             </div>
           ))}
@@ -1679,37 +1609,21 @@ const resetPassword = async (staffData) => {
 
         {showModal && (
           <Modal
-            title={
-              editingId
-                ? "Update Staff"
-                : "Register Staff"
-            }
-            onClose={() =>
-              setShowModal(false)
-            }
+            title={editingId ? "Update Staff" : "Register Staff"}
+            onClose={() => setShowModal(false)}
           >
-
-            <form
-              onSubmit={saveStaff}
-              className="space-y-6"
-            >
-
+            <form onSubmit={saveStaff} className="space-y-6">
               {/* STAFF ID */}
 
               <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-5 text-white shadow-2xl">
-
                 <div className="flex items-center gap-3">
-
                   <Shield className="w-5 h-5 text-teal-400" />
 
                   <div>
-                    <p className="text-xs uppercase text-slate-400">
-                      Staff ID
-                    </p>
+                    <p className="text-xs uppercase text-slate-400">Staff ID</p>
 
                     <p className="text-lg font-bold text-teal-400">
-                      {generatedId ||
-                        "PENDING"}
+                      {generatedId || "PENDING"}
                     </p>
                   </div>
                 </div>
@@ -1718,20 +1632,16 @@ const resetPassword = async (staffData) => {
               {/* FORM */}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
                 {/* PROFILE */}
 
                 <div className="col-span-full">
-
                   <label className="text-xs font-bold text-slate-500 flex items-center gap-2">
                     <ImageIcon className="w-3 h-3" />
                     Profile Image
                   </label>
 
                   <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-
                     <div className="w-20 h-20 rounded-3xl bg-slate-100 overflow-hidden shadow-md">
-
                       {preview ? (
                         <img
                           src={preview}
@@ -1759,9 +1669,7 @@ const resetPassword = async (staffData) => {
                   label="Full Name"
                   value={form.name}
                   onChange={handleChange}
-                  icon={
-                    <User className="w-3.5 h-3.5" />
-                  }
+                  icon={<User className="w-3.5 h-3.5" />}
                 />
 
                 <Input
@@ -1769,9 +1677,7 @@ const resetPassword = async (staffData) => {
                   label="Phone"
                   value={form.phone}
                   onChange={handleChange}
-                  icon={
-                    <Phone className="w-3.5 h-3.5" />
-                  }
+                  icon={<Phone className="w-3.5 h-3.5" />}
                 />
 
                 <Input
@@ -1779,9 +1685,7 @@ const resetPassword = async (staffData) => {
                   label="Aadhar Number"
                   value={form.aadhaar}
                   onChange={handleChange}
-                  icon={
-                    <CreditCard className="w-3.5 h-3.5" />
-                  }
+                  icon={<CreditCard className="w-3.5 h-3.5" />}
                 />
 
                 <Input
@@ -1790,9 +1694,7 @@ const resetPassword = async (staffData) => {
                   type="date"
                   value={form.dob}
                   onChange={handleChange}
-                  icon={
-                    <Calendar className="w-3.5 h-3.5" />
-                  }
+                  icon={<Calendar className="w-3.5 h-3.5" />}
                 />
 
                 <div className="col-span-full">
@@ -1801,9 +1703,7 @@ const resetPassword = async (staffData) => {
                     label="Address"
                     value={form.address}
                     onChange={handleChange}
-                    icon={
-                      <MapPin className="w-3.5 h-3.5" />
-                    }
+                    icon={<MapPin className="w-3.5 h-3.5" />}
                   />
                 </div>
 
@@ -1813,11 +1713,7 @@ const resetPassword = async (staffData) => {
                   label="Gender"
                   name="gender"
                   value={form.gender}
-                  options={[
-                    "male",
-                    "female",
-                    "other",
-                  ]}
+                  options={["male", "female", "other"]}
                   onChange={handleChange}
                 />
 
@@ -1848,17 +1744,11 @@ const resetPassword = async (staffData) => {
                     onChange={handleChange}
                     className="h-12 bg-white border border-slate-200 px-4 rounded-2xl w-full text-sm font-medium shadow-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
                   >
-                    <option value="">
-                      Select Clinic
-                    </option>
+                    <option value="">Select Clinic</option>
 
                     {clinics.map((c) => (
-                      <option
-                        key={c._id}
-                        value={c._id}
-                      >
-                        {c.name} -{" "}
-                        {c.location}
+                      <option key={c._id} value={c._id}>
+                        {c.name} - {c.location}
                       </option>
                     ))}
                   </select>
@@ -1869,19 +1759,14 @@ const resetPassword = async (staffData) => {
                 <Input
                   name="certificateNumber"
                   label="Certificate Number"
-                  value={
-                    form.certificateNumber
-                  }
+                  value={form.certificateNumber}
                   onChange={handleChange}
-                  icon={
-                    <Briefcase className="w-3.5 h-3.5" />
-                  }
+                  icon={<Briefcase className="w-3.5 h-3.5" />}
                 />
 
                 {/* CERTIFICATE IMAGE */}
 
                 <div className="col-span-full">
-
                   <label className="text-xs font-bold text-slate-500 flex items-center gap-2 mb-2">
                     <Briefcase className="w-3.5 h-3.5" />
                     Certificate Upload
@@ -1889,26 +1774,20 @@ const resetPassword = async (staffData) => {
 
                   <input
                     type="file"
-                    onChange={
-                      handleCertificateImage
-                    }
+                    onChange={handleCertificateImage}
                     className="text-sm"
                   />
 
                   {certificatePreview && (
                     <div className="mt-4">
                       <img
-                        src={
-                          certificatePreview
-                        }
+                        src={certificatePreview}
                         alt="certificate"
                         className="w-48 h-32 object-cover rounded-2xl border shadow-md"
                       />
 
                       <a
-                        href={
-                          certificatePreview
-                        }
+                        href={certificatePreview}
                         target="_blank"
                         rel="noreferrer"
                         className="text-teal-600 text-sm font-bold mt-2 inline-block"
@@ -1926,9 +1805,7 @@ const resetPassword = async (staffData) => {
                   label="Yearly CTC"
                   value={form.ctc}
                   onChange={handleChange}
-                  icon={
-                    <IndianRupee className="w-3.5 h-3.5" />
-                  }
+                  icon={<IndianRupee className="w-3.5 h-3.5" />}
                 />
 
                 <Input
@@ -1960,7 +1837,7 @@ const resetPassword = async (staffData) => {
                 />
 
                 {/* TARGET */}
-{/* 
+                {/* 
                 <Input
                   name="target"
                   label="Monthly Target"
@@ -1974,9 +1851,7 @@ const resetPassword = async (staffData) => {
                 <Input
                   name="targetAchieved"
                   label="Target Achieved"
-                  value={
-                    form.targetAchieved
-                  }
+                  value={form.targetAchieved}
                   onChange={handleChange}
                 />
 
@@ -1985,82 +1860,64 @@ const resetPassword = async (staffData) => {
                   label="Bonus"
                   value={form.bonus}
                   onChange={handleChange}
-                  icon={
-                    <Trophy className="w-3.5 h-3.5" />
-                  }
+                  icon={<Trophy className="w-3.5 h-3.5" />}
                 />
 
                 {/* PASSWORD */}
 
                 <div className="relative">
+                  <label className="text-[11px] font-bold text-slate-500 uppercase ml-1 mb-1 flex items-center gap-2">
+                    <Shield className="w-3.5 h-3.5" />
+                    Portal Password
+                  </label>
 
-  <label className="text-[11px] font-bold text-slate-500 uppercase ml-1 mb-1 flex items-center gap-2">
-    <Shield className="w-3.5 h-3.5" />
-    Portal Password
-  </label>
+                  <input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    value={form.password}
+                    onChange={handleChange}
+                    className="h-12 bg-white border border-slate-200 px-4 pr-24 rounded-2xl w-full text-sm font-medium shadow-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                  />
 
-  <input
-    name="password"
-    type={
-      showPassword
-        ? "text"
-        : "password"
-    }
-    value={form.password}
-    onChange={handleChange}
-    className="h-12 bg-white border border-slate-200 px-4 pr-24 rounded-2xl w-full text-sm font-medium shadow-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-  />
+                  <div className="absolute right-3 top-[38px] flex items-center gap-2">
+                    {/* SHOW/HIDE */}
 
-  <div className="absolute right-3 top-[38px] flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-slate-500 hover:text-teal-600"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
 
-    {/* SHOW/HIDE */}
+                    {/* COPY */}
 
-    <button
-      type="button"
-      onClick={() =>
-        setShowPassword(
-          !showPassword,
-        )
-      }
-      className="text-slate-500 hover:text-teal-600"
-    >
-      {showPassword ? (
-        <EyeOff className="w-4 h-4" />
-      ) : (
-        <Eye className="w-4 h-4" />
-      )}
-    </button>
+                    {form.password && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(form.password);
 
-    {/* COPY */}
-
-    {form.password && (
-      <button
-        type="button"
-        onClick={() => {
-          navigator.clipboard.writeText(
-            form.password,
-          );
-
-          alert(
-            "Password copied",
-          );
-        }}
-        className="text-slate-500 hover:text-teal-600"
-      >
-        <Copy className="w-4 h-4" />
-      </button>
-    )}
-  </div>
-</div>
+                          alert("Password copied");
+                        }}
+                        className="text-slate-500 hover:text-teal-600"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
                 {/* SAVE */}
 
                 <button
                   type="submit"
                   className="col-span-full h-14 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-black tracking-wide shadow-xl shadow-teal-500/20 hover:scale-[1.01] active:scale-[0.99] transition-all"
                 >
-                  {editingId
-                    ? "Update Staff"
-                    : "Save Staff"}
+                  {editingId ? "Update Staff" : "Save Staff"}
                 </button>
               </div>
             </form>
@@ -2072,9 +1929,7 @@ const resetPassword = async (staffData) => {
         {confirmBox && (
           <ConfirmPassword
             onConfirm={confirmDelete}
-            onClose={() =>
-              setConfirmBox(false)
-            }
+            onClose={() => setConfirmBox(false)}
           />
         )}
       </div>
@@ -2086,17 +1941,9 @@ const resetPassword = async (staffData) => {
 INPUT
 */
 
-function Input({
-  label,
-  name,
-  value,
-  onChange,
-  type = "text",
-  icon,
-}) {
+function Input({ label, name, value, onChange, type = "text", icon }) {
   return (
     <div className="flex flex-col gap-1.5">
-
       <label className="text-[11px] font-bold text-slate-500 uppercase ml-1 flex items-center gap-2">
         {icon}
         {label}
@@ -2117,16 +1964,9 @@ function Input({
 SELECT
 */
 
-function Select({
-  label,
-  name,
-  value,
-  options,
-  onChange,
-}) {
+function Select({ label, name, value, options, onChange }) {
   return (
     <div className="flex flex-col gap-1.5">
-
       <label className="text-[11px] font-bold text-slate-500 uppercase ml-1">
         {label}
       </label>
@@ -2139,8 +1979,7 @@ function Select({
       >
         {options.map((o) => (
           <option key={o} value={o}>
-            {o.charAt(0).toUpperCase() +
-              o.slice(1)}
+            {o.charAt(0).toUpperCase() + o.slice(1)}
           </option>
         ))}
       </select>

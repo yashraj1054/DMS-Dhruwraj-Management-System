@@ -19,7 +19,7 @@ import {
   Share2,
   MessageCircle,
   Download,
-  CheckCircle2
+  CheckCircle2,
 } from "lucide-react";
 
 export default function Prescriptions() {
@@ -46,7 +46,7 @@ export default function Prescriptions() {
 
   const token = localStorage.getItem("token");
   const config = { headers: { Authorization: `Bearer ${token}` } };
-  const API_BASE = "http://localhost:5001/api";
+  const API_BASE = "https://dms-backend-amber.vercel.app/api";
 
   // 1. Initial User Fetch
   useEffect(() => {
@@ -117,14 +117,12 @@ export default function Prescriptions() {
   });
 
   const shareDietChart = async () => {
+    const patientId = selected?.patient?._id;
 
-  const patientId = selected?.patient?._id;
+    // PUBLIC URL
+    const publicUrl = `${window.location.origin}/diet-chart/${patientId}`;
 
-  // PUBLIC URL
-  const publicUrl =
-    `${window.location.origin}/diet-chart/${patientId}`;
-
-  const whatsappText = `
+    const whatsappText = `
 🌿 आयुर्वेदिक डाइट चार्ट
 
 Patient: ${selected?.patient?.name}
@@ -135,76 +133,75 @@ ${publicUrl}
 Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
 `;
 
-  window.open(
-    `https://wa.me/91${selected?.patient?.phone}?text=${encodeURIComponent(whatsappText)}`,
-    "_blank"
-  );
-};
+    window.open(
+      `https://wa.me/91${selected?.patient?.phone}?text=${encodeURIComponent(whatsappText)}`,
+      "_blank",
+    );
+  };
 
-const printDietChart = () => {
-  window.print();
-};
+  const printDietChart = () => {
+    window.print();
+  };
 
-// useEffect(() => {
+  // useEffect(() => {
 
-//   const style = document.createElement("style");
+  //   const style = document.createElement("style");
 
-//   style.innerHTML = `
+  //   style.innerHTML = `
 
-//     @media print {
+  //     @media print {
 
-//       html,
-//       body {
-//         background: white !important;
-//         margin: 0 !important;
-//         padding: 0 !important;
-//       }
+  //       html,
+  //       body {
+  //         background: white !important;
+  //         margin: 0 !important;
+  //         padding: 0 !important;
+  //       }
 
-//       body * {
-//         display: none !important;
-//       }
+  //       body * {
+  //         display: none !important;
+  //       }
 
-//       #diet-chart-print,
-//       #diet-chart-print * {
-//         display: block !important;
-//         visibility: visible !important;
-//       }
+  //       #diet-chart-print,
+  //       #diet-chart-print * {
+  //         display: block !important;
+  //         visibility: visible !important;
+  //       }
 
-//       #diet-chart-print {
-//         width: 100% !important;
-//         margin: 0 auto !important;
-//         padding: 0 !important;
-//         box-shadow: none !important;
-//         background: white !important;
-//       }
+  //       #diet-chart-print {
+  //         width: 100% !important;
+  //         margin: 0 auto !important;
+  //         padding: 0 !important;
+  //         box-shadow: none !important;
+  //         background: white !important;
+  //       }
 
-//       .diet-section {
-//         break-inside: avoid;
-//         page-break-inside: avoid;
-//       }
+  //       .diet-section {
+  //         break-inside: avoid;
+  //         page-break-inside: avoid;
+  //       }
 
-//       @page {
-//         size: A4 portrait;
-//         margin: 8mm;
-//       }
+  //       @page {
+  //         size: A4 portrait;
+  //         margin: 8mm;
+  //       }
 
-//       * {
-//         -webkit-print-color-adjust: exact !important;
-//         print-color-adjust: exact !important;
-//       }
+  //       * {
+  //         -webkit-print-color-adjust: exact !important;
+  //         print-color-adjust: exact !important;
+  //       }
 
-//     }
+  //     }
 
-//   `;
+  //   `;
 
-//   document.head.appendChild(style);
+  //   document.head.appendChild(style);
 
-//   return () => {
-//     document.head.removeChild(style);
-//   };
+  //   return () => {
+  //     document.head.removeChild(style);
+  //   };
 
-// }, []);
-
+  // }, []);
 
   return (
     <div className="p-4 md:p-6  min-h-screen font-sans text-[#2d3748] antialiased">
@@ -409,12 +406,11 @@ const printDietChart = () => {
             </div>
           </div>
 
-{showPrescriptionModal && (
-  <div className="fixed inset-0 bg-black/60 z-[90] overflow-y-auto p-6">
-
-    {/* MAIN PAPER */}
-    <div
-      className="
+          {showPrescriptionModal && (
+            <div className="fixed inset-0 bg-black/60 z-[90] overflow-y-auto p-6">
+              {/* MAIN PAPER */}
+              <div
+                className="
         bg-[#fffef9]
         mx-auto
         shadow-[0_20px_60px_rgba(0,0,0,0.25)]
@@ -423,14 +419,14 @@ const printDietChart = () => {
         relative
         overflow-hidden
       "
-      style={{
-        width: "210mm",
-        minHeight: "297mm",
-      }}
-    >
-
-      {/* WATERMARK */}
-      <div className="
+                style={{
+                  width: "210mm",
+                  minHeight: "297mm",
+                }}
+              >
+                {/* WATERMARK */}
+                <div
+                  className="
         absolute
         inset-0
         flex
@@ -439,23 +435,22 @@ const printDietChart = () => {
         pointer-events-none
         opacity-[0.03]
         z-0
-      ">
+      "
+                >
+                  <img
+                    src="/brandicon.png"
+                    alt=""
+                    className="w-[450px] h-[450px] object-contain"
+                  />
+                </div>
 
-        <img
-          src="/brandicon.png"
-          alt=""
-          className="w-[450px] h-[450px] object-contain"
-        />
+                {/* TOP STRIP */}
+                <div className="h-3 bg-[#1d5c42]" />
 
-      </div>
-
-      {/* TOP STRIP */}
-      <div className="h-3 bg-[#1d5c42]" />
-
-      {/* CLOSE */}
-      <button
-        onClick={() => setShowPrescriptionModal(false)}
-        className="
+                {/* CLOSE */}
+                <button
+                  onClick={() => setShowPrescriptionModal(false)}
+                  className="
           absolute
           top-5
           right-5
@@ -473,14 +468,14 @@ const printDietChart = () => {
           transition
           print:hidden
         "
-      >
-        <X size={20} />
-      </button>
+                >
+                  <X size={20} />
+                </button>
 
-      {/* PRINT */}
-      <button
-        onClick={() => window.print()}
-        className="
+                {/* PRINT */}
+                <button
+                  onClick={() => window.print()}
+                  className="
           absolute
           top-5
           right-20
@@ -496,22 +491,20 @@ const printDietChart = () => {
           transition
           print:hidden
         "
-      >
-        Print
-      </button>
+                >
+                  Print
+                </button>
 
-      {/* CONTENT */}
-      <div className="relative z-10 px-8 pt-6 pb-10">
+                {/* CONTENT */}
+                <div className="relative z-10 px-8 pt-6 pb-10">
+                  {/* ================= HEADER ================= */}
 
-        {/* ================= HEADER ================= */}
-
-        <div className="flex justify-between items-start">
-
-          {/* LEFT */}
-          <div className="flex gap-5">
-
-            {/* LOGO */}
-            <div className="
+                  <div className="flex justify-between items-start">
+                    {/* LEFT */}
+                    <div className="flex gap-5">
+                      {/* LOGO */}
+                      <div
+                        className="
               h-24
               w-24
               rounded-full
@@ -523,80 +516,80 @@ const printDietChart = () => {
               items-center
               justify-center
               shadow-md
-            ">
+            "
+                      >
+                        <img
+                          src="/brandicon.png"
+                          alt=""
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
 
-              <img
-                src="/brandicon.png"
-                alt=""
-                className="w-full h-full object-contain"
-              />
-
-            </div>
-
-            {/* TITLE */}
-            <div>
-
-              <h1 className="
+                      {/* TITLE */}
+                      <div>
+                        <h1
+                          className="
                 text-[42px]
                 font-black
                 uppercase
                 tracking-wide
                 text-[#1d5c42]
                 leading-none
-              ">
-                Dhruwraj Ayurveda
-              </h1>
+              "
+                        >
+                          Dhruwraj Ayurveda
+                        </h1>
 
-              <h2 className="
+                        <h2
+                          className="
                 text-[28px]
                 font-bold
                 uppercase
                 tracking-wide
                 text-slate-700
                 mt-1
-              ">
-                & Panchkarma Clinic
-              </h2>
+              "
+                        >
+                          & Panchkarma Clinic
+                        </h2>
 
-              <div className="
+                        <div
+                          className="
                 mt-3
                 text-sm
                 text-slate-600
                 leading-6
-              ">
+              "
+                        >
+                          Ayurveda | Panchkarma | Lifestyle Correction
+                          <br />
+                          Holistic Healing & Natural Treatment
+                        </div>
+                      </div>
+                    </div>
 
-                Ayurveda | Panchkarma | Lifestyle Correction
-
-                <br />
-
-                Holistic Healing & Natural Treatment
-
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* RIGHT */}
-          <div className="text-right">
-
-            <h2 className="
+                    {/* RIGHT */}
+                    <div className="text-right">
+                      <h2
+                        className="
               text-3xl
               font-black
               text-[#1d5c42]
-            ">
-              Dr. AMREKHA PAL
-            </h2>
+            "
+                      >
+                        Dr. AMREKHA PAL
+                      </h2>
 
-            <p className="text-sm mt-1 text-slate-600">
-              B.H.M.S. (Agra)
-            </p>
+                      <p className="text-sm mt-1 text-slate-600">
+                        B.H.M.S. (Agra)
+                      </p>
 
-            <p className="text-sm text-slate-600">
-              Ayurveda & Panchkarma Specialist
-            </p>
+                      <p className="text-sm text-slate-600">
+                        Ayurveda & Panchkarma Specialist
+                      </p>
 
-            <div className="
+                      <div
+                        className="
               mt-4
               bg-[#eef7f2]
               border
@@ -606,54 +599,53 @@ const printDietChart = () => {
               rounded-xl
               text-xs
               text-slate-700
-            ">
+            "
+                      >
+                        OPD Timing: 10 AM - 8 PM
+                      </div>
+                    </div>
+                  </div>
 
-              OPD Timing: 10 AM - 8 PM
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* DIVIDER */}
-        <div className="
+                  {/* DIVIDER */}
+                  <div
+                    className="
           mt-6
           border-t-[3px]
           border-[#1d5c42]
-        " />
+        "
+                  />
 
-        {/* ================= PATIENT INFO ================= */}
+                  {/* ================= PATIENT INFO ================= */}
 
-        <div className="
+                  <div
+                    className="
           mt-6
           grid
           grid-cols-4
           gap-4
-        ">
-
-          {[
-            {
-              label: "Patient Name",
-              value: selected?.patient?.name || "--",
-            },
-            {
-              label: "Phone",
-              value: selected?.patient?.phone || "--",
-            },
-            {
-              label: "Patient ID",
-              value: selected?.patient?.patientId || "--",
-            },
-            {
-              label: "Age",
-              value: `${selected?.patient?.age || "--"} Years`,
-            },
-          ].map((item, idx) => (
-
-            <div
-              key={idx}
-              className="
+        "
+                  >
+                    {[
+                      {
+                        label: "Patient Name",
+                        value: selected?.patient?.name || "--",
+                      },
+                      {
+                        label: "Phone",
+                        value: selected?.patient?.phone || "--",
+                      },
+                      {
+                        label: "Patient ID",
+                        value: selected?.patient?.patientId || "--",
+                      },
+                      {
+                        label: "Age",
+                        value: `${selected?.patient?.age || "--"} Years`,
+                      },
+                    ].map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="
                 bg-[#f9fbfa]
                 border
                 border-[#dbe8e0]
@@ -661,96 +653,97 @@ const printDietChart = () => {
                 px-4
                 py-3
               "
-            >
-
-              <p className="
+                      >
+                        <p
+                          className="
                 text-xs
                 uppercase
                 tracking-wide
                 text-slate-500
                 font-semibold
-              ">
-                {item.label}
-              </p>
+              "
+                        >
+                          {item.label}
+                        </p>
 
-              <p className="
+                        <p
+                          className="
                 mt-1
                 text-lg
                 font-black
                 text-slate-800
-              ">
-                {item.value}
-              </p>
+              "
+                        >
+                          {item.value}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
 
-            </div>
+                  {/* ================= COMPLAINTS ================= */}
 
-          ))}
-
-        </div>
-
-        {/* ================= COMPLAINTS ================= */}
-
-        <div className="mt-8">
-
-          <div className="
+                  <div className="mt-8">
+                    <div
+                      className="
             bg-[#f8f8f8]
             border
             border-[#d7d7d7]
             rounded-2xl
             p-5
-          ">
-
-            <h2 className="
+          "
+                    >
+                      <h2
+                        className="
               text-lg
               font-black
               text-[#1d5c42]
               mb-3
-            ">
-              Chief Complaints
-            </h2>
+            "
+                      >
+                        Chief Complaints
+                      </h2>
 
-            <p className="
+                      <p
+                        className="
               text-[15px]
               leading-8
               text-slate-700
-            ">
+            "
+                      >
+                        {selected?.patient?.complaints ||
+                          "Gas, Acidity, Weak Digestion, Constipation"}
+                      </p>
+                    </div>
+                  </div>
 
-              {selected?.patient?.complaints ||
-                "Gas, Acidity, Weak Digestion, Constipation"}
+                  {/* ================= RX ================= */}
 
-            </p>
-
-          </div>
-
-        </div>
-
-        {/* ================= RX ================= */}
-
-        <div className="mt-10">
-
-          <div className="
+                  <div className="mt-10">
+                    <div
+                      className="
             text-7xl
             font-black
             text-[#1d5c42]
             leading-none
             mb-4
-          ">
-            ℞
-          </div>
+          "
+                    >
+                      ℞
+                    </div>
 
-          {/* CHURAN */}
-          {selected.formData?.rx?.churan && (
-
-            <div className="mb-10">
-
-              <div className="
+                    {/* CHURAN */}
+                    {selected.formData?.rx?.churan && (
+                      <div className="mb-10">
+                        <div
+                          className="
                 flex
                 items-center
                 gap-3
                 mb-5
-              ">
-
-                <div className="
+              "
+                        >
+                          <div
+                            className="
                   h-10
                   w-10
                   rounded-full
@@ -760,21 +753,24 @@ const printDietChart = () => {
                   items-center
                   justify-center
                   font-black
-                ">
-                  C
-                </div>
+                "
+                          >
+                            C
+                          </div>
 
-                <h2 className="
+                          <h2
+                            className="
                   text-3xl
                   font-black
                   text-[#1d5c42]
-                ">
-                  चूर्ण
-                </h2>
+                "
+                          >
+                            चूर्ण
+                          </h2>
+                        </div>
 
-              </div>
-
-              <div className="
+                        <div
+                          className="
                 bg-[#fcfcfc]
                 border-l-[5px]
                 border-[#1d5c42]
@@ -784,29 +780,26 @@ const printDietChart = () => {
                 text-[18px]
                 leading-10
                 shadow-sm
-              ">
+              "
+                        >
+                          {selected.formData?.rx?.churan}
+                        </div>
+                      </div>
+                    )}
 
-                {selected.formData?.rx?.churan}
-
-              </div>
-
-            </div>
-
-          )}
-
-          {/* TABLETS */}
-          {selected.formData?.rx?.tablets && (
-
-            <div className="mb-10">
-
-              <div className="
+                    {/* TABLETS */}
+                    {selected.formData?.rx?.tablets && (
+                      <div className="mb-10">
+                        <div
+                          className="
                 flex
                 items-center
                 gap-3
                 mb-5
-              ">
-
-                <div className="
+              "
+                        >
+                          <div
+                            className="
                   h-10
                   w-10
                   rounded-full
@@ -816,21 +809,24 @@ const printDietChart = () => {
                   items-center
                   justify-center
                   font-black
-                ">
-                  T
-                </div>
+                "
+                          >
+                            T
+                          </div>
 
-                <h2 className="
+                          <h2
+                            className="
                   text-3xl
                   font-black
                   text-[#1d5c42]
-                ">
-                  टैबलेट
-                </h2>
+                "
+                          >
+                            टैबलेट
+                          </h2>
+                        </div>
 
-              </div>
-
-              <div className="
+                        <div
+                          className="
                 bg-[#fcfcfc]
                 border-l-[5px]
                 border-[#1d5c42]
@@ -840,29 +836,26 @@ const printDietChart = () => {
                 text-[18px]
                 leading-10
                 shadow-sm
-              ">
+              "
+                        >
+                          {selected.formData?.rx?.tablets}
+                        </div>
+                      </div>
+                    )}
 
-                {selected.formData?.rx?.tablets}
-
-              </div>
-
-            </div>
-
-          )}
-
-          {/* OTHERS */}
-          {selected.formData?.rx?.others && (
-
-            <div className="mb-10">
-
-              <div className="
+                    {/* OTHERS */}
+                    {selected.formData?.rx?.others && (
+                      <div className="mb-10">
+                        <div
+                          className="
                 flex
                 items-center
                 gap-3
                 mb-5
-              ">
-
-                <div className="
+              "
+                        >
+                          <div
+                            className="
                   h-10
                   w-10
                   rounded-full
@@ -872,21 +865,24 @@ const printDietChart = () => {
                   items-center
                   justify-center
                   font-black
-                ">
-                  O
-                </div>
+                "
+                          >
+                            O
+                          </div>
 
-                <h2 className="
+                          <h2
+                            className="
                   text-3xl
                   font-black
                   text-[#1d5c42]
-                ">
-                  Other Medicines
-                </h2>
+                "
+                          >
+                            Other Medicines
+                          </h2>
+                        </div>
 
-              </div>
-
-              <div className="
+                        <div
+                          className="
                 bg-[#fcfcfc]
                 border-l-[5px]
                 border-[#1d5c42]
@@ -896,172 +892,165 @@ const printDietChart = () => {
                 text-[18px]
                 leading-10
                 shadow-sm
-              ">
+              "
+                        >
+                          {selected.formData?.rx?.others}
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-                {selected.formData?.rx?.others}
+                  {/* ================= ADVICE ================= */}
 
-              </div>
-
-            </div>
-
-          )}
-
-        </div>
-
-        {/* ================= ADVICE ================= */}
-
-        <div className="mt-12">
-
-          <div className="
+                  <div className="mt-12">
+                    <div
+                      className="
             bg-[#eef7f2]
             border
             border-[#cfe4d8]
             rounded-3xl
             p-6
-          ">
-
-            <h2 className="
+          "
+                    >
+                      <h2
+                        className="
               text-2xl
               font-black
               text-[#1d5c42]
               mb-4
-            ">
-              Advice & Precautions
-            </h2>
+            "
+                      >
+                        Advice & Precautions
+                      </h2>
 
-            <div className="
+                      <div
+                        className="
               grid
               grid-cols-2
               gap-4
               text-[15px]
               text-slate-700
-            ">
+            "
+                      >
+                        <div className="flex gap-3">
+                          <span>✓</span>
+                          <p>Take medicines on proper time.</p>
+                        </div>
 
-              <div className="flex gap-3">
-                <span>✓</span>
-                <p>Take medicines on proper time.</p>
-              </div>
+                        <div className="flex gap-3">
+                          <span>✓</span>
+                          <p>Avoid oily and spicy foods.</p>
+                        </div>
 
-              <div className="flex gap-3">
-                <span>✓</span>
-                <p>Avoid oily and spicy foods.</p>
-              </div>
+                        <div className="flex gap-3">
+                          <span>✓</span>
+                          <p>Drink enough water daily.</p>
+                        </div>
 
-              <div className="flex gap-3">
-                <span>✓</span>
-                <p>Drink enough water daily.</p>
-              </div>
+                        <div className="flex gap-3">
+                          <span>✓</span>
+                          <p>Sleep on time and avoid stress.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="flex gap-3">
-                <span>✓</span>
-                <p>Sleep on time and avoid stress.</p>
-              </div>
+                  {/* ================= SIGNATURE ================= */}
 
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* ================= SIGNATURE ================= */}
-
-        <div className="
+                  <div
+                    className="
           mt-20
           flex
           justify-end
-        ">
-
-          <div className="text-center">
-
-            <div className="
+        "
+                  >
+                    <div className="text-center">
+                      <div
+                        className="
               h-[80px]
               w-[220px]
               border-b-2
               border-[#1d5c42]
-            " />
+            "
+                      />
 
-            <p className="
+                      <p
+                        className="
               mt-2
               font-bold
               text-slate-700
-            ">
-              Authorized Signature
-            </p>
+            "
+                      >
+                        Authorized Signature
+                      </p>
+                    </div>
+                  </div>
 
-          </div>
+                  {/* ================= FOOTER ================= */}
 
-        </div>
-
-        {/* ================= FOOTER ================= */}
-
-        <div
-          className="
+                  <div
+                    className="
             mt-16
             border-t-[3px]
             border-[#1d5c42]
             pt-6
             pb-2
           "
-        >
-
-          <div className="
+                  >
+                    <div
+                      className="
             flex
             justify-between
             items-center
-          ">
-
-            {/* LEFT */}
-            <div>
-
-              <h2 className="
+          "
+                    >
+                      {/* LEFT */}
+                      <div>
+                        <h2
+                          className="
                 text-[#1d5c42]
                 font-black
                 text-xl
                 tracking-wide
-              ">
-                Dhruwraj Ayurveda & Panchkarma Clinic
-              </h2>
+              "
+                        >
+                          Dhruwraj Ayurveda & Panchkarma Clinic
+                        </h2>
 
-              <p className="
+                        <p
+                          className="
                 text-sm
                 mt-2
                 text-slate-700
                 leading-7
-              ">
+              "
+                        >
+                          20 A, Zoo Road, Vikas Nagar, Kanpur (U.P.)
+                          <br />
+                          Contact: +91 8299532791
+                        </p>
+                      </div>
 
-                20 A, Zoo Road, Vikas Nagar,
-                Kanpur (U.P.)
-
-                <br />
-
-                Contact: +91 8299532791
-
-              </p>
-
-            </div>
-
-            {/* RIGHT */}
-            <div className="text-right">
-
-              <div className="
+                      {/* RIGHT */}
+                      <div className="text-right">
+                        <div
+                          className="
                 bg-[#1d5c42]
                 text-white
                 px-5
                 py-3
                 rounded-2xl
                 shadow-md
-              ">
+              "
+                        >
+                          Follow Up After 15 Days
+                        </div>
+                      </div>
+                    </div>
 
-                Follow Up After 15 Days
-
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* NOTE */}
-          <div className="
+                    {/* NOTE */}
+                    <div
+                      className="
             mt-6
             pt-4
             border-t
@@ -1072,40 +1061,37 @@ const printDietChart = () => {
             items-center
             text-xs
             text-slate-600
-          ">
+          "
+                    >
+                      <p>
+                        Kindly bring this prescription during follow up visit.
+                      </p>
 
-            <p>
-              Kindly bring this prescription during follow up visit.
-            </p>
-
-            {/* MUST LINE */}
-            <p className="
+                      {/* MUST LINE */}
+                      <p
+                        className="
               font-black
               uppercase
               tracking-wider
               text-[#1d5c42]
-            ">
-              Not For Legal Medicose Purpose
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-)}
+            "
+                      >
+                        Not For Legal Medicose Purpose
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* DIET MODAL */}
 
-{showDietModal && (
-  <div className="fixed inset-0 bg-[#eef2f7] z-[100] overflow-y-auto p-6">
-
-    {/* ACTION BAR */}
-    <div className="
+          {showDietModal && (
+            <div className="fixed inset-0 bg-[#eef2f7] z-[100] overflow-y-auto p-6">
+              {/* ACTION BAR */}
+              <div
+                className="
       max-w-[210mm]
       mx-auto
       mb-4
@@ -1113,15 +1099,14 @@ const printDietChart = () => {
       justify-end
       gap-3
       print:hidden
-    ">
+    "
+              >
+                {/* WHATSAPP */}
+                <button
+                  onClick={() => {
+                    const publicUrl = `${window.location.origin}/diet-chart/${selected?.patient?._id}`;
 
-      {/* WHATSAPP */}
-      <button
-        onClick={() => {
-          const publicUrl =
-            `${window.location.origin}/diet-chart/${selected?.patient?._id}`;
-
-          const whatsappText = `
+                    const whatsappText = `
 🌿 आयुर्वेदिक डाइट चार्ट
 
 Patient: ${selected?.patient?.name}
@@ -1129,14 +1114,14 @@ Patient: ${selected?.patient?.name}
 View Diet Chart:
 ${publicUrl}
 
-Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`
+Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`;
 
-          window.open(
-            `https://wa.me/91${selected?.patient?.phone}?text=${encodeURIComponent(whatsappText)}`,
-            "_blank"
-          );
-        }}
-        className="
+                    window.open(
+                      `https://wa.me/91${selected?.patient?.phone}?text=${encodeURIComponent(whatsappText)}`,
+                      "_blank",
+                    );
+                  }}
+                  className="
           h-12
           px-5
           rounded-xl
@@ -1148,35 +1133,34 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`
           gap-2
           shadow-md
         "
-      >
-        <MessageCircle size={18} />
-        WhatsApp
-      </button>
+                >
+                  <MessageCircle size={18} />
+                  WhatsApp
+                </button>
 
-      {/* PRINT */}
-      <button
-       onClick={() => {
+                {/* PRINT */}
+                <button
+                  onClick={() => {
+                    const printElement =
+                      document.getElementById("diet-chart-print");
 
-  const printElement =
-      document.getElementById("diet-chart-print");
+                    if (!printElement) return;
 
-    if (!printElement) return;
+                    const printContents = printElement.innerHTML;
 
-    const printContents = printElement.innerHTML;
+                    const printWindow = window.open(
+                      "",
+                      "",
+                      "width=1200,height=900",
+                    );
 
-    const printWindow = window.open(
-      "",
-      "",
-      "width=1200,height=900"
-    );
+                    // POPUP BLOCKED
+                    if (!printWindow) {
+                      alert("Popup blocked. Please allow popups.");
+                      return;
+                    }
 
-    // POPUP BLOCKED
-    if (!printWindow) {
-      alert("Popup blocked. Please allow popups.");
-      return;
-    }
-
-    printWindow.document.write(`
+                    printWindow.document.write(`
       <html>
         <head>
           <title>Diet Chart</title>
@@ -1215,16 +1199,15 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`
       </html>
     `);
 
-    printWindow.document.close();
+                    printWindow.document.close();
 
-    setTimeout(() => {
-      printWindow.focus();
-      printWindow.print();
-      printWindow.close();
-    }, 500);
-
-}}
-        className="
+                    setTimeout(() => {
+                      printWindow.focus();
+                      printWindow.print();
+                      printWindow.close();
+                    }, 500);
+                  }}
+                  className="
           h-12
           px-5
           rounded-xl
@@ -1236,15 +1219,15 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`
           gap-2
           shadow-md
         "
-      >
-        <Printer size={18} />
-        Print
-      </button>
+                >
+                  <Printer size={18} />
+                  Print
+                </button>
 
-      {/* CLOSE */}
-      <button
-        onClick={() => setShowDietModal(false)}
-        className="
+                {/* CLOSE */}
+                <button
+                  onClick={() => setShowDietModal(false)}
+                  className="
           h-12
           w-12
           rounded-xl
@@ -1254,30 +1237,29 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`
           items-center
           justify-center
         "
-      >
-        <X size={18} />
-      </button>
+                >
+                  <X size={18} />
+                </button>
+              </div>
 
-    </div>
-
-    {/* A4 SHEET */}
-    <div
-      id="diet-chart-print"
-      className="
+              {/* A4 SHEET */}
+              <div
+                id="diet-chart-print"
+                className="
         bg-white
         mx-auto
         shadow-2xl
         print:shadow-none
       "
-      style={{
-        width: "210mm",
-        minHeight: "297mm",
-        padding: "10mm"
-      }}
-    >
-
-      {/* TOP HEADER */}
-      <div className="
+                style={{
+                  width: "210mm",
+                  minHeight: "297mm",
+                  padding: "10mm",
+                }}
+              >
+                {/* TOP HEADER */}
+                <div
+                  className="
         flex
         justify-between
         items-start
@@ -1285,12 +1267,12 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`
         border-[#d4a017]
         pb-4
         mb-5
-      ">
-
-        {/* LEFT */}
-        <div className="flex gap-4">
-
-          <div className="
+      "
+                >
+                  {/* LEFT */}
+                  <div className="flex gap-4">
+                    <div
+                      className="
             h-20
             w-20
             rounded-full
@@ -1300,50 +1282,48 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`
             flex
             items-center
             justify-center
-          ">
-            <img
-              src="/brandicon.png"
-              alt=""
-              className="w-35 h-35 object-contain"
-            />
-          </div>
+          "
+                    >
+                      <img
+                        src="/brandicon.png"
+                        alt=""
+                        className="w-35 h-35 object-contain"
+                      />
+                    </div>
 
-          <div>
-
-            <h1 className="
+                    <div>
+                      <h1
+                        className="
               text-4xl
               font-black
               tracking-tight
               leading-none
-            ">
-              आयुर्वेदिक डाइट चार्ट
-            </h1>
+            "
+                      >
+                        आयुर्वेदिक डाइट चार्ट
+                      </h1>
 
-            <p className="
+                      <p
+                        className="
               text-gray-500
               mt-2
               text-sm
-            ">
-              Personalized Ayurvedic Diet Recommendation
-            </p>
+            "
+                      >
+                        Personalized Ayurvedic Diet Recommendation
+                      </p>
+                    </div>
+                  </div>
 
-          </div>
+                  {/* RIGHT */}
+                  <div className="text-right text-sm">
+                    <p className="font-bold text-lg">{user?.clinicName}</p>
+                  </div>
+                </div>
 
-        </div>
-
-        {/* RIGHT */}
-        <div className="text-right text-sm">
-
-          <p className="font-bold text-lg">
-            {user?.clinicName}
-          </p>
-
-        </div>
-
-      </div>
-
-      {/* PATIENT INFO */}
-      <div className="
+                {/* PATIENT INFO */}
+                <div
+                  className="
         grid
         grid-cols-4
         gap-4
@@ -1353,117 +1333,220 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`
         p-4
         mb-5
         text-sm
-      ">
+      "
+                >
+                  <div>
+                    <p className="text-gray-400">Patient</p>
 
-        <div>
-          <p className="text-gray-400">
-            Patient
-          </p>
+                    <p className="font-bold">{selected?.patient?.name}</p>
+                  </div>
 
-          <p className="font-bold">
-            {selected?.patient?.name}
-          </p>
-        </div>
+                  <div>
+                    <p className="text-gray-400">Phone</p>
 
-        <div>
-          <p className="text-gray-400">
-            Phone
-          </p>
+                    <p className="font-bold">+91 {selected?.patient?.phone}</p>
+                  </div>
 
-          <p className="font-bold">
-            +91 {selected?.patient?.phone}
-          </p>
-        </div>
+                  <div>
+                    <p className="text-gray-400">Patient ID</p>
 
-        <div>
-          <p className="text-gray-400">
-            Patient ID
-          </p>
+                    <p className="font-bold">{selected?.patient?.patientId}</p>
+                  </div>
 
-          <p className="font-bold">
-            {selected?.patient?.patientId}
-          </p>
-        </div>
+                  <div>
+                    <p className="text-gray-400">Age</p>
 
-        <div>
-          <p className="text-gray-400">
-            Age
-          </p>
+                    <p className="font-bold">
+                      {selected?.patient?.age || "--"} Years
+                    </p>
+                  </div>
+                </div>
 
-          <p className="font-bold">
-            {selected?.patient?.age || "--"} Years
-          </p>
-        </div>
-
-      </div>
-
-      {/* FOOD TABLE */}
-      <div className="
+                {/* FOOD TABLE */}
+                <div
+                  className="
         grid
         grid-cols-3
         gap-3
-      ">
-
-        {[
-          {
-            title: "अनाज",
-            key: "grains",
-            items: ["गेहूं","ज्वार","बाजरा","मक्का","चावल","दलिया"]
-          },
-          {
-            title: "आटा",
-            key: "flour",
-            items: ["मैदा","बेसन"]
-          },
-          {
-            title: "मेवे",
-            key: "dryFruits",
-            items: ["मूंगफली","बादाम","भीगे बादाम","काजू","किशमिश","पिस्ता","मुनक्का","अंजीर","अखरोट"]
-          },
-          {
-            title: "दाल",
-            key: "pulses",
-            items: ["मूंग छिलका","अरहर","साबुत मसूर","मसूर","साबुत उड़द","उड़द छिलका","चना","छोले","राजमा","लोबिया","सोयाबीन"]
-          },
-          {
-            title: "सब्जियां",
-            key: "vegetables",
-            items: ["मेथी","पेठा","सेम","बथुआ","गाजर","आलू","पालक","टींडा","मटर","टमाटर","सरसों","तरोई","करेला","नींबू","प्याज","पत्ता गोभी","परवल","कटहल","लहसुन","गोभी","शलगम","भिंडी","शिमला मिर्च","लौकी","बैंगन","अरबी","ग्वार की फली","चुकंदर","कद्दू"]
-          },
-          {
-            title: "फल",
-            key: "fruits",
-            items: ["सेब","अनार","अनानास","संतरा","केला","अंगूर","चीकू","आम","अमरूद","पपीता","तरबूज","लीची","खरबूजा","आड़ू","नाशपाती","मोसंबी"]
-          },
-          {
-            title: "पेय पदार्थ",
-            key: "drinks",
-            items: ["गुनगुना पानी","पानी","ठंडाई","शिकंजी","कार्बन युक्त पेय","नारियल पानी","चाय","कॉफी","आयुर्वेदिक चाय","फलों का रस","सब्जियों का सूप","सब्जियों का रस"]
-          },
-          {
-            title: "दुग्ध उत्पाद",
-            key: "dairy",
-            items: ["ठंडा दूध","गरम दूध","क्रीम सहित दूध","क्रीम रहित दूध","गाय का दूध","भैंस का दूध","बकरी का दूध","मट्ठा","दही","पनीर","देसी घी"]
-          },
-          {
-            title: "मसाले",
-            key: "spices",
-            items: ["लाल मिर्च","हरी मिर्च","हल्दी","धनिया","अजवाइन","लौंग","सोंठ","जीरा","छोटी इलाइची","बड़ी इलाइची","काला नमक","सेंधा नमक","तेज पत्ता","खटाई/इमली","जयफल","अचार"]
-          }
-        ].map((section) => (
-
-          <div
-            key={section.key}
-            className="
+      "
+                >
+                  {[
+                    {
+                      title: "अनाज",
+                      key: "grains",
+                      items: [
+                        "गेहूं",
+                        "ज्वार",
+                        "बाजरा",
+                        "मक्का",
+                        "चावल",
+                        "दलिया",
+                      ],
+                    },
+                    {
+                      title: "आटा",
+                      key: "flour",
+                      items: ["मैदा", "बेसन"],
+                    },
+                    {
+                      title: "मेवे",
+                      key: "dryFruits",
+                      items: [
+                        "मूंगफली",
+                        "बादाम",
+                        "भीगे बादाम",
+                        "काजू",
+                        "किशमिश",
+                        "पिस्ता",
+                        "मुनक्का",
+                        "अंजीर",
+                        "अखरोट",
+                      ],
+                    },
+                    {
+                      title: "दाल",
+                      key: "pulses",
+                      items: [
+                        "मूंग छिलका",
+                        "अरहर",
+                        "साबुत मसूर",
+                        "मसूर",
+                        "साबुत उड़द",
+                        "उड़द छिलका",
+                        "चना",
+                        "छोले",
+                        "राजमा",
+                        "लोबिया",
+                        "सोयाबीन",
+                      ],
+                    },
+                    {
+                      title: "सब्जियां",
+                      key: "vegetables",
+                      items: [
+                        "मेथी",
+                        "पेठा",
+                        "सेम",
+                        "बथुआ",
+                        "गाजर",
+                        "आलू",
+                        "पालक",
+                        "टींडा",
+                        "मटर",
+                        "टमाटर",
+                        "सरसों",
+                        "तरोई",
+                        "करेला",
+                        "नींबू",
+                        "प्याज",
+                        "पत्ता गोभी",
+                        "परवल",
+                        "कटहल",
+                        "लहसुन",
+                        "गोभी",
+                        "शलगम",
+                        "भिंडी",
+                        "शिमला मिर्च",
+                        "लौकी",
+                        "बैंगन",
+                        "अरबी",
+                        "ग्वार की फली",
+                        "चुकंदर",
+                        "कद्दू",
+                      ],
+                    },
+                    {
+                      title: "फल",
+                      key: "fruits",
+                      items: [
+                        "सेब",
+                        "अनार",
+                        "अनानास",
+                        "संतरा",
+                        "केला",
+                        "अंगूर",
+                        "चीकू",
+                        "आम",
+                        "अमरूद",
+                        "पपीता",
+                        "तरबूज",
+                        "लीची",
+                        "खरबूजा",
+                        "आड़ू",
+                        "नाशपाती",
+                        "मोसंबी",
+                      ],
+                    },
+                    {
+                      title: "पेय पदार्थ",
+                      key: "drinks",
+                      items: [
+                        "गुनगुना पानी",
+                        "पानी",
+                        "ठंडाई",
+                        "शिकंजी",
+                        "कार्बन युक्त पेय",
+                        "नारियल पानी",
+                        "चाय",
+                        "कॉफी",
+                        "आयुर्वेदिक चाय",
+                        "फलों का रस",
+                        "सब्जियों का सूप",
+                        "सब्जियों का रस",
+                      ],
+                    },
+                    {
+                      title: "दुग्ध उत्पाद",
+                      key: "dairy",
+                      items: [
+                        "ठंडा दूध",
+                        "गरम दूध",
+                        "क्रीम सहित दूध",
+                        "क्रीम रहित दूध",
+                        "गाय का दूध",
+                        "भैंस का दूध",
+                        "बकरी का दूध",
+                        "मट्ठा",
+                        "दही",
+                        "पनीर",
+                        "देसी घी",
+                      ],
+                    },
+                    {
+                      title: "मसाले",
+                      key: "spices",
+                      items: [
+                        "लाल मिर्च",
+                        "हरी मिर्च",
+                        "हल्दी",
+                        "धनिया",
+                        "अजवाइन",
+                        "लौंग",
+                        "सोंठ",
+                        "जीरा",
+                        "छोटी इलाइची",
+                        "बड़ी इलाइची",
+                        "काला नमक",
+                        "सेंधा नमक",
+                        "तेज पत्ता",
+                        "खटाई/इमली",
+                        "जयफल",
+                        "अचार",
+                      ],
+                    },
+                  ].map((section) => (
+                    <div
+                      key={section.key}
+                      className="
             diet-section
               border
               rounded-xl
               overflow-hidden
             "
-          >
-
-            {/* TITLE */}
-            <div className="
+                    >
+                      {/* TITLE */}
+                      <div
+                        className="
               bg-black
               text-white
               px-3
@@ -1471,55 +1554,54 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`
               text-center
               font-bold
               text-sm
-            ">
-              {section.title}
-            </div>
+            "
+                      >
+                        {section.title}
+                      </div>
 
-            {/* ITEMS */}
-            <div className="
+                      {/* ITEMS */}
+                      <div
+                        className="
               p-3
               space-y-1.5
               text-[13px]
-            ">
+            "
+                      >
+                        {section.items.map((item) => {
+                          const checked =
+                            selected.formData?.dietChart?.[
+                              section.key
+                            ]?.includes(item);
 
-              {section.items.map((item) => {
-
-                const checked =
-                  selected.formData?.dietChart?.[
-                    section.key
-                  ]?.includes(item);
-
-                return (
-                  <div
-                    key={item}
-                    className="
+                          return (
+                            <div
+                              key={item}
+                              className="
                       flex
                       items-start
                       gap-2
                     "
-                  >
-
-                    {checked ? (
-                      <>
-                        <input
-                          type="checkbox"
-                          checked
-                          readOnly
-                          className="
+                            >
+                              {checked ? (
+                                <>
+                                  <input
+                                    type="checkbox"
+                                    checked
+                                    readOnly
+                                    className="
                             mt-[2px]
                             h-3.5
                             w-3.5
                             accent-green-600
                           "
-                        />
+                                  />
 
-                        <span className="font-medium">
-                          {item}
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <div className="
+                                  <span className="font-medium">{item}</span>
+                                </>
+                              ) : (
+                                <>
+                                  <div
+                                    className="
                           mt-[2px]
                           h-3.5
                           w-3.5
@@ -1530,59 +1612,58 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`
                           justify-center
                           text-[8px]
                           text-red-400
-                        ">
-                          ✕
-                        </div>
+                        "
+                                  >
+                                    ✕
+                                  </div>
 
-                        <span className="
+                                  <span
+                                    className="
                           line-through
                           text-red-400
-                        ">
-                          {item}
-                        </span>
-                      </>
-                    )}
+                        "
+                                  >
+                                    {item}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
-                  </div>
-                );
-              })}
-
-            </div>
-
-          </div>
-        ))}
-
-      </div>
-
-      {/* FOOTER */}
-      <div className="
+                {/* FOOTER */}
+                <div
+                  className="
         mt-6
         border-t
         pt-4
         text-center
-      ">
-
-        <p className="
+      "
+                >
+                  <p
+                    className="
           text-xl
           font-black
-        ">
-          “उचित आहार ही स्वास्थ्य का पहला साधन है”
-        </p>
-
-      </div>
-
-    </div>
-  </div>
-)}
+        "
+                  >
+                    “उचित आहार ही स्वास्थ्य का पहला साधन है”
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* HOW TO TAKE MODAL */}
 
-{showHowToTakeModal && (
-  <div className="fixed inset-0 bg-[#eef2f7] z-[100] overflow-y-auto p-6">
-
-    {/* ACTION BAR */}
-    <div
-      className="
+          {showHowToTakeModal && (
+            <div className="fixed inset-0 bg-[#eef2f7] z-[100] overflow-y-auto p-6">
+              {/* ACTION BAR */}
+              <div
+                className="
         max-w-[210mm]
         mx-auto
         mb-4
@@ -1591,16 +1672,13 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"};`
         gap-3
         print:hidden
       "
-    >
+              >
+                {/* WHATSAPP */}
+                <button
+                  onClick={() => {
+                    const publicUrl = `${window.location.origin}/how-to-take/${selected?.patient?._id}`;
 
-      {/* WHATSAPP */}
-      <button
-        onClick={() => {
-
-          const publicUrl =
-            `${window.location.origin}/how-to-take/${selected?.patient?._id}`;
-
-          const whatsappText = `
+                    const whatsappText = `
 💊 औषधि लेने की विधि
 
 Patient: ${selected?.patient?.name}
@@ -1611,13 +1689,12 @@ ${publicUrl}
 Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
 `;
 
-          window.open(
-            `https://wa.me/91${selected?.patient?.phone}?text=${encodeURIComponent(whatsappText)}`,
-            "_blank"
-          );
-
-        }}
-        className="
+                    window.open(
+                      `https://wa.me/91${selected?.patient?.phone}?text=${encodeURIComponent(whatsappText)}`,
+                      "_blank",
+                    );
+                  }}
+                  className="
           h-12
           px-5
           rounded-xl
@@ -1629,34 +1706,33 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
           gap-2
           shadow-md
         "
-      >
-        <MessageCircle size={18} />
-        WhatsApp
-      </button>
+                >
+                  <MessageCircle size={18} />
+                  WhatsApp
+                </button>
 
-      {/* PRINT */}
-      <button
-        onClick={() => {
+                {/* PRINT */}
+                <button
+                  onClick={() => {
+                    const printElement =
+                      document.getElementById("how-to-take-print");
 
-          const printElement =
-            document.getElementById("how-to-take-print");
+                    if (!printElement) return;
 
-          if (!printElement) return;
+                    const printContents = printElement.innerHTML;
 
-          const printContents = printElement.innerHTML;
+                    const printWindow = window.open(
+                      "",
+                      "",
+                      "width=1200,height=900",
+                    );
 
-          const printWindow = window.open(
-            "",
-            "",
-            "width=1200,height=900"
-          );
+                    if (!printWindow) {
+                      alert("Popup blocked");
+                      return;
+                    }
 
-          if (!printWindow) {
-            alert("Popup blocked");
-            return;
-          }
-
-          printWindow.document.write(`
+                    printWindow.document.write(`
             <html>
               <head>
                 <title>How To Take</title>
@@ -1690,16 +1766,15 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
             </html>
           `);
 
-          printWindow.document.close();
+                    printWindow.document.close();
 
-          setTimeout(() => {
-            printWindow.focus();
-            printWindow.print();
-            printWindow.close();
-          }, 500);
-
-        }}
-        className="
+                    setTimeout(() => {
+                      printWindow.focus();
+                      printWindow.print();
+                      printWindow.close();
+                    }, 500);
+                  }}
+                  className="
           h-12
           px-5
           rounded-xl
@@ -1711,15 +1786,15 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
           gap-2
           shadow-md
         "
-      >
-        <Printer size={18} />
-        Print
-      </button>
+                >
+                  <Printer size={18} />
+                  Print
+                </button>
 
-      {/* CLOSE */}
-      <button
-        onClick={() => setShowHowToTakeModal(false)}
-        className="
+                {/* CLOSE */}
+                <button
+                  onClick={() => setShowHowToTakeModal(false)}
+                  className="
           h-12
           w-12
           rounded-xl
@@ -1729,29 +1804,28 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
           items-center
           justify-center
         "
-      >
-        <X size={18} />
-      </button>
+                >
+                  <X size={18} />
+                </button>
+              </div>
 
-    </div>
-
-    {/* MAIN SHEET */}
-    <div
-      id="how-to-take-print"
-      className="
+              {/* MAIN SHEET */}
+              <div
+                id="how-to-take-print"
+                className="
         bg-white
         mx-auto
         shadow-2xl
       "
-      style={{
-        width: "210mm",
-        minHeight: "297mm",
-        padding: "10mm"
-      }}
-    >
-
-      {/* HEADER */}
-      <div className="
+                style={{
+                  width: "210mm",
+                  minHeight: "297mm",
+                  padding: "10mm",
+                }}
+              >
+                {/* HEADER */}
+                <div
+                  className="
         flex
         justify-between
         items-start
@@ -1759,12 +1833,12 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
         border-black
         pb-4
         mb-5
-      ">
-
-        {/* LEFT */}
-        <div className="flex gap-4">
-
-          <div className="
+      "
+                >
+                  {/* LEFT */}
+                  <div className="flex gap-4">
+                    <div
+                      className="
             h-20
             w-20
             rounded-full
@@ -1774,50 +1848,48 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
             flex
             items-center
             justify-center
-          ">
-            <img
-              src="/brandicon.png"
-              alt=""
-              className="w-full h-full object-contain"
-            />
-          </div>
+          "
+                    >
+                      <img
+                        src="/brandicon.png"
+                        alt=""
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
 
-          <div>
-
-            <h1 className="
+                    <div>
+                      <h1
+                        className="
               text-4xl
               font-black
               tracking-tight
               leading-none
-            ">
-              औषध पैक लेने की विधि
-            </h1>
+            "
+                      >
+                        औषध पैक लेने की विधि
+                      </h1>
 
-            <p className="
+                      <p
+                        className="
               text-gray-500
               mt-2
               text-sm
-            ">
-              Ayurvedic Medicine Instructions
-            </p>
+            "
+                      >
+                        Ayurvedic Medicine Instructions
+                      </p>
+                    </div>
+                  </div>
 
-          </div>
+                  {/* RIGHT */}
+                  <div className="text-right text-sm">
+                    <p className="font-bold text-lg">{user?.clinicName}</p>
+                  </div>
+                </div>
 
-        </div>
-
-        {/* RIGHT */}
-        <div className="text-right text-sm">
-
-          <p className="font-bold text-lg">
-            {user?.clinicName}
-          </p>
-
-        </div>
-
-      </div>
-
-      {/* PATIENT INFO */}
-      <div className="
+                {/* PATIENT INFO */}
+                <div
+                  className="
         grid
         grid-cols-4
         gap-4
@@ -1827,52 +1899,38 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
         p-4
         mb-5
         text-sm
-      ">
+      "
+                >
+                  <div>
+                    <p className="text-gray-400">Patient</p>
 
-        <div>
-          <p className="text-gray-400">
-            Patient
-          </p>
+                    <p className="font-bold">{selected?.patient?.name}</p>
+                  </div>
 
-          <p className="font-bold">
-            {selected?.patient?.name}
-          </p>
-        </div>
+                  <div>
+                    <p className="text-gray-400">Phone</p>
 
-        <div>
-          <p className="text-gray-400">
-            Phone
-          </p>
+                    <p className="font-bold">+91 {selected?.patient?.phone}</p>
+                  </div>
 
-          <p className="font-bold">
-            +91 {selected?.patient?.phone}
-          </p>
-        </div>
+                  <div>
+                    <p className="text-gray-400">Patient ID</p>
 
-        <div>
-          <p className="text-gray-400">
-            Patient ID
-          </p>
+                    <p className="font-bold">{selected?.patient?.patientId}</p>
+                  </div>
 
-          <p className="font-bold">
-            {selected?.patient?.patientId}
-          </p>
-        </div>
+                  <div>
+                    <p className="text-gray-400">Age</p>
 
-        <div>
-          <p className="text-gray-400">
-            Age
-          </p>
+                    <p className="font-bold">
+                      {selected?.patient?.age || "--"} Years
+                    </p>
+                  </div>
+                </div>
 
-          <p className="font-bold">
-            {selected?.patient?.age || "--"} Years
-          </p>
-        </div>
-
-      </div>
-
-      {/* DESCRIPTION */}
-      <div className="
+                {/* DESCRIPTION */}
+                <div
+                  className="
         bg-[#ececec]
         border
         p-4
@@ -1880,21 +1938,20 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
         font-semibold
         leading-8
         mb-8
-      ">
+      "
+                >
+                  ये औषधियां/दवाइयां विशेष रूप से आपकी बताई हुई समस्याओं एवं
+                  लक्षणों के आधार पर दी गई हैं। इनमें पूर्णतः आयुर्वेदिक औषधि
+                  द्रव्यों का प्रयोग किया गया है। इनको लेने की विधि नीचे बताई गई
+                  है।
+                </div>
 
-        ये औषधियां/दवाइयां विशेष रूप से आपकी बताई हुई समस्याओं एवं लक्षणों
-        के आधार पर दी गई हैं। इनमें पूर्णतः आयुर्वेदिक औषधि द्रव्यों का
-        प्रयोग किया गया है। इनको लेने की विधि नीचे बताई गई है।
-
-      </div>
-
-      {/* CHURAN SECTION */}
-      <div className="border-[2px] border-black">
-
-        <div className="grid grid-cols-12">
-
-          {/* LEFT */}
-          <div className="
+                {/* CHURAN SECTION */}
+                <div className="border-[2px] border-black">
+                  <div className="grid grid-cols-12">
+                    {/* LEFT */}
+                    <div
+                      className="
             col-span-2
             border-r-[2px]
             border-black
@@ -1903,58 +1960,48 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
             flex
             flex-col
             items-center
-          ">
+          "
+                    >
+                      <h2 className="text-4xl font-black mb-5">औषधि</h2>
 
-            <h2 className="text-4xl font-black mb-5">
-              औषधि
-            </h2>
+                      <img
+                        src="/images/churan.png"
+                        alt=""
+                        className="w-full object-contain"
+                      />
+                    </div>
 
-            <img
-              src="/images/churan.png"
-              alt=""
-              className="w-full object-contain"
-            />
-
-          </div>
-
-          {/* TABLE */}
-          <div className="col-span-8 p-2">
-
-            <table className="w-full border-collapse">
-
-              <thead>
-
-                <tr className="bg-[#ececec]">
-
-                  {[
-                    "(क्र.सं.)",
-                    "दवा का नाम",
-                    "कब - कब लेना है",
-                    "कितनी मात्रा में",
-                    "किसके साथ",
-                    "कब तक",
-                  ].map((h) => (
-                    <th
-                      key={h}
-                      className="
+                    {/* TABLE */}
+                    <div className="col-span-8 p-2">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-[#ececec]">
+                            {[
+                              "(क्र.सं.)",
+                              "दवा का नाम",
+                              "कब - कब लेना है",
+                              "कितनी मात्रा में",
+                              "किसके साथ",
+                              "कब तक",
+                            ].map((h) => (
+                              <th
+                                key={h}
+                                className="
                         border
                         border-black
                         p-2
                         text-xs
                         font-black
                       "
-                    >
-                      {h}
-                    </th>
-                  ))}
+                              >
+                                {h}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
 
-                </tr>
-
-              </thead>
-
-              <tbody>
-
-                {/* {(selected?.formData?.howToTake?.churan || []).map((item, idx) => (
+                        <tbody>
+                          {/* {(selected?.formData?.howToTake?.churan || []).map((item, idx) => (
 
                   <tr key={idx}>
 
@@ -1985,35 +2032,50 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
                   </tr>
 
                 ))} */}
-                {Array.isArray(selected?.formData?.howToTake?.churan) ? (
-  selected.formData.howToTake.churan.map((item, idx) => (
-    <tr key={idx}>
-      <td className="border border-black p-2 text-center font-bold">
-        {idx + 1}
-      </td>
-      <td className="border border-black p-2">{item.name}</td>
-      <td className="border border-black p-2">{item.time}</td>
-      <td className="border border-black p-2">{item.quantity}</td>
-      <td className="border border-black p-2">{item.with}</td>
-      <td className="border border-black p-2">{item.duration}</td>
-    </tr>
-  ))
-) : (
-  <tr>
-    <td colSpan={6} className="text-center p-4 text-gray-400 italic">
-      No churan instructions available.
-    </td>
-  </tr>
-)}
+                          {Array.isArray(
+                            selected?.formData?.howToTake?.churan,
+                          ) ? (
+                            selected.formData.howToTake.churan.map(
+                              (item, idx) => (
+                                <tr key={idx}>
+                                  <td className="border border-black p-2 text-center font-bold">
+                                    {idx + 1}
+                                  </td>
+                                  <td className="border border-black p-2">
+                                    {item.name}
+                                  </td>
+                                  <td className="border border-black p-2">
+                                    {item.time}
+                                  </td>
+                                  <td className="border border-black p-2">
+                                    {item.quantity}
+                                  </td>
+                                  <td className="border border-black p-2">
+                                    {item.with}
+                                  </td>
+                                  <td className="border border-black p-2">
+                                    {item.duration}
+                                  </td>
+                                </tr>
+                              ),
+                            )
+                          ) : (
+                            <tr>
+                              <td
+                                colSpan={6}
+                                className="text-center p-4 text-gray-400 italic"
+                              >
+                                No churan instructions available.
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
 
-              </tbody>
-
-            </table>
-
-          </div>
-
-          {/* RIGHT */}
-          <div className="
+                    {/* RIGHT */}
+                    <div
+                      className="
             col-span-2
             border-l-[2px]
             border-black
@@ -2021,31 +2083,29 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
             flex
             items-center
             justify-center
-          ">
+          "
+                    >
+                      <img
+                        src="/images/spoon-guide.png"
+                        alt=""
+                        className="w-full object-contain"
+                      />
+                    </div>
+                  </div>
+                </div>
 
-            <img
-              src="/images/spoon-guide.png"
-              alt=""
-              className="w-full object-contain"
-            />
-
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* TABLETS */}
-      <div className="
+                {/* TABLETS */}
+                <div
+                  className="
         border-x-[2px]
         border-b-[2px]
         border-black
-      ">
-
-        <div className="grid grid-cols-12">
-
-          {/* LEFT */}
-          <div className="
+      "
+                >
+                  <div className="grid grid-cols-12">
+                    {/* LEFT */}
+                    <div
+                      className="
             col-span-2
             border-r-[2px]
             border-black
@@ -2054,58 +2114,48 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
             flex
             flex-col
             items-center
-          ">
+          "
+                    >
+                      <h2 className="text-4xl font-black mb-5">टैबलेट</h2>
 
-            <h2 className="text-4xl font-black mb-5">
-              टैबलेट
-            </h2>
+                      <img
+                        src="/images/tablet.png"
+                        alt=""
+                        className="w-full object-contain"
+                      />
+                    </div>
 
-            <img
-              src="/images/tablet.png"
-              alt=""
-              className="w-full object-contain"
-            />
-
-          </div>
-
-          {/* TABLE */}
-          <div className="col-span-10 p-2">
-
-            <table className="w-full border-collapse">
-
-              <thead>
-
-                <tr className="bg-[#ececec]">
-
-                  {[
-                    "(क्र.सं.)",
-                    "दवा का नाम",
-                    "कब - कब लेना है",
-                    "कितनी मात्रा में",
-                    "किसके साथ",
-                    "कब तक",
-                  ].map((h) => (
-                    <th
-                      key={h}
-                      className="
+                    {/* TABLE */}
+                    <div className="col-span-10 p-2">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-[#ececec]">
+                            {[
+                              "(क्र.सं.)",
+                              "दवा का नाम",
+                              "कब - कब लेना है",
+                              "कितनी मात्रा में",
+                              "किसके साथ",
+                              "कब तक",
+                            ].map((h) => (
+                              <th
+                                key={h}
+                                className="
                         border
                         border-black
                         p-2
                         text-xs
                         font-black
                       "
-                    >
-                      {h}
-                    </th>
-                  ))}
+                              >
+                                {h}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
 
-                </tr>
-
-              </thead>
-
-              <tbody>
-
-                {/* {(selected?.formData?.howToTake?.tablets || []).map((item, idx) => (
+                        <tbody>
+                          {/* {(selected?.formData?.howToTake?.tablets || []).map((item, idx) => (
 
                   <tr key={idx}>
 
@@ -2136,42 +2186,51 @@ Thankyou - ${user?.clinicName || "Ayurveda Clinic"}
                   </tr>
 
                 ))} */}
-                {Array.isArray(selected?.formData?.howToTake?.tablets) ? (
-  selected.formData.howToTake.tablets.map((item, idx) => (
-    <tr key={idx}>
-      <td className="border border-black p-2 text-center font-bold">
-        {idx + 1}
-      </td>
-      <td className="border border-black p-2">{item.name}</td>
-      <td className="border border-black p-2">{item.time}</td>
-      <td className="border border-black p-2">{item.quantity}</td>
-      <td className="border border-black p-2">{item.with}</td>
-      <td className="border border-black p-2">{item.duration}</td>
-    </tr>
-  ))
-) : (
-  <tr>
-    <td colSpan={6} className="text-center p-4 text-gray-400 italic">
-      No tablet instructions available.
-    </td>
-  </tr>
-)}
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-)}
-
+                          {Array.isArray(
+                            selected?.formData?.howToTake?.tablets,
+                          ) ? (
+                            selected.formData.howToTake.tablets.map(
+                              (item, idx) => (
+                                <tr key={idx}>
+                                  <td className="border border-black p-2 text-center font-bold">
+                                    {idx + 1}
+                                  </td>
+                                  <td className="border border-black p-2">
+                                    {item.name}
+                                  </td>
+                                  <td className="border border-black p-2">
+                                    {item.time}
+                                  </td>
+                                  <td className="border border-black p-2">
+                                    {item.quantity}
+                                  </td>
+                                  <td className="border border-black p-2">
+                                    {item.with}
+                                  </td>
+                                  <td className="border border-black p-2">
+                                    {item.duration}
+                                  </td>
+                                </tr>
+                              ),
+                            )
+                          ) : (
+                            <tr>
+                              <td
+                                colSpan={6}
+                                className="text-center p-4 text-gray-400 italic"
+                              >
+                                No tablet instructions available.
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

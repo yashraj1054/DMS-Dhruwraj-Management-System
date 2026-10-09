@@ -17,7 +17,7 @@
 //     notes: "",
 //   });
 
-//   const API_BASE = "http://localhost:5001/api";
+//   const API_BASE = "https://dms-backend-amber.vercel.app/api";
 
 //   const user =
 //     JSON.parse(localStorage.getItem("user")) || {};
@@ -74,7 +74,7 @@
 //     console.log("TOKEN:", token);
 
 //     const res = await axios.get(
-//       "http://localhost:5001/api/patients",
+//       "https://dms-backend-amber.vercel.app/api/patients",
 //       {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
@@ -373,7 +373,7 @@ import {
   Stethoscope,
   FileText,
   Plus,
-  Calendar
+  Calendar,
 } from "lucide-react";
 
 export default function Appointments() {
@@ -385,8 +385,7 @@ export default function Appointments() {
 
   const [search, setSearch] = useState("");
 
-  
-  const getTodayDateString = () => new Date().toLocaleDateString('sv');
+  const getTodayDateString = () => new Date().toLocaleDateString("sv");
 
   const [filterDate, setFilterDate] = useState(getTodayDateString());
 
@@ -398,10 +397,9 @@ export default function Appointments() {
     notes: "",
   });
 
-  const API_BASE = "http://localhost:5001/api";
+  const API_BASE = "https://dms-backend-amber.vercel.app/api";
 
-  const user =
-    JSON.parse(localStorage.getItem("user")) || {};
+  const user = JSON.parse(localStorage.getItem("user")) || {};
 
   const token = localStorage.getItem("token");
 
@@ -435,27 +433,23 @@ export default function Appointments() {
     fetchDoctors();
   }, []);
 
-
   // Auto-Reset: Tracks day rollovers and updates the filter state dynamically
-useEffect(() => {
-  const checkDateRollover = setInterval(() => {
-    const actualToday = getTodayDateString();
-    
-    // If the internal clock shifts to a new day, update the calendar selection automatically
-    if (filterDate !== actualToday) {
-      setFilterDate(actualToday);
-    }
-  }, 60000); // 60-second check loop
+  useEffect(() => {
+    const checkDateRollover = setInterval(() => {
+      const actualToday = getTodayDateString();
 
-  return () => clearInterval(checkDateRollover);
-}, [filterDate]);
+      // If the internal clock shifts to a new day, update the calendar selection automatically
+      if (filterDate !== actualToday) {
+        setFilterDate(actualToday);
+      }
+    }, 60000); // 60-second check loop
+
+    return () => clearInterval(checkDateRollover);
+  }, [filterDate]);
 
   const fetchAppointments = async () => {
     try {
-      const res = await axios.get(
-        `${API_BASE}/appointments`,
-        config
-      );
+      const res = await axios.get(`${API_BASE}/appointments`, config);
 
       setAppointments(res.data || []);
     } catch (err) {
@@ -465,33 +459,21 @@ useEffect(() => {
 
   const fetchPatients = async () => {
     try {
-      const res = await axios.get(
-        `${API_BASE}/patients`,
-        config
-      );
+      const res = await axios.get(`${API_BASE}/patients`, config);
 
       setPatients(res.data || []);
     } catch (err) {
-      console.error(
-        "PATIENT FETCH ERROR:",
-        err.response?.data || err.message
-      );
+      console.error("PATIENT FETCH ERROR:", err.response?.data || err.message);
     }
   };
 
   const fetchDoctors = async () => {
     try {
-      const res = await axios.get(
-        `${API_BASE}/staff/doctors`,
-        config
-      );
+      const res = await axios.get(`${API_BASE}/staff/doctors`, config);
 
       setDoctors(res.data || []);
     } catch (err) {
-      console.error(
-        "DOCTOR FETCH ERROR:",
-        err.response?.data || err.message
-      );
+      console.error("DOCTOR FETCH ERROR:", err.response?.data || err.message);
     }
   };
 
@@ -525,7 +507,7 @@ useEffect(() => {
           clinic: user.clinic,
           createdBy: user._id,
         },
-        config
+        config,
       );
 
       alert("Appointment booked successfully");
@@ -536,10 +518,7 @@ useEffect(() => {
     } catch (err) {
       console.error(err);
 
-      alert(
-        err.response?.data?.message ||
-          "Failed to book appointment"
-      );
+      alert(err.response?.data?.message || "Failed to book appointment");
     }
   };
 
@@ -556,14 +535,11 @@ useEffect(() => {
   // FILTER + SEARCH
   const filteredAppointments = useMemo(() => {
     return appointments.filter((a) => {
-      const patientName =
-        a.patient?.name?.toLowerCase() || "";
+      const patientName = a.patient?.name?.toLowerCase() || "";
 
-      const patientId =
-        a.patient?.patientId?.toLowerCase() || "";
+      const patientId = a.patient?.patientId?.toLowerCase() || "";
 
-      const doctorName =
-        a.doctor?.name?.toLowerCase() || "";
+      const doctorName = a.doctor?.name?.toLowerCase() || "";
 
       const searchText = search.toLowerCase();
 
@@ -578,12 +554,11 @@ useEffect(() => {
       //   .toISOString()
       //   .split("T")[0];
 
-      const appointmentDate = new Date(a.appointmentDate)
-  .toLocaleDateString('sv');
+      const appointmentDate = new Date(a.appointmentDate).toLocaleDateString(
+        "sv",
+      );
 
-      const matchesDate = filterDate
-        ? appointmentDate === filterDate
-        : true;
+      const matchesDate = filterDate ? appointmentDate === filterDate : true;
 
       return matchesSearch && matchesDate;
     });
@@ -595,9 +570,7 @@ useEffect(() => {
       <div className="bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl p-6 mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
           <div>
-            <h1 className="text-4xl font-bold text-slate-800">
-              Appointments
-            </h1>
+            <h1 className="text-4xl font-bold text-slate-800">Appointments</h1>
 
             <p className="text-slate-500 mt-1 italic">
               Manage clinic appointments professionally
@@ -625,11 +598,8 @@ useEffect(() => {
               type="text"
               placeholder="Search patient, doctor, patient ID..."
               value={search}
-              onChange={(e) =>
-                setSearch(e.target.value)
-              }
+              onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 bg-slate-50 shadow-sm focus:ring-2 focus:ring-teal-500 outline-none"
-              
             />
           </div>
 
@@ -642,9 +612,7 @@ useEffect(() => {
             <input
               type="date"
               value={filterDate}
-              onChange={(e) =>
-                setFilterDate(e.target.value)
-              }
+              onChange={(e) => setFilterDate(e.target.value)}
               className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 bg-slate-50 shadow-sm focus:ring-2 focus:ring-teal-500 outline-none"
             />
           </div>
@@ -672,10 +640,7 @@ useEffect(() => {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <div className="bg-teal-100 p-3 rounded-2xl">
-                      <User
-                        className="text-teal-700"
-                        size={20}
-                      />
+                      <User className="text-teal-700" size={20} />
                     </div>
 
                     <div>
@@ -684,8 +649,7 @@ useEffect(() => {
                       </h2>
 
                       <p className="text-gray-500 text-sm">
-                        Patient ID:{" "}
-                        {a.patient?.patientId}
+                        Patient ID: {a.patient?.patientId}
                       </p>
                     </div>
                   </div>
@@ -701,30 +665,20 @@ useEffect(() => {
                   </div>
 
                   <div className="flex items-start gap-3 text-gray-700">
-                    <FileText
-                      size={18}
-                      className="mt-1"
-                    />
+                    <FileText size={18} className="mt-1" />
 
-                    <p>
-                      {a.notes || "No notes added"}
-                    </p>
+                    <p>{a.notes || "No notes added"}</p>
                   </div>
                 </div>
 
                 {/* RIGHT */}
                 <div className="flex lg:flex-col gap-5 lg:items-end">
                   <div className="bg-slate-100 px-5 py-3 rounded-2xl text-center">
-                    
-
                     <div className="flex items-center justify-center gap-2 mt-1 text-gray-600">
                       <Calendar size={15} />
-                    <p className="font text-slate-700">
-                      
-                      {new Date(
-                        a.appointmentDate
-                      ).toLocaleDateString()}
-                    </p>
+                      <p className="font text-slate-700">
+                        {new Date(a.appointmentDate).toLocaleDateString()}
+                      </p>
                     </div>
 
                     <div className="flex items-center justify-center gap-2 mt-1 text-gray-600">
@@ -734,14 +688,14 @@ useEffect(() => {
                   </div>
 
                   <span
-  className={`px-4 py-2 rounded-full text-sm font-semibold capitalize ${
-    a.status === "completed"  || a.status === "viewed"
-      ? "bg-green-100 text-green-700"
-      : "bg-yellow-100 text-yellow-700"
-  }`}
->
-  {a.status || "Pending"}
-</span>
+                    className={`px-4 py-2 rounded-full text-sm font-semibold capitalize ${
+                      a.status === "completed" || a.status === "viewed"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                  >
+                    {a.status || "Pending"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -759,9 +713,7 @@ useEffect(() => {
                   Book Appointment
                 </h2>
 
-                <p className="text-gray-500">
-                  Schedule patient consultation
-                </p>
+                <p className="text-gray-500">Schedule patient consultation</p>
               </div>
 
               <button
@@ -773,10 +725,7 @@ useEffect(() => {
               </button>
             </div>
 
-            <form
-              onSubmit={saveAppointment}
-              className="grid gap-5"
-            >
+            <form onSubmit={saveAppointment} className="grid gap-5">
               <div>
                 <label className="block mb-2 font-semibold text-slate-700">
                   Search Patient
@@ -838,9 +787,7 @@ useEffect(() => {
                   className="border border-gray-200 p-3 rounded-2xl w-full focus:ring-2 focus:ring-teal-500 outline-none"
                   required
                 >
-                  <option value="">
-                    Select Slot
-                  </option>
+                  <option value="">Select Slot</option>
 
                   {timeSlots.map((slot) => (
                     <option key={slot} value={slot}>

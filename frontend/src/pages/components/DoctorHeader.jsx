@@ -16,7 +16,9 @@ export default function DoctorHeader({ openSidebar }) {
         <div>
           <h2 className="text-lg font-semibold">Doctor Dashboard</h2>
 
-          <p className="text-xs text-slate-400">Manage appointments & prescriptions</p>
+          <p className="text-xs text-slate-400">
+            Manage appointments & prescriptions
+          </p>
         </div>
       </div>
 
@@ -28,30 +30,18 @@ export default function DoctorHeader({ openSidebar }) {
         </div>
 
         <div className="w-9 h-9 rounded-full overflow-hidden  ">
-
- {user?.profileImage ? (
-
-  <img
-
-   src={`http://localhost:5001/uploads/${user.profileImage}`}
-
-   alt="profile"
-
-   className="w-full h-full object-cover"
-
-  />
-
- ) : (
-
-  <span className="text-teal-700 font-semibold">
-
-   {user?.name?.charAt(0)}
-
-  </span>
-
- )}
-
-</div>
+          {user?.profileImage ? (
+            <img
+              src={`https://dms-backend-amber.vercel.app/uploads/${user.profileImage}`}
+              alt="profile"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <span className="text-teal-700 font-semibold">
+              {user?.name?.charAt(0)}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

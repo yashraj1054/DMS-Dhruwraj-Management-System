@@ -16,8 +16,7 @@ export default function Patient() {
 
   const user = JSON.parse(sessionStorage.getItem("user"));
 
-
-  const API_BASE = "http://localhost:5001/api";
+  const API_BASE = "https://dms-backend-amber.vercel.app/api";
   const config = {
     headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
   };
@@ -58,7 +57,7 @@ export default function Patient() {
     const clinic = clinics.find((c) => c._id === clinicId);
     if (clinic) {
       const count = patients.filter(
-        (p) => (p.clinic?._id || p.clinic) === clinicId
+        (p) => (p.clinic?._id || p.clinic) === clinicId,
       ).length;
       const newId = `${clinic.patientPrefix}${String(count + 1).padStart(3, "0")}`;
       setGeneratedId(newId);
@@ -112,7 +111,9 @@ export default function Patient() {
     setForm({ ...p, clinic: p.clinic?._id || p.clinic });
     setGeneratedId(p.patientId);
     if (p.profileImage) {
-      setPreview(`http://localhost:5001/uploads/${p.profileImage}`);
+      setPreview(
+        `https://dms-backend-amber.vercel.app/uploads/${p.profileImage}`,
+      );
     }
     setOpen(true);
   };
@@ -147,7 +148,7 @@ export default function Patient() {
   const isReadOnly = editing && user.role !== "admin";
 
   return (
-    <div >
+    <div>
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
         <div>
@@ -189,23 +190,35 @@ export default function Patient() {
       {/* Patient List */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredPatients.map((p) => (
-          <div key={p._id} className="bg-white p-4 rounded-xl border shadow-sm hover:shadow-md transition-shadow">
+          <div
+            key={p._id}
+            className="bg-white p-4 rounded-xl border shadow-sm hover:shadow-md transition-shadow"
+          >
             <div className="flex justify-between items-start">
               <span className="text-[10px] font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded">
                 {p.patientId}
               </span>
-              <span className="text-[10px] text-slate-400">{p.clinic?.location}</span>
+              <span className="text-[10px] text-slate-400">
+                {p.clinic?.location}
+              </span>
             </div>
             <h3 className="font-bold text-slate-800 mt-2">{p.name}</h3>
             <p className="text-sm text-slate-500">{p.phone}</p>
             <div className="flex gap-2 mt-4">
-              <button onClick={() => editPatient(p)} className="flex-1 border py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50">
-                <Edit2 className="w-3.5 h-3.5" />{user.role === "admin" ? "Edit" : "View Details"}
+              <button
+                onClick={() => editPatient(p)}
+                className="flex-1 border py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50"
+              >
+                <Edit2 className="w-3.5 h-3.5" />
+                {user.role === "admin" ? "Edit" : "View Details"}
               </button>
-              
+
               {/* FEATURE: DELETE ONLY FOR ADMIN */}
               {user.role === "admin" && (
-                <button onClick={() => triggerDelete(p._id)} className="flex-1 bg-red-50 text-red-600 py-1.5 rounded-lg text-xs font-medium hover:bg-red-100">
+                <button
+                  onClick={() => triggerDelete(p._id)}
+                  className="flex-1 bg-red-50 text-red-600 py-1.5 rounded-lg text-xs font-medium hover:bg-red-100"
+                >
                   <Trash2 className="w-3.5 h-3.5" /> Delete
                 </button>
               )}
@@ -218,55 +231,175 @@ export default function Patient() {
       {open && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white p-6 rounded-2xl w-full max-w-[750px] max-h-[90vh] overflow-y-auto relative shadow-2xl">
-            <button onClick={handleClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <button
+              onClick={handleClose}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
 
             <h2 className="text-xl font-bold mb-6 text-slate-800 border-b pb-2">
-              {isReadOnly ? "Patient Details (View Only)" : "Patient Confidential Information"}
+              {isReadOnly
+                ? "Patient Details (View Only)"
+                : "Patient Confidential Information"}
             </h2>
 
             <form onSubmit={savePatient} className="grid md:grid-cols-2 gap-4">
               <div className="col-span-full bg-slate-900 text-white p-3 rounded-lg flex justify-between items-center">
-                <span className="text-sm font-medium">PATIENT ID: <span className="text-teal-400 ml-2">{generatedId || "---"}</span></span>
-                <span className="text-xs opacity-70">DATE: {new Date().toLocaleDateString()}</span>
+                <span className="text-sm font-medium">
+                  PATIENT ID:{" "}
+                  <span className="text-teal-400 ml-2">
+                    {generatedId || "---"}
+                  </span>
+                </span>
+                <span className="text-xs opacity-70">
+                  DATE: {new Date().toLocaleDateString()}
+                </span>
               </div>
 
               {/* Pass isReadOnly to inputs */}
-              <Input name="name" label="Name" form={form} onChange={handleChange} disabled={isReadOnly} />
+              <Input
+                name="name"
+                label="Name"
+                form={form}
+                onChange={handleChange}
+                disabled={isReadOnly}
+              />
               <div className="grid grid-cols-2 gap-2">
-                <Input name="dob" label="DOB" type="date" form={form} onChange={handleChange} disabled={isReadOnly} />
-                <Input name="age" label="Age" type="number" form={form} onChange={handleChange} disabled={isReadOnly} />
+                <Input
+                  name="dob"
+                  label="DOB"
+                  type="date"
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
+                <Input
+                  name="age"
+                  label="Age"
+                  type="number"
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
               </div>
 
-              <Select name="gender" label="Sex" options={["M", "F", "Other"]} form={form} onChange={handleChange} disabled={isReadOnly} />
-              <Input name="phone" label="Telephone" form={form} onChange={handleChange} disabled={isReadOnly} />
-              <Input name="address" label="Address" className="col-span-full" form={form} onChange={handleChange} disabled={isReadOnly} />
-              
+              <Select
+                name="gender"
+                label="Sex"
+                options={["M", "F", "Other"]}
+                form={form}
+                onChange={handleChange}
+                disabled={isReadOnly}
+              />
+              <Input
+                name="phone"
+                label="Telephone"
+                form={form}
+                onChange={handleChange}
+                disabled={isReadOnly}
+              />
+              <Input
+                name="address"
+                label="Address"
+                className="col-span-full"
+                form={form}
+                onChange={handleChange}
+                disabled={isReadOnly}
+              />
+
               <div className="grid grid-cols-2 gap-2">
-                <Input name="city" label="City" form={form} onChange={handleChange} disabled={isReadOnly} />
-                <Input name="state" label="State" form={form} onChange={handleChange} disabled={isReadOnly} />
+                <Input
+                  name="city"
+                  label="City"
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
+                <Input
+                  name="state"
+                  label="State"
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
-                <Input name="pinCode" label="Pin Code" form={form} onChange={handleChange} disabled={isReadOnly} />
-                <Input name="email" label="E-mail ID" form={form} onChange={handleChange} disabled={isReadOnly} />
+                <Input
+                  name="pinCode"
+                  label="Pin Code"
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
+                <Input
+                  name="email"
+                  label="E-mail ID"
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
               </div>
 
-              <Input name="occupation" label="Occupation" form={form} onChange={handleChange} disabled={isReadOnly} />
+              <Input
+                name="occupation"
+                label="Occupation"
+                form={form}
+                onChange={handleChange}
+                disabled={isReadOnly}
+              />
               <div className="grid grid-cols-2 gap-2">
-                <Input name="height" label="Height" form={form} onChange={handleChange} disabled={isReadOnly} />
-                <Input name="weight" label="Weight" form={form} onChange={handleChange} disabled={isReadOnly} />
+                <Input
+                  name="height"
+                  label="Height"
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
+                <Input
+                  name="weight"
+                  label="Weight"
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
               </div>
 
-              <Input name="referredBy" label="Referred by/Found us" form={form} onChange={handleChange} disabled={isReadOnly} />
-              <Select name="maritalStatus" label="Marital Status" options={["Single", "Married", "Divorced", "Others"]} form={form} onChange={handleChange} disabled={isReadOnly} />
+              <Input
+                name="referredBy"
+                label="Referred by/Found us"
+                form={form}
+                onChange={handleChange}
+                disabled={isReadOnly}
+              />
+              <Select
+                name="maritalStatus"
+                label="Marital Status"
+                options={["Single", "Married", "Divorced", "Others"]}
+                form={form}
+                onChange={handleChange}
+                disabled={isReadOnly}
+              />
 
               {user.role === "admin" && (
                 <div className="col-span-full">
-                  <label className="text-xs font-semibold text-slate-500">Clinic Location</label>
+                  <label className="text-xs font-semibold text-slate-500">
+                    Clinic Location
+                  </label>
                   <select
                     name="clinic"
                     value={form.clinic || ""}
@@ -277,7 +410,9 @@ export default function Patient() {
                   >
                     <option value="">Select Clinic</option>
                     {clinics.map((c) => (
-                      <option key={c._id} value={c._id}>{c.location}</option>
+                      <option key={c._id} value={c._id}>
+                        {c.location}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -304,16 +439,41 @@ export default function Patient() {
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl animate-in fade-in zoom-in duration-200">
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 15c-.77 1.333.192 3 1.732 3z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 text-red-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 15c-.77 1.333.192 3 1.732 3z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-slate-800">Confirm Delete</h3>
-              <p className="text-slate-500 mt-2 text-sm">Are you sure? This cannot be undone.</p>
+              <h3 className="text-xl font-bold text-slate-800">
+                Confirm Delete
+              </h3>
+              <p className="text-slate-500 mt-2 text-sm">
+                Are you sure? This cannot be undone.
+              </p>
             </div>
             <div className="flex gap-3 mt-8">
-              <button onClick={() => setDeleteConfirm(null)} className="flex-1 border py-3 rounded-xl">Cancel</button>
-              <button onClick={confirmDelete} className="flex-1 bg-red-500 text-white py-3 rounded-xl shadow-lg shadow-red-200">Yes, Delete</button>
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 border py-3 rounded-xl"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="flex-1 bg-red-500 text-white py-3 rounded-xl shadow-lg shadow-red-200"
+              >
+                Yes, Delete
+              </button>
             </div>
           </div>
         </div>
@@ -323,10 +483,20 @@ export default function Patient() {
 }
 
 // Updated Components to handle 'disabled' prop
-function Input({ label, name, form, onChange, type = "text", className = "", disabled = false }) {
+function Input({
+  label,
+  name,
+  form,
+  onChange,
+  type = "text",
+  className = "",
+  disabled = false,
+}) {
   return (
     <div className={className}>
-      <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{label}</label>
+      <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+        {label}
+      </label>
       <input
         type={type}
         name={name}
@@ -334,7 +504,9 @@ function Input({ label, name, form, onChange, type = "text", className = "", dis
         onChange={onChange}
         disabled={disabled}
         className={`border mt-1 p-2.5 rounded-lg w-full text-sm outline-none transition-colors ${
-          disabled ? "bg-slate-50 text-slate-400 cursor-not-allowed" : "focus:border-teal-500 bg-white"
+          disabled
+            ? "bg-slate-50 text-slate-400 cursor-not-allowed"
+            : "focus:border-teal-500 bg-white"
         }`}
       />
     </div>
@@ -344,23 +516,27 @@ function Input({ label, name, form, onChange, type = "text", className = "", dis
 function Select({ label, name, options, form, onChange, disabled = false }) {
   return (
     <div>
-      <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{label}</label>
+      <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+        {label}
+      </label>
       <select
         name={name}
         value={form[name] || ""}
         onChange={onChange}
         disabled={disabled}
         className={`border mt-1 p-2.5 rounded-lg w-full text-sm outline-none transition-colors ${
-          disabled ? "bg-slate-50 text-slate-400 cursor-not-allowed" : "focus:border-teal-500 bg-white"
+          disabled
+            ? "bg-slate-50 text-slate-400 cursor-not-allowed"
+            : "focus:border-teal-500 bg-white"
         }`}
       >
         <option value="">Select</option>
         {options.map((o) => (
-          <option key={o} value={o}>{o}</option>
+          <option key={o} value={o}>
+            {o}
+          </option>
         ))}
       </select>
     </div>
   );
 }
-
-

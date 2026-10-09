@@ -24,13 +24,11 @@
 
 //  e.preventDefault();
 
-
-
 //  try{
 
 //   await axios.put(
 
-//    "http://localhost:5001/api/staff/change-password",
+//    "https://dms-backend-amber.vercel.app/api/staff/change-password",
 
 //    {
 
@@ -51,8 +49,6 @@
 //    }
 
 //   );
-
-
 
 //   alert("Password updated");
 
@@ -76,7 +72,7 @@
 //       <div className="bg-white p-6 rounded-xl border shadow-sm">
 //         <div className="flex items-center gap-4 mb-6">
 //           <img
-//             src={`http://localhost:5001/uploads/${user.profileImage}`}
+//             src={`https://dms-backend-amber.vercel.app/uploads/${user.profileImage}`}
 //             className="w-16 h-16 rounded-full object-cover border"
 //           />
 
@@ -152,11 +148,20 @@
 
 import { useState } from "react";
 import axios from "axios";
-import { 
-  User, ShieldCheck, Mail, MapPin, Calendar, 
-  Phone, Briefcase, Award, Lock, Fingerprint, 
-  VenusAndMars , IndianRupee, 
-  Building
+import {
+  User,
+  ShieldCheck,
+  Mail,
+  MapPin,
+  Calendar,
+  Phone,
+  Briefcase,
+  Award,
+  Lock,
+  Fingerprint,
+  VenusAndMars,
+  IndianRupee,
+  Building,
 } from "lucide-react";
 
 export default function Profile() {
@@ -179,14 +184,14 @@ export default function Profile() {
     setLoading(true);
     try {
       await axios.put(
-        "http://localhost:5001/api/staff/change-password",
+        "https://dms-backend-amber.vercel.app/api/staff/change-password",
         {
           currentPassword: form.currentPassword,
-          newPassword: form.newPassword
+          newPassword: form.newPassword,
         },
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-        }
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        },
       );
       alert("Password updated successfully");
       setForm({ currentPassword: "", newPassword: "" });
@@ -203,39 +208,50 @@ export default function Profile() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Account Profile</h1>
-          <p className="text-slate-500 mt-1">View your personal details and account settings.</p>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+            Account Profile
+          </h1>
+          <p className="text-slate-500 mt-1">
+            View your personal details and account settings.
+          </p>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-100 rounded-2xl">
           <ShieldCheck className="w-4 h-4 text-teal-600" />
-          <span className="text-xs font-bold text-teal-700 uppercase tracking-wider">Verified Staff</span>
+          <span className="text-xs font-bold text-teal-700 uppercase tracking-wider">
+            Verified Staff
+          </span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
-        
         {/* Left Column: Identity Card */}
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-white border border-slate-100 rounded-[32px] p-8 shadow-sm text-center relative overflow-hidden">
             {/* Subtle background decoration */}
             <div className="absolute top-0 left-0 w-full h-24 bg-slate-50 -z-0"></div>
-            
+
             <div className="relative z-10">
               <div className="relative inline-block">
                 <img
-                  src={`http://localhost:5001/uploads/${user.profileImage}`}
+                  src={`https://dms-backend-amber.vercel.app/uploads/${user.profileImage}`}
                   className="w-32 h-32 rounded-[40px] object-cover border-4 border-white shadow-xl mx-auto"
-                  onError={(e) => { e.target.src = "https://ui-avatars.com/api/?name=" + user.name; }}
+                  onError={(e) => {
+                    e.target.src =
+                      "https://ui-avatars.com/api/?name=" + user.name;
+                  }}
                 />
                 <div className="absolute -bottom-2 -right-2 bg-teal-500 p-2 rounded-2xl border-4 border-white shadow-lg">
                   <Fingerprint className="w-5 h-5 text-white" />
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-slate-900 mt-6">{user.name}</h2>
-              <p className="text-teal-600 font-bold text-xs uppercase tracking-[0.2em] mt-1">{user.role}</p>
-              
-              
+              <h2 className="text-2xl font-bold text-slate-900 mt-6">
+                {user.name}
+              </h2>
+              <p className="text-teal-600 font-bold text-xs uppercase tracking-[0.2em] mt-1">
+                {user.role}
+              </p>
+
               <div className="mt-6 pt-6 border-t border-slate-50 space-y-3">
                 <div className="flex items-center justify-center gap-2 text-slate-500 text-sm">
                   <Briefcase className="w-4 h-4" />
@@ -247,7 +263,10 @@ export default function Profile() {
                 </div>
                 <div className="flex flex-1 items-center justify-center gap-2 text-slate-500 text-sm">
                   <MapPin className="w-4 h-4" />
-                  <span className="font-medium"> {user.clinicLocation || "Main Branch"}</span>
+                  <span className="font-medium">
+                    {" "}
+                    {user.clinicLocation || "Main Branch"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -267,8 +286,6 @@ export default function Profile() {
             </div>
           </div> */}
         </div>
-
-
       </div>
     </div>
   );
@@ -279,11 +296,15 @@ function DetailItem({ label, value, icon, className = "" }) {
     <div className={`group ${className}`}>
       <div className="flex items-center gap-2 mb-1.5">
         <span className="p-1 bg-slate-50 rounded-lg text-slate-400 group-hover:text-teal-600 group-hover:bg-teal-50 transition-colors">
-          {icon }
+          {icon}
         </span>
-        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{label}</label>
+        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+          {label}
+        </label>
       </div>
-      <p className="text-sm font-semibold text-slate-700 ml-7 tracking-tight">{value || "Not provided"}</p>
+      <p className="text-sm font-semibold text-slate-700 ml-7 tracking-tight">
+        {value || "Not provided"}
+      </p>
     </div>
   );
 }

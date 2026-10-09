@@ -16,7 +16,7 @@
 
 //   const user = JSON.parse(localStorage.getItem("user"));
 
-//   const API_BASE = "http://localhost:5001/api";
+//   const API_BASE = "https://dms-backend-amber.vercel.app/api";
 //   const config = {
 //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 //   };
@@ -111,7 +111,7 @@
 //     setForm({ ...p, clinic: p.clinic?._id || p.clinic });
 //     setGeneratedId(p.patientId);
 //     if (p.profileImage) {
-//       setPreview(`http://localhost:5001/uploads/${p.profileImage}`);
+//       setPreview(`https://dms-backend-amber.vercel.app/uploads/${p.profileImage}`);
 //     }
 //     setOpen(true);
 //   };
@@ -201,7 +201,7 @@
 //               <button onClick={() => editPatient(p)} className="flex-1 flex items-center justify-center gap-2 bg-slate-50 text-slate-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-100 transition-colors">
 //                 <Edit2 className="w-3.5 h-3.5" /> {user.role === "admin" ? "Edit" : "View Details"}
 //               </button>
-              
+
 //               {/* FEATURE: DELETE ONLY FOR ADMIN */}
 //               {user.role === "admin" && (
 //                 <button onClick={() => triggerDelete(p._id)} className="flex-1 flex items-center justify-center gap-2 bg-rose-50 text-rose-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-rose-100 transition-colors">
@@ -243,7 +243,7 @@
 //               <Select name="gender" label="Sex" options={["M", "F", "Other"]} form={form} onChange={handleChange} disabled={isReadOnly} />
 //               <Input name="phone" label="Telephone" form={form} onChange={handleChange} disabled={isReadOnly} />
 //               <Input name="address" label="Address" className="col-span-full" form={form} onChange={handleChange} disabled={isReadOnly} />
-              
+
 //               <div className="grid grid-cols-2 gap-2">
 //                 <Input name="city" label="City" form={form} onChange={handleChange} disabled={isReadOnly} />
 //                 <Input name="state" label="State" form={form} onChange={handleChange} disabled={isReadOnly} />
@@ -364,7 +364,19 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Trash2, Edit2, Search, Plus, X, User, Phone, MapPin, Calendar, Activity, ChevronRight } from "lucide-react";
+import {
+  Trash2,
+  Edit2,
+  Search,
+  Plus,
+  X,
+  User,
+  Phone,
+  MapPin,
+  Calendar,
+  Activity,
+  ChevronRight,
+} from "lucide-react";
 
 export default function Patients() {
   const [patients, setPatients] = useState([]);
@@ -378,7 +390,7 @@ export default function Patients() {
   const [search, setSearch] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const API_BASE = "http://localhost:5001/api";
+  const API_BASE = "https://dms-backend-amber.vercel.app/api";
   const config = {
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   };
@@ -419,7 +431,7 @@ export default function Patients() {
     const clinic = clinics.find((c) => c._id === clinicId);
     if (clinic) {
       const count = patients.filter(
-        (p) => (p.clinic?._id || p.clinic) === clinicId
+        (p) => (p.clinic?._id || p.clinic) === clinicId,
       ).length;
       const newId = `${clinic.patientPrefix}${String(count + 1).padStart(3, "0")}`;
       setGeneratedId(newId);
@@ -473,7 +485,7 @@ export default function Patients() {
     (p) =>
       p.name?.toLowerCase().includes(search.toLowerCase()) ||
       p.patientId?.toLowerCase().includes(search.toLowerCase()) ||
-      p.phone?.includes(search)
+      p.phone?.includes(search),
   );
 
   const isReadOnly = editing && user.role !== "admin";
@@ -484,9 +496,7 @@ export default function Patients() {
       <div className="bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl p-6 mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
           <div>
-            <h1 className="text-4xl font-bold text-slate-800">
-              Patients
-            </h1>
+            <h1 className="text-4xl font-bold text-slate-800">Patients</h1>
 
             <p className="text-slate-500 mt-1 italic">
               Manage clinic patient records professionally
@@ -513,12 +523,14 @@ export default function Patients() {
           </div>
         </div>
       </div>
-      
 
       {/* Grid Layout */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredPatients.map((p) => (
-          <div key={p._id} className="group bg-white rounded-3xl border border-slate-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div
+            key={p._id}
+            className="group bg-white rounded-3xl border border-slate-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+          >
             <div className="flex justify-between items-start mb-4">
               <div className="px-3 py-1 bg-teal-50 text-teal-700 rounded-full text-[11px] font-bold tracking-widest uppercase">
                 {p.patientId}
@@ -530,7 +542,9 @@ export default function Patients() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xl font-bold text-slate-800 group-hover:text-teal-600 transition-colors">{p.name}</h3>
+              <h3 className="text-xl font-bold text-slate-800 group-hover:text-teal-600 transition-colors">
+                {p.name}
+              </h3>
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 text-slate-500 text-sm">
                   <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center">
@@ -548,17 +562,17 @@ export default function Patients() {
             </div>
 
             <div className="mt-6 pt-6 border-t border-slate-50 flex gap-3">
-              <button 
-                onClick={() => editPatient(p)} 
+              <button
+                onClick={() => editPatient(p)}
                 className="flex-1 inline-flex items-center justify-center gap-2 py-3 bg-slate-50 hover:bg-teal-50 text-slate-700 hover:text-teal-700 rounded-xl text-sm font-bold transition-colors"
               >
                 <Edit2 className="w-4 h-4" />
                 {user.role === "admin" ? "Edit Record" : "View Details"}
               </button>
-              
+
               {user.role === "admin" && (
-                <button 
-                  onClick={() => setDeleteConfirm(p._id)} 
+                <button
+                  onClick={() => setDeleteConfirm(p._id)}
                   className="w-12 flex items-center justify-center bg-white border border-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-500 rounded-xl transition-all"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -573,23 +587,30 @@ export default function Patients() {
       {open && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-[2.5rem] w-full max-w-3xl my-auto relative shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-            
             {/* Modal Header */}
             <div className="px-8 py-6 bg-slate-50 border-b flex justify-between items-center">
               <div>
                 <h2 className="text-2xl font-bold text-slate-900">
-                  {isReadOnly ? "Patient File" : editing ? "Edit Record" : "Registration"}
+                  {isReadOnly
+                    ? "Patient File"
+                    : editing
+                      ? "Edit Record"
+                      : "Registration"}
                 </h2>
-                <p className="text-sm text-slate-500 font-medium">Please verify all clinical information</p>
+                <p className="text-sm text-slate-500 font-medium">
+                  Please verify all clinical information
+                </p>
               </div>
-              <button onClick={handleClose} className="p-2 hover:bg-white rounded-full shadow-sm transition-all">
+              <button
+                onClick={handleClose}
+                className="p-2 hover:bg-white rounded-full shadow-sm transition-all"
+              >
                 <X className="w-6 h-6 text-slate-400" />
               </button>
             </div>
 
             <form onSubmit={savePatient} className="p-8">
               <div className="grid md:grid-cols-2 gap-6">
-                
                 {/* ID Banner */}
                 <div className="col-span-full flex items-center justify-between bg-teal-900 rounded-2xl p-5 text-white shadow-inner">
                   <div className="flex items-center gap-4">
@@ -597,12 +618,18 @@ export default function Patients() {
                       <User className="w-5 h-5 text-teal-300" />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-widest text-teal-300 font-bold">System Patient ID</p>
-                      <p className="text-lg font-mono font-bold">{generatedId || "PENDING..."}</p>
+                      <p className="text-[10px] uppercase tracking-widest text-teal-300 font-bold">
+                        System Patient ID
+                      </p>
+                      <p className="text-lg font-mono font-bold">
+                        {generatedId || "PENDING..."}
+                      </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-[10px] uppercase tracking-widest text-teal-300 font-bold">Status</p>
+                    <p className="text-[10px] uppercase tracking-widest text-teal-300 font-bold">
+                      Status
+                    </p>
                     <p className="text-sm font-bold flex items-center gap-1">
                       <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse" />
                       {isReadOnly ? "Authenticated" : "Active Session"}
@@ -610,41 +637,136 @@ export default function Patients() {
                   </div>
                 </div>
 
-                <Input name="name" label="Full Name" placeholder="John Doe" form={form} onChange={handleChange} disabled={isReadOnly} />
-                
+                <Input
+                  name="name"
+                  label="Full Name"
+                  placeholder="John Doe"
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
+
                 <div className="grid grid-cols-2 gap-4">
-                  <Input name="dob" label="Date of Birth" type="date" form={form} onChange={handleChange} disabled={isReadOnly} />
-                  <Input name="age" label="Age" type="number" form={form} onChange={handleChange} disabled={isReadOnly} />
+                  <Input
+                    name="dob"
+                    label="Date of Birth"
+                    type="date"
+                    form={form}
+                    onChange={handleChange}
+                    disabled={isReadOnly}
+                  />
+                  <Input
+                    name="age"
+                    label="Age"
+                    type="number"
+                    form={form}
+                    onChange={handleChange}
+                    disabled={isReadOnly}
+                  />
                 </div>
 
-                <Select name="gender" label="Gender" options={["M", "F", "Other"]} form={form} onChange={handleChange} disabled={isReadOnly} />
-                <Input name="phone" label="Contact Number" placeholder="+91 00000 00000" form={form} onChange={handleChange} disabled={isReadOnly} />
-                
+                <Select
+                  name="gender"
+                  label="Gender"
+                  options={["M", "F", "Other"]}
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
+                <Input
+                  name="phone"
+                  label="Contact Number"
+                  placeholder="+91 00000 00000"
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
+
                 <div className="col-span-full">
-                  <Input name="address" label="Residential Address" placeholder="Street, Landmark, Area" form={form} onChange={handleChange} disabled={isReadOnly} />
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <Input name="city" label="City" form={form} onChange={handleChange} disabled={isReadOnly} />
-                  <Input name="state" label="State" form={form} onChange={handleChange} disabled={isReadOnly} />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <Input name="pinCode" label="PIN Code" form={form} onChange={handleChange} disabled={isReadOnly} />
-                  <Input name="email" label="Email Address" type="email" placeholder="email@example.com" form={form} onChange={handleChange} disabled={isReadOnly} />
+                  <Input
+                    name="address"
+                    label="Residential Address"
+                    placeholder="Street, Landmark, Area"
+                    form={form}
+                    onChange={handleChange}
+                    disabled={isReadOnly}
+                  />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <Input name="height" label="Height (cm)" form={form} onChange={handleChange} disabled={isReadOnly} />
-                  <Input name="weight" label="Weight (kg)" form={form} onChange={handleChange} disabled={isReadOnly} />
+                  <Input
+                    name="city"
+                    label="City"
+                    form={form}
+                    onChange={handleChange}
+                    disabled={isReadOnly}
+                  />
+                  <Input
+                    name="state"
+                    label="State"
+                    form={form}
+                    onChange={handleChange}
+                    disabled={isReadOnly}
+                  />
                 </div>
 
-                <Input name="occupation" label="Occupation" form={form} onChange={handleChange} disabled={isReadOnly} />
-                <Select name="maritalStatus" label="Marital Status" options={["Single", "Married", "Divorced", "Others"]} form={form} onChange={handleChange} disabled={isReadOnly} />
+                <div className="grid grid-cols-2 gap-4">
+                  <Input
+                    name="pinCode"
+                    label="PIN Code"
+                    form={form}
+                    onChange={handleChange}
+                    disabled={isReadOnly}
+                  />
+                  <Input
+                    name="email"
+                    label="Email Address"
+                    type="email"
+                    placeholder="email@example.com"
+                    form={form}
+                    onChange={handleChange}
+                    disabled={isReadOnly}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <Input
+                    name="height"
+                    label="Height (cm)"
+                    form={form}
+                    onChange={handleChange}
+                    disabled={isReadOnly}
+                  />
+                  <Input
+                    name="weight"
+                    label="Weight (kg)"
+                    form={form}
+                    onChange={handleChange}
+                    disabled={isReadOnly}
+                  />
+                </div>
+
+                <Input
+                  name="occupation"
+                  label="Occupation"
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
+                <Select
+                  name="maritalStatus"
+                  label="Marital Status"
+                  options={["Single", "Married", "Divorced", "Others"]}
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
 
                 {user.role === "admin" && (
                   <div className="col-span-full bg-slate-50 p-4 rounded-2xl border border-dashed border-slate-200">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-tighter">Assigned Clinic</label>
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-tighter">
+                      Assigned Clinic
+                    </label>
                     <select
                       name="clinic"
                       value={form.clinic || ""}
@@ -655,7 +777,9 @@ export default function Patients() {
                     >
                       <option value="">Select Location</option>
                       {clinics.map((c) => (
-                        <option key={c._id} value={c._id}>{c.location} — {c.name}</option>
+                        <option key={c._id} value={c._id}>
+                          {c.location} — {c.name}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -667,7 +791,9 @@ export default function Patients() {
                 {!isReadOnly ? (
                   <button className="w-full bg-teal-600 hover:bg-teal-700 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-teal-100 transition-all flex items-center justify-center gap-2">
                     <ChevronRight className="w-5 h-5" />
-                    {editing ? "Confirm & Update Record" : "Finalize & Save Patient"}
+                    {editing
+                      ? "Confirm & Update Record"
+                      : "Finalize & Save Patient"}
                   </button>
                 ) : (
                   <div className="w-full bg-slate-100 text-slate-400 py-4 rounded-2xl font-bold text-center border-2 border-dashed border-slate-200 uppercase tracking-widest text-sm">
@@ -688,10 +814,23 @@ export default function Patients() {
               <Trash2 className="h-10 w-10 text-rose-500" />
             </div>
             <h3 className="text-2xl font-bold text-slate-800">Are you sure?</h3>
-            <p className="text-slate-500 mt-2 font-medium">This action will permanently remove the patient record from the database.</p>
+            <p className="text-slate-500 mt-2 font-medium">
+              This action will permanently remove the patient record from the
+              database.
+            </p>
             <div className="flex gap-3 mt-8">
-              <button onClick={() => setDeleteConfirm(null)} className="flex-1 px-6 py-3.5 border border-slate-200 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all">Cancel</button>
-              <button onClick={confirmDelete} className="flex-1 px-6 py-3.5 bg-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-rose-200 hover:bg-rose-600 transition-all">Delete</button>
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 px-6 py-3.5 border border-slate-200 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="flex-1 px-6 py-3.5 bg-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-rose-200 hover:bg-rose-600 transition-all"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
@@ -700,10 +839,20 @@ export default function Patients() {
   );
 }
 
-function Input({ label, name, form, onChange, type = "text", placeholder = "", disabled = false }) {
+function Input({
+  label,
+  name,
+  form,
+  onChange,
+  type = "text",
+  placeholder = "",
+  disabled = false,
+}) {
   return (
     <div className="space-y-1.5">
-      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">{label}</label>
+      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+        {label}
+      </label>
       <input
         type={type}
         name={name}
@@ -712,9 +861,9 @@ function Input({ label, name, form, onChange, type = "text", placeholder = "", d
         onChange={onChange}
         disabled={disabled}
         className={`w-full px-4 py-3 rounded-xl text-sm font-medium border transition-all outline-none ${
-          disabled 
-          ? "bg-slate-50 border-slate-100 text-slate-400 cursor-not-allowed" 
-          : "bg-white border-slate-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/5"
+          disabled
+            ? "bg-slate-50 border-slate-100 text-slate-400 cursor-not-allowed"
+            : "bg-white border-slate-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/5"
         }`}
       />
     </div>
@@ -724,26 +873,27 @@ function Input({ label, name, form, onChange, type = "text", placeholder = "", d
 function Select({ label, name, options, form, onChange, disabled = false }) {
   return (
     <div className="space-y-1.5">
-      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">{label}</label>
+      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+        {label}
+      </label>
       <select
         name={name}
         value={form[name] || ""}
         onChange={onChange}
         disabled={disabled}
         className={`w-full px-4 py-3 rounded-xl text-sm font-bold border transition-all outline-none appearance-none ${
-          disabled 
-          ? "bg-slate-50 border-slate-100 text-slate-400 cursor-not-allowed" 
-          : "bg-white border-slate-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/5 cursor-pointer"
+          disabled
+            ? "bg-slate-50 border-slate-100 text-slate-400 cursor-not-allowed"
+            : "bg-white border-slate-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/5 cursor-pointer"
         }`}
       >
         <option value="">Select {label}</option>
         {options.map((o) => (
-          <option key={o} value={o}>{o}</option>
+          <option key={o} value={o}>
+            {o}
+          </option>
         ))}
       </select>
     </div>
   );
 }
-
-
-

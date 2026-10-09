@@ -48,11 +48,11 @@ export default function MyAppointments() {
   // FULL STATE INITIALIZATION BASED ON SCREENSHOTS
   const INITIAL_FORM_DATA = {
     prescription: [
-    {
-      date: new Date().toISOString().split("T")[0],
-      medicine: "",
-    },
-  ],
+      {
+        date: new Date().toISOString().split("T")[0],
+        medicine: "",
+      },
+    ],
     relief: "",
 
     pastHistory: {
@@ -87,7 +87,7 @@ export default function MyAppointments() {
       intensity: "",
       medicine: "",
       others: "",
-      notes:"",
+      notes: "",
     },
 
     acidity: {
@@ -95,7 +95,7 @@ export default function MyAppointments() {
       timing: [],
       intensity: "",
       medicine: "",
-      notes:"",
+      notes: "",
     },
 
     tongue: {
@@ -265,35 +265,35 @@ export default function MyAppointments() {
   const [followUps, setFollowUps] = useState([]);
 
   const addPrescription = () => {
-  setFormData((prev) => ({
-    ...prev,
-    prescription: [
-      ...(prev.prescription || []),
-      {
-        date: new Date().toISOString().split("T")[0],
-        medicine: "",
-      },
-    ],
-  }));
-};
+    setFormData((prev) => ({
+      ...prev,
+      prescription: [
+        ...(prev.prescription || []),
+        {
+          date: new Date().toISOString().split("T")[0],
+          medicine: "",
+        },
+      ],
+    }));
+  };
 
-const updatePrescription = (index, field, value) => {
-  const updated = [...formData.prescription];
+  const updatePrescription = (index, field, value) => {
+    const updated = [...formData.prescription];
 
-  updated[index][field] = value;
+    updated[index][field] = value;
 
-  setFormData((prev) => ({
-    ...prev,
-    prescription: updated,
-  }));
-};
+    setFormData((prev) => ({
+      ...prev,
+      prescription: updated,
+    }));
+  };
 
-const removePrescription = (index) => {
-  setFormData((prev) => ({
-    ...prev,
-    prescription: prev.prescription.filter((_, i) => i !== index),
-  }));
-};
+  const removePrescription = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      prescription: prev.prescription.filter((_, i) => i !== index),
+    }));
+  };
 
   const config = { headers: { Authorization: `Bearer ${token}` } };
 
@@ -316,7 +316,7 @@ const removePrescription = (index) => {
 
   // const fetchMyAppointments = async () => {
   //   try {
-  //     const res = await axios.get("http://localhost:5001/api/appointments/my", config);
+  //     const res = await axios.get("https://dms-backend-amber.vercel.app/api/appointments/my", config);
   //     setAppointments(res.data);
   //   } catch (err) { console.error(err); }
   // };
@@ -324,7 +324,7 @@ const removePrescription = (index) => {
   const fetchMyAppointments = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5001/api/appointments/my",
+        "https://dms-backend-amber.vercel.app/api/appointments/my",
         config,
       );
 
@@ -391,28 +391,28 @@ const removePrescription = (index) => {
   };
 
   const generateMedicineId = (count, date = new Date()) => {
-  const months = [
-    "JAN",
-    "FEB",
-    "MAR",
-    "APR",
-    "MAY",
-    "JUN",
-    "JUL",
-    "AUG",
-    "SEP",
-    "OCT",
-    "NOV",
-    "DEC",
-  ];
+    const months = [
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DEC",
+    ];
 
-  const month =
-    typeof date === "string"
-      ? months[new Date(date).getMonth()]
-      : months[date.getMonth()];
+    const month =
+      typeof date === "string"
+        ? months[new Date(date).getMonth()]
+        : months[date.getMonth()];
 
-  return `MDHCV-${month}-${String(count).padStart(4, "0")}`;
-};
+    return `MDHCV-${month}-${String(count).padStart(4, "0")}`;
+  };
 
   // const openAppointment = async (appointment) => {
   //   // Lock Check
@@ -462,7 +462,7 @@ const removePrescription = (index) => {
   //   if (appointment.patient?._id) {
   //     try {
   //       const res = await axios.get(
-  //         `http://localhost:5001/api/appointments/patient-history/${appointment.patient._id}`,
+  //         `https://dms-backend-amber.vercel.app/api/appointments/patient-history/${appointment.patient._id}`,
   //         config
   //       );
 
@@ -574,7 +574,7 @@ const removePrescription = (index) => {
     if (appointment.patient?._id) {
       try {
         const res = await axios.get(
-          `http://localhost:5001/api/appointments/patient-history/${appointment.patient._id}`,
+          `https://dms-backend-amber.vercel.app/api/appointments/patient-history/${appointment.patient._id}`,
           config,
         );
 
@@ -660,7 +660,7 @@ const removePrescription = (index) => {
   const savePrescription = async () => {
     try {
       await axios.put(
-        `http://localhost:5001/api/appointments/${selected._id}/prescription`,
+        `https://dms-backend-amber.vercel.app/api/appointments/${selected._id}/prescription`,
         { formData, followUps },
         config,
       );
@@ -1025,92 +1025,106 @@ const removePrescription = (index) => {
     </tbody>
   </table>
 </div> */}
-<div className="overflow-hidden border border-slate-200 rounded-xl">
-  <table className="w-full border-collapse text-sm">
-    <thead>
-      <tr className="bg-slate-100 text-slate-700">
-        <th className="border-b border-r border-slate-200 p-3 w-16 text-center font-semibold">
-          S.No
-        </th>
-        <th className="border-b border-r border-slate-200 p-3 text-left font-semibold">
-          Chief Complaint
-        </th>
-        <th className="border-b border-r border-slate-200 p-3 w-48 text-left font-semibold">
-          Duration
-        </th>
-        <th className="border-b border-slate-200 p-3 w-20 text-center font-semibold">
-          Actions
-        </th>
-      </tr>
-    </thead>
+                <div className="overflow-hidden border border-slate-200 rounded-xl">
+                  <table className="w-full border-collapse text-sm">
+                    <thead>
+                      <tr className="bg-slate-100 text-slate-700">
+                        <th className="border-b border-r border-slate-200 p-3 w-16 text-center font-semibold">
+                          S.No
+                        </th>
+                        <th className="border-b border-r border-slate-200 p-3 text-left font-semibold">
+                          Chief Complaint
+                        </th>
+                        <th className="border-b border-r border-slate-200 p-3 w-48 text-left font-semibold">
+                          Duration
+                        </th>
+                        <th className="border-b border-slate-200 p-3 w-20 text-center font-semibold">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
 
-    <tbody>
-      {(formData.prescription || []).map((item, index) => (
-        <tr key={index} className="hover:bg-slate-50 transition-colors">
-          {/* Serial Number */}
-          <td className="border-b border-r border-slate-200 p-3 text-center text-slate-600 bg-slate-50/50 font-medium">
-            {index + 1}
-          </td>
+                    <tbody>
+                      {(formData.prescription || []).map((item, index) => (
+                        <tr
+                          key={index}
+                          className="hover:bg-slate-50 transition-colors"
+                        >
+                          {/* Serial Number */}
+                          <td className="border-b border-r border-slate-200 p-3 text-center text-slate-600 bg-slate-50/50 font-medium">
+                            {index + 1}
+                          </td>
 
-          {/* Chief Complaint Input */}
-          <td className="border-b border-r border-slate-200 p-2">
-            <input
-              type="text"
-              value={item.complaint || ""}
-              placeholder="e.g., Fever, Headache"
-              onChange={(e) =>
-                updatePrescription(index, "complaint", e.target.value)
-              }
-              className="w-full px-2 py-1 outline-none bg-transparent placeholder-slate-400 focus:bg-white focus:ring-1 focus:ring-blue-500 rounded"
-            />
-          </td>
+                          {/* Chief Complaint Input */}
+                          <td className="border-b border-r border-slate-200 p-2">
+                            <input
+                              type="text"
+                              value={item.complaint || ""}
+                              placeholder="e.g., Fever, Headache"
+                              onChange={(e) =>
+                                updatePrescription(
+                                  index,
+                                  "complaint",
+                                  e.target.value,
+                                )
+                              }
+                              className="w-full px-2 py-1 outline-none bg-transparent placeholder-slate-400 focus:bg-white focus:ring-1 focus:ring-blue-500 rounded"
+                            />
+                          </td>
 
-          {/* Duration Input */}
-          <td className="border-b border-r border-slate-200 p-2">
-            <input
-              type="text"
-              value={item.duration || ""}
-              placeholder="e.g., 3 days, 2 weeks"
-              onChange={(e) =>
-                updatePrescription(index, "duration", e.target.value)
-              }
-              className="w-full px-2 py-1 outline-none bg-transparent placeholder-slate-400 focus:bg-white focus:ring-1 focus:ring-blue-500 rounded"
-            />
-          </td>
+                          {/* Duration Input */}
+                          <td className="border-b border-r border-slate-200 p-2">
+                            <input
+                              type="text"
+                              value={item.duration || ""}
+                              placeholder="e.g., 3 days, 2 weeks"
+                              onChange={(e) =>
+                                updatePrescription(
+                                  index,
+                                  "duration",
+                                  e.target.value,
+                                )
+                              }
+                              className="w-full px-2 py-1 outline-none bg-transparent placeholder-slate-400 focus:bg-white focus:ring-1 focus:ring-blue-500 rounded"
+                            />
+                          </td>
 
-          {/* Remove Button */}
-          <td className="border-b border-slate-200 p-2 text-center">
-            <button
-              type="button"
-              onClick={() => removePrescription(index)}
-              className="text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors"
-              title="Remove row"
-            >
-              Remove
-            </button>
-          </td>
-        </tr>
-      ))}
-      
-      {/* Fallback for empty state */}
-      {(formData.prescription || []).length === 0 && (
-        <tr>
-          <td colSpan={4} className="p-8 text-center text-slate-400 bg-slate-50/30">
-            No complaints added yet.
-          </td>
-        </tr>
-      )}
-    </tbody>
-  </table>
-</div>
+                          {/* Remove Button */}
+                          <td className="border-b border-slate-200 p-2 text-center">
+                            <button
+                              type="button"
+                              onClick={() => removePrescription(index)}
+                              className="text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors"
+                              title="Remove row"
+                            >
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
 
-<button
-  type="button"
-  onClick={addPrescription}
-  className="mt-4 bg-gradient-to-r from-blue-700 to-indigo-800 text-white px-6 py-3 rounded-2xl font-bold shadow-lg"
->
-  + Add Complaint
-</button>
+                      {/* Fallback for empty state */}
+                      {(formData.prescription || []).length === 0 && (
+                        <tr>
+                          <td
+                            colSpan={4}
+                            className="p-8 text-center text-slate-400 bg-slate-50/30"
+                          >
+                            No complaints added yet.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={addPrescription}
+                  className="mt-4 bg-gradient-to-r from-blue-700 to-indigo-800 text-white px-6 py-3 rounded-2xl font-bold shadow-lg"
+                >
+                  + Add Complaint
+                </button>
               </div>
             </div>
 
@@ -1474,17 +1488,14 @@ const removePrescription = (index) => {
                       </label>
                     ))}
                   </div>
-                   <div className="space-y-2">
-                  <input
-                    placeholder="Notes"
-                    className="w-full border-b border-slate-200 py-2 outline-none focus:border-teal-500 transition-colors text-sm"
-                    value={formData.gas.notes}
-                    onChange={(e) =>
-                      updateField("gas.notes", e.target.value)
-                    }
-                  />
+                  <div className="space-y-2">
+                    <input
+                      placeholder="Notes"
+                      className="w-full border-b border-slate-200 py-2 outline-none focus:border-teal-500 transition-colors text-sm"
+                      value={formData.gas.notes}
+                      onChange={(e) => updateField("gas.notes", e.target.value)}
+                    />
                   </div>
-                  
                 </div>
               </div>
               <div className="bg-slate-50 p-5 rounded-3xl">
@@ -1532,16 +1543,15 @@ const removePrescription = (index) => {
                     ))}
                   </div>
                   <div className="space-y-2">
-                  <input
-                    placeholder="Notes"
-                    className="w-full border-b border-slate-200 py-2 outline-none focus:border-teal-500 transition-colors text-sm"
-                    value={formData.acidity.notes}
-                    onChange={(e) =>
-                      updateField("acidity.notes", e.target.value)
-                    }
-                  />
+                    <input
+                      placeholder="Notes"
+                      className="w-full border-b border-slate-200 py-2 outline-none focus:border-teal-500 transition-colors text-sm"
+                      value={formData.acidity.notes}
+                      onChange={(e) =>
+                        updateField("acidity.notes", e.target.value)
+                      }
+                    />
                   </div>
-                  
                 </div>
               </div>
             </div>
@@ -2572,17 +2582,17 @@ const removePrescription = (index) => {
                           value={visit.medicineId}
                           readOnly
                           onChange={(e) => {
-    const f = [...followUps];
+                            const f = [...followUps];
 
-    f[idx].date = e.target.value;
+                            f[idx].date = e.target.value;
 
-    f[idx].medicineId = generateMedicineId(
-      idx + 1,
-      e.target.value
-    );
+                            f[idx].medicineId = generateMedicineId(
+                              idx + 1,
+                              e.target.value,
+                            );
 
-    setFollowUps(f);
-  }}
+                            setFollowUps(f);
+                          }}
                           placeholder="Medicine ID"
                           className="w-full border-2 border-slate-100 rounded-2xl p-3 focus:outline-none "
                         />
@@ -4061,7 +4071,7 @@ const removePrescription = (index) => {
 
 //   const fetchMyAppointments = async () => {
 //     try {
-//       const res = await axios.get("http://localhost:5001/api/appointments/my", config);
+//       const res = await axios.get("https://dms-backend-amber.vercel.app/api/appointments/my", config);
 //       const sortedAppointments = (res.data || []).sort((a, b) => {
 //         const dateA = new Date(a.appointmentDate).toLocaleDateString('sv');
 //         const dateB = new Date(b.appointmentDate).toLocaleDateString('sv');
@@ -4158,7 +4168,7 @@ const removePrescription = (index) => {
 //     if (appointment.patient?._id) {
 //       try {
 //         const res = await axios.get(
-//           `http://localhost:5001/api/appointments/patient-history/${appointment.patient._id}`,
+//           `https://dms-backend-amber.vercel.app/api/appointments/patient-history/${appointment.patient._id}`,
 //           config
 //         );
 
@@ -4208,7 +4218,7 @@ const removePrescription = (index) => {
 //   const savePrescription = async () => {
 //     try {
 //       await axios.put(
-//         `http://localhost:5001/api/appointments/${selected._id}/prescription`,
+//         `https://dms-backend-amber.vercel.app/api/appointments/${selected._id}/prescription`,
 //         { formData, followUps },
 //         config
 //       );

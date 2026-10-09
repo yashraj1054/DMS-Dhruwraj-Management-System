@@ -173,9 +173,9 @@ const Billing = () => {
   const fetchInitialData = async () => {
     try {
       const [clinicRes, billRes, therapyRes] = await Promise.all([
-        axios.get("http://localhost:5001/api/clinics", auth),
-        axios.get("http://localhost:5001/api/bills", auth),
-        axios.get("http://localhost:5001/api/therapies", auth),
+        axios.get("https://dms-backend-amber.vercel.app/api/clinics", auth),
+        axios.get("https://dms-backend-amber.vercel.app/api/bills", auth),
+        axios.get("https://dms-backend-amber.vercel.app/api/therapies", auth),
       ]);
 
       const clinicList = Array.isArray(clinicRes.data)
@@ -243,7 +243,7 @@ const Billing = () => {
 
       // Load inventory for the same clinic.
       const inventoryRes = await axios.get(
-        `http://localhost:5001/api/medicine/clinic/${myClinic._id}`,
+        `https://dms-backend-amber.vercel.app/api/medicine/clinic/${myClinic._id}`,
         auth,
       );
 
@@ -256,7 +256,7 @@ const Billing = () => {
       console.error("Data Fetch Error:", err);
       alert(
         "Unable to load billing data: " +
-        (err.response?.data?.message || err.message),
+          (err.response?.data?.message || err.message),
       );
     }
   };
@@ -375,7 +375,7 @@ const Billing = () => {
       if (alreadyInCart + qty > availableStock) {
         alert(
           `Only ${availableStock} ${item.unit || "units"} of ${item.name} are available. ` +
-          `${alreadyInCart} ${item.unit || "units"} are already in the cart.`,
+            `${alreadyInCart} ${item.unit || "units"} are already in the cart.`,
         );
         return;
       }
@@ -625,7 +625,7 @@ const Billing = () => {
     if (overStock) {
       alert(
         `${overStock.name}: requested ${requestedByInventory[String(overStock.inventoryId)]} gm, ` +
-        `but only ${Number(overStock.stock || 0)} gm is available.`,
+          `but only ${Number(overStock.stock || 0)} gm is available.`,
       );
       return;
     }
@@ -886,7 +886,7 @@ const Billing = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:5001/api/bills/generate",
+        "https://dms-backend-amber.vercel.app/api/bills/generate",
         payload,
         auth,
       );
@@ -1816,10 +1816,11 @@ const Billing = () => {
                       key={value}
                       type="button"
                       onClick={() => setAyurvedicType(value)}
-                      className={`p-4 rounded-xl border text-sm font-bold transition ${ayurvedicType === value
+                      className={`p-4 rounded-xl border text-sm font-bold transition ${
+                        ayurvedicType === value
                           ? "bg-teal-600 text-white border-teal-600 shadow-md"
                           : "bg-white text-slate-600 border-slate-200 hover:border-teal-400"
-                        }`}
+                      }`}
                     >
                       {label}
                     </button>
@@ -1844,11 +1845,11 @@ const Billing = () => {
                           value={
                             ayurvedicTab.name
                               ? {
-                                label: `${ayurvedicTab.name} — ₹${Number(
-                                  ayurvedicTab.pricePerTab,
-                                ).toFixed(2)}/Tab`,
-                                value: ayurvedicTab.name,
-                              }
+                                  label: `${ayurvedicTab.name} — ₹${Number(
+                                    ayurvedicTab.pricePerTab,
+                                  ).toFixed(2)}/Tab`,
+                                  value: ayurvedicTab.name,
+                                }
                               : null
                           }
                           onChange={(selected) =>
@@ -2028,11 +2029,11 @@ const Billing = () => {
                                   value={
                                     item.name
                                       ? {
-                                        label: `${item.name} — ₹${Number(
-                                          item.pricePerGram,
-                                        ).toFixed(2)}/gm`,
-                                        value: item.name,
-                                      }
+                                          label: `${item.name} — ₹${Number(
+                                            item.pricePerGram,
+                                          ).toFixed(2)}/gm`,
+                                          value: item.name,
+                                        }
                                       : null
                                   }
                                   onChange={(selected) => {
@@ -2187,11 +2188,11 @@ const Billing = () => {
                                   value={
                                     item.name
                                       ? {
-                                        label: `${item.name} — ₹${Number(
-                                          item.pricePerGram,
-                                        ).toFixed(2)}/gm`,
-                                        value: item.name,
-                                      }
+                                          label: `${item.name} — ₹${Number(
+                                            item.pricePerGram,
+                                          ).toFixed(2)}/gm`,
+                                          value: item.name,
+                                        }
                                       : null
                                   }
                                   onChange={(selected) => {
@@ -2336,7 +2337,7 @@ const Billing = () => {
                                 (sum, item) =>
                                   sum +
                                   Number(item.qty || 0) *
-                                  Number(item.pricePerGram || 0),
+                                    Number(item.pricePerGram || 0),
                                 0,
                               )
                               .toFixed(2)}
@@ -2373,11 +2374,11 @@ const Billing = () => {
                           value={
                             ayurvedicOil.name
                               ? {
-                                label: `${ayurvedicOil.name} — ₹${Number(
-                                  ayurvedicOil.pricePerMl,
-                                ).toFixed(2)}/ml`,
-                                value: ayurvedicOil.name,
-                              }
+                                  label: `${ayurvedicOil.name} — ₹${Number(
+                                    ayurvedicOil.pricePerMl,
+                                  ).toFixed(2)}/ml`,
+                                  value: ayurvedicOil.name,
+                                }
                               : null
                           }
                           onChange={(selected) =>
@@ -2593,8 +2594,6 @@ const Billing = () => {
 
 export default Billing;
 
-
-
 // with whatsapp share button but has some issues with printing and preview of invoice. Need to fix that.
 
 // import React, { useState, useEffect } from "react";
@@ -2772,9 +2771,9 @@ export default Billing;
 //   const fetchInitialData = async () => {
 //     try {
 //       const [clinicRes, billRes, therapyRes] = await Promise.all([
-//         axios.get("http://localhost:5001/api/clinics", auth),
-//         axios.get("http://localhost:5001/api/bills", auth),
-//         axios.get("http://localhost:5001/api/therapies", auth),
+//         axios.get("https://dms-backend-amber.vercel.app/api/clinics", auth),
+//         axios.get("https://dms-backend-amber.vercel.app/api/bills", auth),
+//         axios.get("https://dms-backend-amber.vercel.app/api/therapies", auth),
 //       ]);
 
 //       const clinicList = Array.isArray(clinicRes.data)
@@ -2842,7 +2841,7 @@ export default Billing;
 
 //       // Load inventory for the same clinic.
 //       const inventoryRes = await axios.get(
-//         `http://localhost:5001/api/medicine/clinic/${myClinic._id}`,
+//         `https://dms-backend-amber.vercel.app/api/medicine/clinic/${myClinic._id}`,
 //         auth,
 //       );
 
@@ -3485,7 +3484,7 @@ export default Billing;
 //       };
 
 //       const response = await axios.post(
-//         "http://localhost:5001/api/bills/generate",
+//         "https://dms-backend-amber.vercel.app/api/bills/generate",
 //         payload,
 //         auth,
 //       );

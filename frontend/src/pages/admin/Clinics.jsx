@@ -28,7 +28,7 @@
 
 //   // fetch clinics
 //   const fetchClinics = async () => {
-//     const res = await axios.get("http://localhost:5001/api/clinics");
+//     const res = await axios.get("https://dms-backend-amber.vercel.app/api/clinics");
 
 //     setClinics(res.data);
 //   };
@@ -89,9 +89,9 @@
 
 //     try {
 //       if (editingId) {
-//         await axios.put(`http://localhost:5001/api/clinics/${editingId}`, form);
+//         await axios.put(`https://dms-backend-amber.vercel.app/api/clinics/${editingId}`, form);
 //       } else {
-//         await axios.post("http://localhost:5001/api/clinics", form);
+//         await axios.post("https://dms-backend-amber.vercel.app/api/clinics", form);
 //       }
 
 //       setShowModal(false);
@@ -118,7 +118,7 @@
 //     }
 
 //     await axios.delete(
-//       `http://localhost:5001/api/clinics/${selectedClinic._id}`,
+//       `https://dms-backend-amber.vercel.app/api/clinics/${selectedClinic._id}`,
 //     );
 
 //     setConfirmBox(false);
@@ -349,7 +349,7 @@ export default function Clinics() {
   });
 
   const fetchClinics = async () => {
-    const res = await axios.get("http://localhost:5001/api/clinics");
+    const res = await axios.get("https://dms-backend-amber.vercel.app/api/clinics");
     setClinics(res.data);
   };
 
@@ -390,9 +390,9 @@ export default function Clinics() {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`http://localhost:5001/api/clinics/${editingId}`, form);
+        await axios.put(`https://dms-backend-amber.vercel.app/api/clinics/${editingId}`, form);
       } else {
-        await axios.post("http://localhost:5001/api/clinics", form);
+        await axios.post("https://dms-backend-amber.vercel.app/api/clinics", form);
       }
       setShowModal(false);
       fetchClinics();
@@ -411,7 +411,7 @@ export default function Clinics() {
       alert("Wrong password");
       return;
     }
-    await axios.delete(`http://localhost:5001/api/clinics/${selectedClinic._id}`);
+    await axios.delete(`https://dms-backend-amber.vercel.app/api/clinics/${selectedClinic._id}`);
     setConfirmBox(false);
     fetchClinics();
   };

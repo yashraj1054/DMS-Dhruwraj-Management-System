@@ -148,11 +148,11 @@ const Invoice = () => {
   const fetchInitialData = async () => {
     try {
       const [clinicRes, billRes, therapyRes] = await Promise.all([
-        axios.get("http://localhost:5001/api/clinics", auth),
+        axios.get("https://dms-backend-amber.vercel.app/api/clinics", auth),
 
-        axios.get("http://localhost:5001/api/bills", auth),
+        axios.get("https://dms-backend-amber.vercel.app/api/bills", auth),
 
-        axios.get("http://localhost:5001/api/therapies", auth),
+        axios.get("https://dms-backend-amber.vercel.app/api/therapies", auth),
       ]);
 
       setClinics(clinicRes.data);
@@ -198,7 +198,7 @@ const Invoice = () => {
 
   const loadClinicData = async () => {
     const res = await axios.get(
-      `http://localhost:5001/api/medicine/clinic/${selectedClinic}`,
+      `https://dms-backend-amber.vercel.app/api/medicine/clinic/${selectedClinic}`,
 
       auth,
     );
@@ -867,7 +867,7 @@ const Invoice = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5001/api/bills/generate",
+        "https://dms-backend-amber.vercel.app/api/bills/generate",
         payload,
         auth,
       );

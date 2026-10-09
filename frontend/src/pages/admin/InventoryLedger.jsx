@@ -13,10 +13,10 @@ import {
   IndianRupee,
   Building2,
   Pencil,
-Trash2
+  Trash2,
 } from "lucide-react";
 
-const BASE_URL = "http://localhost:5001/api";
+const BASE_URL = "https://dms-backend-amber.vercel.app/api";
 
 const InventoryLedger = () => {
   const token = localStorage.getItem("token");
@@ -46,12 +46,9 @@ const InventoryLedger = () => {
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
 
-  const [isEditing, setIsEditing] =
-  useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-const [editingCompanyId,
-  setEditingCompanyId] =
-  useState(null);
+  const [editingCompanyId, setEditingCompanyId] = useState(null);
 
   const [paymentAmount, setPaymentAmount] = useState("");
 
@@ -239,58 +236,41 @@ const [editingCompanyId,
   };
 
   const updateCompany = async () => {
-
-  try {
-
-    await axios.put(
-      `${BASE_URL}/companies/${editingCompanyId}`,
-      {
-        ...companyForm,
-        totalPaid:
-          selectedCompany?.totalPaid || 0,
-      },
-      authConfig
-    );
-
-    setShowCompanyModal(false);
-
-    setIsEditing(false);
-
-    setEditingCompanyId(null);
-
-    fetchData();
-
-  } catch (err) {
-
-    console.error(err);
-  }
-};
-
-const deleteCompany = async (
-  companyId
-) => {
-
-  try {
-
-    const confirmDelete =
-      window.confirm(
-        "Delete this company?"
+    try {
+      await axios.put(
+        `${BASE_URL}/companies/${editingCompanyId}`,
+        {
+          ...companyForm,
+          totalPaid: selectedCompany?.totalPaid || 0,
+        },
+        authConfig,
       );
 
-    if (!confirmDelete) return;
+      setShowCompanyModal(false);
 
-    await axios.delete(
-      `${BASE_URL}/companies/${companyId}`,
-      authConfig
-    );
+      setIsEditing(false);
 
-    fetchData();
+      setEditingCompanyId(null);
 
-  } catch (err) {
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-    console.error(err);
-  }
-};
+  const deleteCompany = async (companyId) => {
+    try {
+      const confirmDelete = window.confirm("Delete this company?");
+
+      if (!confirmDelete) return;
+
+      await axios.delete(`${BASE_URL}/companies/${companyId}`, authConfig);
+
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -415,56 +395,40 @@ const deleteCompany = async (
                 </button>
 
                 <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => {
+                      setIsEditing(true);
 
-  <button
-    onClick={() => {
+                      setEditingCompanyId(c._id);
 
-      setIsEditing(true);
+                      setCompanyForm({
+                        companyName: c.companyName,
 
-      setEditingCompanyId(c._id);
+                        mrName: c.mrName,
 
-      setCompanyForm({
-        companyName:
-          c.companyName,
+                        mrPhone: c.mrPhone,
 
-        mrName:
-          c.mrName,
+                        discount: c.discount,
+                      });
 
-        mrPhone:
-          c.mrPhone,
+                      setSelectedCompany(c);
 
-        discount:
-          c.discount,
-      });
+                      setShowCompanyModal(true);
+                    }}
+                    className="bg-blue-600 text-white py-2 rounded-xl flex items-center justify-center gap-2"
+                  >
+                    <Pencil size={16} />
+                    Update
+                  </button>
 
-      setSelectedCompany(c);
-
-      setShowCompanyModal(true);
-    }}
-    className="bg-blue-600 text-white py-2 rounded-xl flex items-center justify-center gap-2"
-  >
-
-    <Pencil size={16} />
-
-    Update
-
-  </button>
-
-
-  <button
-    onClick={() =>
-      deleteCompany(c._id)
-    }
-    className="bg-red-600 text-white py-2 rounded-xl flex items-center justify-center gap-2"
-  >
-
-    <Trash2 size={16} />
-
-    Delete
-
-  </button>
-
-</div>
+                  <button
+                    onClick={() => deleteCompany(c._id)}
+                    className="bg-red-600 text-white py-2 rounded-xl flex items-center justify-center gap-2"
+                  >
+                    <Trash2 size={16} />
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>

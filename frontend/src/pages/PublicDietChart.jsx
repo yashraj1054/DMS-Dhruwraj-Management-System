@@ -29,9 +29,8 @@ export default function PublicDietChart() {
 
       const res = await axios.get(
         `${
-          import.meta.env.VITE_API_URL ||
-          "http://localhost:5001"
-        }/api/appointments/public/diet-chart/${patientId}`
+          import.meta.env.VITE_API_URL || "https://dms-backend-amber.vercel.app"
+        }/api/appointments/public/diet-chart/${patientId}`,
       );
 
       console.log("PUBLIC DIET DATA => ", res.data);
@@ -43,7 +42,6 @@ export default function PublicDietChart() {
       setLoading(false);
     }
   }, [patientId]);
-
 
   useEffect(() => {
     fetchDietChart();
@@ -76,18 +74,13 @@ export default function PublicDietChart() {
 
   // PRINT FUNCTION
   const handlePrint = () => {
-    const printElement =
-      document.getElementById("diet-chart-print");
+    const printElement = document.getElementById("diet-chart-print");
 
     if (!printElement) return;
 
     const printContents = printElement.innerHTML;
 
-    const printWindow = window.open(
-      "",
-      "",
-      "width=1200,height=900"
-    );
+    const printWindow = window.open("", "", "width=1200,height=900");
 
     // POPUP BLOCKED
     if (!printWindow) {
@@ -148,12 +141,12 @@ export default function PublicDietChart() {
     {
       title: "अनाज",
       key: "grains",
-      items: ["गेहूं", "ज्वार", "बाजरा", "मक्का", "चावल", "दलिया"]
+      items: ["गेहूं", "ज्वार", "बाजरा", "मक्का", "चावल", "दलिया"],
     },
     {
       title: "आटा",
       key: "flour",
-      items: ["मैदा", "बेसन"]
+      items: ["मैदा", "बेसन"],
     },
     {
       title: "मेवे",
@@ -167,8 +160,8 @@ export default function PublicDietChart() {
         "पिस्ता",
         "मुनक्का",
         "अंजीर",
-        "अखरोट"
-      ]
+        "अखरोट",
+      ],
     },
     {
       title: "दाल",
@@ -184,8 +177,8 @@ export default function PublicDietChart() {
         "छोले",
         "राजमा",
         "लोबिया",
-        "सोयाबीन"
-      ]
+        "सोयाबीन",
+      ],
     },
     {
       title: "सब्जियां",
@@ -219,8 +212,8 @@ export default function PublicDietChart() {
         "अरबी",
         "ग्वार की फली",
         "चुकंदर",
-        "कद्दू"
-      ]
+        "कद्दू",
+      ],
     },
     {
       title: "फल",
@@ -241,8 +234,8 @@ export default function PublicDietChart() {
         "खरबूजा",
         "आड़ू",
         "नाशपाती",
-        "मोसंबी"
-      ]
+        "मोसंबी",
+      ],
     },
     {
       title: "पेय पदार्थ",
@@ -259,8 +252,8 @@ export default function PublicDietChart() {
         "आयुर्वेदिक चाय",
         "फलों का रस",
         "सब्जियों का सूप",
-        "सब्जियों का रस"
-      ]
+        "सब्जियों का रस",
+      ],
     },
     {
       title: "दुग्ध उत्पाद",
@@ -276,8 +269,8 @@ export default function PublicDietChart() {
         "मट्ठा",
         "दही",
         "पनीर",
-        "देसी घी"
-      ]
+        "देसी घी",
+      ],
     },
     {
       title: "मसाले",
@@ -298,9 +291,9 @@ export default function PublicDietChart() {
         "तेज pत्ता",
         "खटाई/इमली",
         "जयफल",
-        "अचार"
-      ]
-    }
+        "अचार",
+      ],
+    },
   ];
 
   return (
@@ -352,7 +345,7 @@ export default function PublicDietChart() {
         style={{
           width: "210mm",
           minHeight: "297mm",
-          padding: "10mm"
+          padding: "10mm",
         }}
       >
         {/* HEADER */}
@@ -431,34 +424,24 @@ export default function PublicDietChart() {
         >
           <div>
             <p className="text-gray-400">Patient</p>
-            <p className="font-bold">
-              {data?.patient?.name || "--"}
-            </p>
+            <p className="font-bold">{data?.patient?.name || "--"}</p>
           </div>
 
           <div>
             <p className="text-gray-400">Phone</p>
-            <p className="font-bold">
-              +91 {data?.patient?.phone || "--"}
-            </p>
+            <p className="font-bold">+91 {data?.patient?.phone || "--"}</p>
           </div>
 
           <div>
             <p className="text-gray-400">Patient ID</p>
-            <p className="font-bold">
-              {data?.patient?.patientId || "--"}
-            </p>
+            <p className="font-bold">{data?.patient?.patientId || "--"}</p>
           </div>
 
           <div>
             <p className="text-gray-400">Age</p>
-            <p className="font-bold">
-              {data?.patient?.age || "--"} Years
-            </p>
+            <p className="font-bold">{data?.patient?.age || "--"} Years</p>
           </div>
         </div>
-
-       
 
         {/* FOOD TABLE */}
         <div
@@ -503,9 +486,7 @@ export default function PublicDietChart() {
               >
                 {section.items.map((item) => {
                   const checked =
-                    dietChartData?.[
-                      section.key
-                    ]?.includes(item) || false;
+                    dietChartData?.[section.key]?.includes(item) || false;
 
                   return (
                     <div
@@ -530,9 +511,7 @@ export default function PublicDietChart() {
                             "
                           />
 
-                          <span className="font-medium">
-                            {item}
-                          </span>
+                          <span className="font-medium">{item}</span>
                         </>
                       ) : (
                         <>
