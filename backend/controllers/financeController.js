@@ -279,80 +279,720 @@ exports.addInventoryStock = async (req, res) => {
 // GET FINANCE STATS
 // =======================================
 
+// exports.getFinanceStats = async (req, res) => {
+//   try {
+
+//     const {
+//       startDate,
+//       endDate,
+//       clinicId
+//     } = req.query;
+
+//     const cId = new mongoose.Types.ObjectId(clinicId);
+
+//     // =========================
+//     // DATE FILTERS
+//     // =========================
+
+//     const salesFilter = {
+//       clinicId: cId,
+//       createdAt: {
+//         $gte: new Date(startDate),
+//         $lte: new Date(endDate + "T23:59:59.999Z")
+//       }
+//     };
+
+//     const expenseFilter = {
+//       clinicId: cId,
+//       date: {
+//         $gte: new Date(startDate),
+//         $lte: new Date(endDate + "T23:59:59.999Z")
+//       }
+//     };
+
+//     // =========================
+//     // SALES SUMMARY
+//     // =========================
+
+//     const salesStats = await Bill.aggregate([
+//       {
+//         $match: salesFilter
+//       },
+//       {
+//         $group: {
+//           _id: null,
+
+//           totalSales: {
+//             $sum: "$totalAmount"
+//           },
+
+//           consultation: {
+//             $sum: "$breakdown.consultationTotal"
+//           },
+
+//           medicines: {
+//             $sum: "$breakdown.medicineTotal"
+//           },
+
+//           therapy: {
+//             $sum: "$breakdown.therapyTotal"
+//           },
+
+//           upiSales: {
+//             $sum: {
+//               $cond: [
+//                 { $eq: ["$paymentMethod", "UPI"] },
+//                 "$totalAmount",
+//                 0
+//               ]
+//             }
+//           },
+
+//           cashSales: {
+//             $sum: {
+//               $cond: [
+//                 { $eq: ["$paymentMethod", "Cash"] },
+//                 "$totalAmount",
+//                 0
+//               ]
+//             }
+//           }
+//         }
+//       }
+//     ]);
+
+//     // =========================
+//     // EXPENSE SUMMARY
+//     // =========================
+
+//     const expenseStats = await Expense.aggregate([
+//       {
+//         $match: expenseFilter
+//       },
+//       {
+//         $group: {
+//           _id: null,
+//           total: {
+//             $sum: "$amount"
+//           }
+//         }
+//       }
+//     ]);
+
+//     // =========================
+//     // INVENTORY PURCHASE SUMMARY
+//     // =========================
+
+//     const inventoryStats = await InventoryLedger.aggregate([
+//       {
+//         $match: expenseFilter
+//       },
+//       {
+//         $group: {
+//           _id: null,
+//           total: {
+//             $sum: {
+//               $multiply: [
+//                 "$quantity",
+//                 "$purchasePrice"
+//               ]
+//             }
+//           }
+//         }
+//       }
+//     ]);
+
+//     // =========================
+//     // HISTORY
+//     // =========================
+
+//     const salesHistory =
+//       await Bill.find(salesFilter).lean();
+
+//     const expenseHistory =
+//       await Expense.find(expenseFilter).lean();
+
+//     const inventoryHistory =
+//       await InventoryLedger.find(expenseFilter).lean();
+
+//     // =========================
+//     // COMBINED LEDGER
+//     // =========================
+
+//     const combinedHistory = [
+//       ...salesHistory,
+//       ...expenseHistory,
+//       ...inventoryHistory
+//     ].sort((a, b) => {
+
+//       const dateA = a.createdAt || a.date;
+//       const dateB = b.createdAt || b.date;
+
+//       return new Date(dateB) - new Date(dateA);
+
+//     });
+
+//     res.status(200).json({
+
+//       summary:
+//         salesStats[0] || {
+//           totalSales: 0,
+//           consultation: 0,
+//           medicines: 0,
+//           therapy: 0,
+//           upiSales: 0,
+//           cashSales: 0
+//         },
+
+//       totalExpenses:
+//         expenseStats[0]?.total || 0,
+
+//       inventoryPurchaseTotal:
+//         inventoryStats[0]?.total || 0,
+
+//       history: combinedHistory
+//     });
+
+//   } catch (error) {
+
+//     res.status(500).json({
+//       message: error.message
+//     });
+
+//   }
+// };
+
+// =======================================
+// GET FINANCE STATS
+// =======================================
+
+// exports.getFinanceStats = async (req, res) => {
+//   try {
+//     const {
+//       startDate,
+//       endDate,
+//       clinicId
+//     } = req.query;
+
+//     if (!clinicId) {
+//       return res.status(400).json({
+//         message: 'clinicId is required'
+//       });
+//     }
+
+//     const cId = new mongoose.Types.ObjectId(clinicId);
+
+//     // =========================
+//     // DATE FILTERS
+//     // =========================
+
+//     const salesFilter = {
+//       clinicId: cId,
+//       createdAt: {
+//         $gte: new Date(startDate),
+//         $lte: new Date(endDate + "T23:59:59.999Z")
+//       }
+//     };
+
+//     const expenseFilter = {
+//       clinicId: cId,
+//       date: {
+//         $gte: new Date(startDate),
+//         $lte: new Date(endDate + "T23:59:59.999Z")
+//       }
+//     };
+
+//     // =========================
+//     // SALES SUMMARY
+//     // =========================
+
+//     const salesStats = await Bill.aggregate([
+//       {
+//         $match: salesFilter
+//       },
+
+//       // ============================================
+//       // CALCULATE MEDICINE SALES
+//       // ============================================
+//       {
+//         $addFields: {
+//           calculatedMedicineSales: {
+//             $reduce: {
+//               input: {
+//                 $ifNull: ["$items", []]
+//               },
+
+//               initialValue: 0,
+
+//               in: {
+//                 $add: [
+//                   "$$value",
+
+//                   {
+//                     $cond: [
+//                       {
+//                         $in: [
+//                           "$$this.category",
+//                           [
+//                             "Medicine",
+//                             "Ayurvedic Tab",
+//                             "Ayurvedic Churan",
+//                             "Ayurvedic Oil"
+//                           ]
+//                         ]
+//                       },
+
+//                       {
+//                         $ifNull: [
+//                           "$$this.total",
+//                           0
+//                         ]
+//                       },
+
+//                       0
+//                     ]
+//                   }
+//                 ]
+//               }
+//             }
+//           }
+//         }
+//       },
+
+//       // ============================================
+//       // GROUP SALES
+//       // ============================================
+//       {
+//         $group: {
+//           _id: null,
+
+//           totalSales: {
+//             $sum: {
+//               $ifNull: ["$totalAmount", 0]
+//             }
+//           },
+
+//           consultation: {
+//             $sum: {
+//               $ifNull: [
+//                 "$breakdown.consultationTotal",
+//                 0
+//               ]
+//             }
+//           },
+
+//           // ========================================
+//           // ALL MEDICINE SALES
+//           //
+//           // Medicine
+//           // + Ayurvedic Tab
+//           // + Ayurvedic Churan
+//           // + Ayurvedic Oil
+//           // ========================================
+//           medicines: {
+//             $sum: "$calculatedMedicineSales"
+//           },
+
+//           therapy: {
+//             $sum: {
+//               $ifNull: [
+//                 "$breakdown.therapyTotal",
+//                 0
+//               ]
+//             }
+//           },
+
+//           upiSales: {
+//             $sum: {
+//               $cond: [
+//                 {
+//                   $eq: [
+//                     "$paymentMethod",
+//                     "UPI"
+//                   ]
+//                 },
+
+//                 {
+//                   $ifNull: [
+//                     "$totalAmount",
+//                     0
+//                   ]
+//                 },
+
+//                 0
+//               ]
+//             }
+//           },
+
+//           cashSales: {
+//             $sum: {
+//               $cond: [
+//                 {
+//                   $eq: [
+//                     "$paymentMethod",
+//                     "Cash"
+//                   ]
+//                 },
+
+//                 {
+//                   $ifNull: [
+//                     "$totalAmount",
+//                     0
+//                   ]
+//                 },
+
+//                 0
+//               ]
+//             }
+//           }
+//         }
+//       }
+//     ]);
+
+//     // =========================
+//     // EXPENSE SUMMARY
+//     // =========================
+
+//     const expenseStats = await Expense.aggregate([
+//       {
+//         $match: expenseFilter
+//       },
+
+//       {
+//         $group: {
+//           _id: null,
+
+//           total: {
+//             $sum: {
+//               $ifNull: [
+//                 "$amount",
+//                 0
+//               ]
+//             }
+//           }
+//         }
+//       }
+//     ]);
+
+//     // =========================
+//     // INVENTORY PURCHASE SUMMARY
+//     // =========================
+
+//     const inventoryStats = await InventoryLedger.aggregate([
+//       {
+//         $match: expenseFilter
+//       },
+
+//       {
+//         $group: {
+//           _id: null,
+
+//           total: {
+//             $sum: {
+//               $multiply: [
+//                 {
+//                   $ifNull: [
+//                     "$quantity",
+//                     0
+//                   ]
+//                 },
+
+//                 {
+//                   $ifNull: [
+//                     "$purchasePrice",
+//                     0
+//                   ]
+//                 }
+//               ]
+//             }
+//           }
+//         }
+//       }
+//     ]);
+
+//     // =========================
+//     // HISTORY
+//     // =========================
+
+//     const salesHistory =
+//       await Bill.find(salesFilter)
+//         .sort({ createdAt: -1 })
+//         .lean();
+
+//     const expenseHistory =
+//       await Expense.find(expenseFilter)
+//         .sort({ date: -1 })
+//         .lean();
+
+//     const inventoryHistory =
+//       await InventoryLedger.find(expenseFilter)
+//         .sort({ date: -1 })
+//         .lean();
+
+//     // =========================
+//     // COMBINED LEDGER
+//     // =========================
+
+//     const combinedHistory = [
+//       ...salesHistory,
+//       ...expenseHistory,
+//       ...inventoryHistory
+//     ].sort((a, b) => {
+
+//       const dateA =
+//         a.createdAt ||
+//         a.date;
+
+//       const dateB =
+//         b.createdAt ||
+//         b.date;
+
+//       return (
+//         new Date(dateB) -
+//         new Date(dateA)
+//       );
+//     });
+
+//     // =========================
+//     // RESPONSE
+//     // =========================
+
+//     res.status(200).json({
+
+//       summary:
+//         salesStats[0] || {
+//           totalSales: 0,
+//           consultation: 0,
+//           medicines: 0,
+//           therapy: 0,
+//           upiSales: 0,
+//           cashSales: 0
+//         },
+
+//       totalExpenses:
+//         expenseStats[0]?.total || 0,
+
+//       inventoryPurchaseTotal:
+//         inventoryStats[0]?.total || 0,
+
+//       history: combinedHistory
+//     });
+
+//   } catch (error) {
+
+//     console.error(
+//       "FINANCE STATS ERROR:",
+//       error
+//     );
+
+//     res.status(500).json({
+//       message: error.message
+//     });
+//   }
+// };
+
 exports.getFinanceStats = async (req, res) => {
   try {
-
     const {
       startDate,
       endDate,
       clinicId
     } = req.query;
 
+    if (!clinicId) {
+      return res.status(400).json({
+        message: "Clinic ID is required"
+      });
+    }
+
     const cId = new mongoose.Types.ObjectId(clinicId);
 
-    // =========================
-    // DATE FILTERS
-    // =========================
+    // =========================================================
+    // DATE FILTER
+    // =========================================================
 
     const salesFilter = {
       clinicId: cId,
       createdAt: {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate + "T23:59:59.999Z")
+        $gte: new Date(`${startDate}T00:00:00.000Z`),
+        $lte: new Date(`${endDate}T23:59:59.999Z`)
       }
     };
 
     const expenseFilter = {
       clinicId: cId,
       date: {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate + "T23:59:59.999Z")
+        $gte: new Date(`${startDate}T00:00:00.000Z`),
+        $lte: new Date(`${endDate}T23:59:59.999Z`)
       }
     };
 
-    // =========================
-    // SALES SUMMARY
-    // =========================
+    // =========================================================
+    // SALES
+    // =========================================================
 
     const salesStats = await Bill.aggregate([
       {
         $match: salesFilter
       },
+
       {
         $group: {
           _id: null,
 
+          // ---------------------------------------------------
+          // TOTAL SALES
+          // ---------------------------------------------------
+
           totalSales: {
-            $sum: "$totalAmount"
+            $sum: {
+              $ifNull: ["$totalAmount", 0]
+            }
           },
+
+          // ---------------------------------------------------
+          // CONSULTATION
+          // ---------------------------------------------------
 
           consultation: {
-            $sum: "$breakdown.consultationTotal"
-          },
-
-          medicines: {
-            $sum: "$breakdown.medicineTotal"
-          },
-
-          therapy: {
-            $sum: "$breakdown.therapyTotal"
-          },
-
-          upiSales: {
             $sum: {
-              $cond: [
-                { $eq: ["$paymentMethod", "UPI"] },
-                "$totalAmount",
+              $ifNull: [
+                "$breakdown.consultationTotal",
                 0
               ]
             }
           },
 
+          // ---------------------------------------------------
+          // MEDICINES
+          // Includes:
+          // Normal Medicine
+          // Ayurvedic Tab
+          // Ayurvedic Churan
+          // Ayurvedic Oil
+          // ---------------------------------------------------
+
+          medicines: {
+            $sum: {
+              $reduce: {
+                input: {
+                  $ifNull: ["$items", []]
+                },
+
+                initialValue: 0,
+
+                in: {
+                  $cond: [
+                    {
+                      $in: [
+                        "$$this.category",
+                        [
+                          "Medicine",
+                          "Ayurvedic Tab",
+                          "Ayurvedic Churan",
+                          "Ayurvedic Oil"
+                        ]
+                      ]
+                    },
+
+                    {
+                      $add: [
+                        "$$value",
+                        {
+                          $ifNull: [
+                            "$$this.total",
+                            0
+                          ]
+                        }
+                      ]
+                    },
+
+                    "$$value"
+                  ]
+                }
+              }
+            }
+          },
+
+          // ---------------------------------------------------
+          // THERAPY
+          // ---------------------------------------------------
+
+          therapy: {
+            $sum: {
+              $ifNull: [
+                "$breakdown.therapyTotal",
+                0
+              ]
+            }
+          },
+
+          // ---------------------------------------------------
+          // ONLINE / UPI
+          // ---------------------------------------------------
+
+          upiSales: {
+            $sum: {
+              $cond: [
+                {
+                  $in: [
+                    {
+                      $toLower: {
+                        $ifNull: [
+                          "$paymentMethod",
+                          ""
+                        ]
+                      }
+                    },
+                    [
+                      "upi",
+                      "online",
+                      "card",
+                      "bank transfer"
+                    ]
+                  ]
+                },
+
+                {
+                  $ifNull: [
+                    "$totalAmount",
+                    0
+                  ]
+                },
+
+                0
+              ]
+            }
+          },
+
+          // ---------------------------------------------------
+          // CASH
+          // ---------------------------------------------------
+
           cashSales: {
             $sum: {
               $cond: [
-                { $eq: ["$paymentMethod", "Cash"] },
-                "$totalAmount",
+                {
+                  $eq: [
+                    {
+                      $toLower: {
+                        $ifNull: [
+                          "$paymentMethod",
+                          ""
+                        ]
+                      }
+                    },
+                    "cash"
+                  ]
+                },
+
+                {
+                  $ifNull: [
+                    "$totalAmount",
+                    0
+                  ]
+                },
+
                 0
               ]
             }
@@ -361,40 +1001,24 @@ exports.getFinanceStats = async (req, res) => {
       }
     ]);
 
-    // =========================
-    // EXPENSE SUMMARY
-    // =========================
+    // =========================================================
+    // EXPENSES
+    // =========================================================
 
     const expenseStats = await Expense.aggregate([
       {
         $match: expenseFilter
       },
+
       {
         $group: {
           _id: null,
-          total: {
-            $sum: "$amount"
-          }
-        }
-      }
-    ]);
 
-    // =========================
-    // INVENTORY PURCHASE SUMMARY
-    // =========================
-
-    const inventoryStats = await InventoryLedger.aggregate([
-      {
-        $match: expenseFilter
-      },
-      {
-        $group: {
-          _id: null,
           total: {
             $sum: {
-              $multiply: [
-                "$quantity",
-                "$purchasePrice"
+              $ifNull: [
+                "$amount",
+                0
               ]
             }
           }
@@ -402,38 +1026,83 @@ exports.getFinanceStats = async (req, res) => {
       }
     ]);
 
-    // =========================
+    // =========================================================
+    // INVENTORY PURCHASES
+    // =========================================================
+
+    const inventoryStats = await InventoryLedger.aggregate([
+      {
+        $match: expenseFilter
+      },
+
+      {
+        $group: {
+          _id: null,
+
+          total: {
+            $sum: {
+              $multiply: [
+                {
+                  $ifNull: [
+                    "$quantity",
+                    0
+                  ]
+                },
+
+                {
+                  $ifNull: [
+                    "$purchasePrice",
+                    0
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]);
+
+    // =========================================================
     // HISTORY
-    // =========================
+    // =========================================================
 
     const salesHistory =
-      await Bill.find(salesFilter).lean();
+      await Bill.find(salesFilter)
+        .sort({ createdAt: -1 })
+        .lean();
 
     const expenseHistory =
-      await Expense.find(expenseFilter).lean();
+      await Expense.find(expenseFilter)
+        .sort({ date: -1 })
+        .lean();
 
     const inventoryHistory =
-      await InventoryLedger.find(expenseFilter).lean();
-
-    // =========================
-    // COMBINED LEDGER
-    // =========================
+      await InventoryLedger.find(expenseFilter)
+        .sort({ date: -1 })
+        .lean();
 
     const combinedHistory = [
       ...salesHistory,
       ...expenseHistory,
       ...inventoryHistory
     ].sort((a, b) => {
+      const dateA =
+        a.createdAt || a.date;
 
-      const dateA = a.createdAt || a.date;
-      const dateB = b.createdAt || b.date;
+      const dateB =
+        b.createdAt || b.date;
 
-      return new Date(dateB) - new Date(dateA);
-
+      return (
+        new Date(dateB) -
+        new Date(dateA)
+      );
     });
 
-    res.status(200).json({
+    // =========================================================
+    // RESPONSE
+    // =========================================================
 
+    res.status(200).json({
       summary:
         salesStats[0] || {
           totalSales: 0,
@@ -454,10 +1123,13 @@ exports.getFinanceStats = async (req, res) => {
     });
 
   } catch (error) {
+    console.error(
+      "Finance Stats Error:",
+      error
+    );
 
     res.status(500).json({
       message: error.message
     });
-
   }
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { TrendingUp, Users, Building2, Activity, ArrowUpRight, MapPin, ChevronDown } from 'lucide-react';
+import { TrendingUp, Users, Building2, Activity, ArrowUpRight, MapPin, ChevronDown , ChartLine } from 'lucide-react';
 
 export default function AdminDashboard() {
   const [data, setData] = useState(null);
@@ -41,6 +41,8 @@ export default function AdminDashboard() {
     finally { setLoading(false); }
   }, [selectedClinic]);
 
+
+  
   useEffect(() => {
     fetchStats();
   }, [fetchStats]);
@@ -63,7 +65,7 @@ export default function AdminDashboard() {
         <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Global System Summary</h2>
         {/* Grid: 2 columns on mobile, 3 on tablet, 5 on desktop */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
-          <SummaryCard title="Total Sales" value={data?.systemSummary?.totalSales || 0} color="teal" icon={<TrendingUp size={16}/>} />
+          <SummaryCard title="Total Sales" value={data?.systemSummary?.totalSales || 0} color="teal" icon={<ChartLine size={16}/>} />
           <SummaryCard title="Net Profit" value={data?.systemSummary?.netProfit || 0} color="emerald" icon={<ArrowUpRight size={16}/>} />
           <SummaryCard title="Clinics" value={data?.systemSummary?.totalClinics || 0} color="blue" icon={<Building2 size={16}/>} isCurrency={false} />
           <SummaryCard title="Staff" value={data?.systemSummary?.totalStaff || 0} color="indigo" icon={<Users size={16}/>} isCurrency={false} />

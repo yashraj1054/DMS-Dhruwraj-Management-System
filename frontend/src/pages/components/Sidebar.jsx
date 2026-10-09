@@ -113,7 +113,7 @@ export default function Sidebar({ open, setOpen }) {
         {/* logo */}
 
         <div className="mb-8">
-          <h1 className="text-lg font-semibold text-slate-800">Dhrwuraj</h1>
+          <h1 className="text-lg font-semibold text-slate-800">Dhruwraj</h1>
 
           <p className="text-xs text-slate-400">Management system</p>
         </div>

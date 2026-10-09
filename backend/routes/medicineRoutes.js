@@ -1,182 +1,438 @@
+// const express = require("express");
+// const router = express.Router();
+
+// const Medicine = require("../models/Medicine");
+// const authMiddleware = require("../middleware/authMiddleware");
+
+
+
+
+// // routes/medicine.js
+
+
+// // Update GET route to filter by clinic if needed
+
+
+// /* CREATE MEDICINE */
+
+// router.post("/", authMiddleware, async (req, res) => {
+
+//  try {
+
+// const { clinicId, name, brand, quantityType } = req.body;
+
+
+//   const existing = await Medicine.findOne({
+
+//    clinicId,
+//    name: req.body.name,
+
+//    brand: req.body.brand,
+
+//    quantityType: req.body.quantityType
+
+//   });
+
+
+
+//   const totalMrp =
+//    req.body.mrp *
+//    req.body.quantity;
+
+
+
+//   const discountAmount =
+//    totalMrp *
+//    (req.body.discount / 100);
+
+
+
+//   const clinicCost =
+//    totalMrp -
+//    discountAmount;
+
+
+
+//   /* IF MEDICINE ALREADY EXISTS */
+
+//   if (existing) {
+
+//    const newStock =
+//     existing.quantity +
+//     Number(req.body.quantity);
+
+
+
+//    existing.history.push({
+
+//     action: "purchase",
+
+//     quantity: req.body.quantity,
+
+//     previousStock: existing.quantity,
+
+//     newStock,
+
+//     updatedBy: req.user?.name || "admin",
+
+//     type: "purchase"
+
+//    });
+
+
+
+//    existing.quantity = newStock;
+//    existing.mrp = req.body.mrp;
+//    existing.discount = req.body.discount;
+//    existing.clinicCost = clinicCost;
+
+
+
+//    await existing.save();
+
+
+
+//    return res.json(existing);
+
+//   }
+
+
+
+//   /* CREATE NEW MEDICINE */
+
+//   const medicine = new Medicine({
+
+//    ...req.body,
+
+//    clinicCost,
+
+//    history: [
+
+//     {
+
+//      action: "created",
+
+//      quantity: req.body.quantity,
+
+//      previousStock: 0,
+
+//      newStock: req.body.quantity,
+
+//      updatedBy: req.user?.name || "admin",
+
+//      type: "purchase"
+
+//     }
+
+//    ]
+
+//   });
+
+
+
+//   await medicine.save();
+
+
+
+//   res.json(medicine);
+
+//  }
+
+//  catch (err) {
+
+//   console.log(err);
+
+//   res.status(500).json({
+
+//    message: "Error saving medicine"
+
+//   });
+
+//  }
+
+// });
+
+// /* GET ALL MEDICINES */
+// router.get("/clinic/:clinicId", authMiddleware, async (req, res) => {
+//   try {
+//     const data = await Medicine.find({ clinicId: req.params.clinicId })
+//       .sort({ createdAt: -1 });
+//     res.json(data);
+//   } catch (err) {
+//     res.status(500).json({ message: "Fetch error" });
+//   }
+// });
+
+
+// router.get('/:id', async (req, res) => {
+//   try {
+//     const medicine = await Medicine.findById(req.params.id);
+//     res.json(medicine);
+//   } catch (err) {
+//     res.status(404).json({ message: "Medicine not found" });
+//   }
+// });
+
+
+
+// /* UPDATE MEDICINE */
+
+// router.put("/:id", authMiddleware, async (req, res) => {
+//   try {
+//     const existing = await Medicine.findById(req.params.id);
+
+//     if (!existing) {
+//       return res.status(404).json({
+//         message: "Medicine not found",
+//       });
+//     }
+
+//     const newQty = Number(req.body.quantity);
+
+//     const difference = newQty - existing.quantity;
+
+//     const totalMrp = req.body.mrp * req.body.quantity;
+
+//     const discountAmount = totalMrp * (req.body.discount / 100);
+
+//     const clinicCost = totalMrp - discountAmount;
+
+//     /* push history */
+
+//     existing.history.push({
+//       action: "updated",
+
+//       quantity: difference,
+
+//       previousStock: existing.quantity,
+
+//       newStock: newQty,
+
+//       updatedBy: req.user?.name || "admin",
+
+//       type: difference > 0 ? "purchase" : "usage",
+//     });
+
+//     existing.name = req.body.name;
+//     existing.brand = req.body.brand;
+//     existing.mrName = req.body.mrName;
+//     existing.mrPhone = req.body.mrPhone;
+//     existing.category = req.body.category;
+//     existing.type = req.body.type;
+//     existing.mrp = req.body.mrp;
+//     existing.discount = req.body.discount;
+//     existing.quantity = req.body.quantity;
+//     existing.quantityType = req.body.quantityType;
+//     existing.clinicCost = clinicCost;
+
+//     await existing.save();
+
+//     res.json(existing);
+//   } catch (err) {
+//     console.log(err);
+
+//     res.status(500).json({
+//       message: "Update error",
+//     });
+//   }
+// });
+
+// /* DELETE MEDICINE */
+
+// router.delete("/:id", authMiddleware, async (req, res) => {
+//   try {
+//     await Medicine.findByIdAndDelete(req.params.id);
+
+//     res.json({
+//       message: "Deleted successfully",
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "Delete error",
+//     });
+//   }
+// });
+
+// module.exports = router;
+
+
 const express = require("express");
 const router = express.Router();
 
 const Medicine = require("../models/Medicine");
 const authMiddleware = require("../middleware/authMiddleware");
 
+const AYURVEDIC_CATEGORIES = [
+  "Ayurvedic Tabs",
+  "Ayurvedic Churans & Bhasams",
+  "Ayurvedic Oils",
+];
 
+function normalizedAyurvedicSubtype(body) {
+  if (body.category !== "Ayurvedic Churans & Bhasams") return "";
 
+  const value = String(body.ayurvedicSubtype || "").trim().toLowerCase();
 
-// routes/medicine.js
+  if (value === "bhasam") return "Bhasam";
+  if (value === "churan") return "Churan";
 
+  return "";
+}
 
-// Update GET route to filter by clinic if needed
+function normalizedQuantityType(body) {
+  if (body.category === "Ayurvedic Tabs") return "Piece";
+  if (body.category === "Ayurvedic Churans & Bhasams") return "Grams";
+  if (body.category === "Ayurvedic Oils") return "ML";
+  return body.quantityType || "Piece";
+}
 
-
-/* CREATE MEDICINE */
-
-router.post("/", authMiddleware, async (req, res) => {
-
- try {
-
-const { clinicId, name, brand, quantityType } = req.body;
-
-
-  const existing = await Medicine.findOne({
-
-   clinicId,
-   name: req.body.name,
-
-   brand: req.body.brand,
-
-   quantityType: req.body.quantityType
-
-  });
-
-
-
+function calculateClinicCost(body) {
   const totalMrp =
-   req.body.mrp *
-   req.body.quantity;
-
-
+    (Number(body.mrp) || 0) * (Number(body.quantity) || 0);
 
   const discountAmount =
-   totalMrp *
-   (req.body.discount / 100);
+    totalMrp * ((Number(body.discount) || 0) / 100);
 
+  return totalMrp - discountAmount;
+}
 
+/* ============================================================
+   CREATE MEDICINE / ADD STOCK
+============================================================ */
+router.post("/", authMiddleware, async (req, res) => {
+  try {
+    const { clinicId, name, brand } = req.body;
+    const quantityType = normalizedQuantityType(req.body);
+    const ayurvedicSubtype = normalizedAyurvedicSubtype(req.body);
 
-  const clinicCost =
-   totalMrp -
-   discountAmount;
-
-
-
-  /* IF MEDICINE ALREADY EXISTS */
-
-  if (existing) {
-
-   const newStock =
-    existing.quantity +
-    Number(req.body.quantity);
-
-
-
-   existing.history.push({
-
-    action: "purchase",
-
-    quantity: req.body.quantity,
-
-    previousStock: existing.quantity,
-
-    newStock,
-
-    updatedBy: req.user?.name || "admin",
-
-    type: "purchase"
-
-   });
-
-
-
-   existing.quantity = newStock;
-   existing.mrp = req.body.mrp;
-   existing.discount = req.body.discount;
-   existing.clinicCost = clinicCost;
-
-
-
-   await existing.save();
-
-
-
-   return res.json(existing);
-
-  }
-
-
-
-  /* CREATE NEW MEDICINE */
-
-  const medicine = new Medicine({
-
-   ...req.body,
-
-   clinicCost,
-
-   history: [
-
-    {
-
-     action: "created",
-
-     quantity: req.body.quantity,
-
-     previousStock: 0,
-
-     newStock: req.body.quantity,
-
-     updatedBy: req.user?.name || "admin",
-
-     type: "purchase"
-
+    if (!clinicId || !name) {
+      return res.status(400).json({
+        message: "Clinic and medicine name are required",
+      });
     }
 
-   ]
+    // Keep the existing inventory behavior, while making the Ayurvedic
+    // subtype part of the identity for Churan/Bhasam stock.
+    const existingQuery = {
+      clinicId,
+      name,
+      brand: req.body.brand,
+      quantityType,
+    };
 
-  });
+    if (req.body.category === "Ayurvedic Churans & Bhasams") {
+      existingQuery.category = req.body.category;
+      existingQuery.ayurvedicSubtype = ayurvedicSubtype;
+    }
 
+    const existing = await Medicine.findOne(existingQuery);
 
+    const incomingQty = Number(req.body.quantity) || 0;
+    const clinicCost = calculateClinicCost({
+      ...req.body,
+      quantity: incomingQty,
+    });
 
-  await medicine.save();
+    /* ----------------------------------------------------------
+       EXISTING MEDICINE -> ADD PURCHASE STOCK
+    ---------------------------------------------------------- */
+    if (existing) {
+      const previousStock = Number(existing.quantity) || 0;
+      const newStock = previousStock + incomingQty;
 
+      existing.history.push({
+        action: "purchase",
+        quantity: incomingQty,
+        previousStock,
+        newStock,
+        updatedBy: req.user?.name || "admin",
+        type: "purchase",
+      });
 
+      existing.quantity = newStock;
+      existing.mrp = Number(req.body.mrp) || 0;
+      existing.discount = Number(req.body.discount) || 0;
+      existing.clinicCost = clinicCost;
+      existing.quantityType = quantityType;
+      existing.ayurvedicSubtype = ayurvedicSubtype;
 
-  res.json(medicine);
+      // Keep the latest descriptive values in sync.
+      existing.mrName = req.body.mrName;
+      existing.mrPhone = req.body.mrPhone;
+      existing.type = req.body.type;
+      existing.category = req.body.category;
 
- }
+      await existing.save();
+      return res.json(existing);
+    }
 
- catch (err) {
+    /* ----------------------------------------------------------
+       CREATE NEW MEDICINE
+    ---------------------------------------------------------- */
+    const medicine = new Medicine({
+      ...req.body,
+      quantityType,
+      ayurvedicSubtype,
+      clinicCost,
+      history: [
+        {
+          action: "created",
+          quantity: incomingQty,
+          previousStock: 0,
+          newStock: incomingQty,
+          updatedBy: req.user?.name || "admin",
+          type: "purchase",
+        },
+      ],
+    });
 
-  console.log(err);
+    await medicine.save();
 
-  res.status(500).json({
-
-   message: "Error saving medicine"
-
-  });
-
- }
-
+    res.status(201).json(medicine);
+  } catch (err) {
+    console.error("CREATE MEDICINE ERROR:", err);
+    res.status(500).json({
+      message: "Error saving medicine",
+      error: err.message,
+    });
+  }
 });
 
-/* GET ALL MEDICINES */
+/* ============================================================
+   GET ALL MEDICINES FOR CLINIC
+============================================================ */
 router.get("/clinic/:clinicId", authMiddleware, async (req, res) => {
   try {
     const data = await Medicine.find({ clinicId: req.params.clinicId })
       .sort({ createdAt: -1 });
+
     res.json(data);
   } catch (err) {
+    console.error("GET MEDICINES ERROR:", err);
     res.status(500).json({ message: "Fetch error" });
   }
 });
 
-
-router.get('/:id', async (req, res) => {
+/* ============================================================
+   GET SINGLE MEDICINE / HISTORY
+============================================================ */
+router.get("/:id", async (req, res) => {
   try {
     const medicine = await Medicine.findById(req.params.id);
+
+    if (!medicine) {
+      return res.status(404).json({ message: "Medicine not found" });
+    }
+
     res.json(medicine);
   } catch (err) {
     res.status(404).json({ message: "Medicine not found" });
   }
 });
 
-
-
-/* UPDATE MEDICINE */
-
+/* ============================================================
+   UPDATE MEDICINE
+============================================================ */
 router.put("/:id", authMiddleware, async (req, res) => {
   try {
     const existing = await Medicine.findById(req.params.id);
@@ -187,29 +443,24 @@ router.put("/:id", authMiddleware, async (req, res) => {
       });
     }
 
-    const newQty = Number(req.body.quantity);
+    const newQty = Number(req.body.quantity) || 0;
+    const previousStock = Number(existing.quantity) || 0;
+    const difference = newQty - previousStock;
 
-    const difference = newQty - existing.quantity;
+    const quantityType = normalizedQuantityType(req.body);
+    const ayurvedicSubtype = normalizedAyurvedicSubtype(req.body);
+    const clinicCost = calculateClinicCost({
+      ...req.body,
+      quantity: newQty,
+    });
 
-    const totalMrp = req.body.mrp * req.body.quantity;
-
-    const discountAmount = totalMrp * (req.body.discount / 100);
-
-    const clinicCost = totalMrp - discountAmount;
-
-    /* push history */
-
+    // Manual inventory edit history.
     existing.history.push({
       action: "updated",
-
       quantity: difference,
-
-      previousStock: existing.quantity,
-
+      previousStock,
       newStock: newQty,
-
       updatedBy: req.user?.name || "admin",
-
       type: difference > 0 ? "purchase" : "usage",
     });
 
@@ -219,26 +470,29 @@ router.put("/:id", authMiddleware, async (req, res) => {
     existing.mrPhone = req.body.mrPhone;
     existing.category = req.body.category;
     existing.type = req.body.type;
-    existing.mrp = req.body.mrp;
-    existing.discount = req.body.discount;
-    existing.quantity = req.body.quantity;
-    existing.quantityType = req.body.quantityType;
+    existing.ayurvedicSubtype = ayurvedicSubtype;
+    existing.mrp = Number(req.body.mrp) || 0;
+    existing.discount = Number(req.body.discount) || 0;
+    existing.quantity = newQty;
+    existing.quantityType = quantityType;
     existing.clinicCost = clinicCost;
 
     await existing.save();
 
     res.json(existing);
   } catch (err) {
-    console.log(err);
+    console.error("UPDATE MEDICINE ERROR:", err);
 
     res.status(500).json({
       message: "Update error",
+      error: err.message,
     });
   }
 });
 
-/* DELETE MEDICINE */
-
+/* ============================================================
+   DELETE MEDICINE
+============================================================ */
 router.delete("/:id", authMiddleware, async (req, res) => {
   try {
     await Medicine.findByIdAndDelete(req.params.id);
