@@ -197,9 +197,10 @@ exports.getDashboardStats = async (req, res) => {
       netProfit,
       totalClinics,
       totalStaff,
+      totalPatients: await Patient.countDocuments(),
 
       // Patients registered during current month
-      totalPatients: monthlyPatients
+      // totalPatients: monthlyPatients
     };
 
     // =====================================================
@@ -387,8 +388,9 @@ exports.getDashboardStats = async (req, res) => {
           }),
 
         // Patients registered this month
-        patientCount:
-          branchPatientCount,
+        patientCount: await Patient.countDocuments({ 
+          $or: [{ clinic: queryId }, { clinicId: queryId }, { clinic: selectedClinicId }] 
+        }),
 
         // Current month sales
         sales,
