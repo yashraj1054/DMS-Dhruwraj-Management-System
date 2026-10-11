@@ -2831,7 +2831,7 @@ export default function Finances() {
                             {" • "}
 
                             {new Date(
-                               item.date,
+                               item.date || item.createdAt,
                             ).toLocaleDateString()}
                           </p>
                         </td>
