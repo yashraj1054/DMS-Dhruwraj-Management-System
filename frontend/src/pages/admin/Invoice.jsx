@@ -11564,7 +11564,7 @@ const Invoice = () => {
               <div className="mb-1">
                 {sectionTitle(type)}
 
-                <div className="grid grid-cols-[1fr_62px_88px_72px_72px_92px] items-center border-b border-[#E5EBF2] pb-1.5 text-[11px] font-bold text-[#91A6C2]">
+                {/* <div className="grid grid-cols-[1fr_62px_88px_72px_72px_92px] items-center border-b border-[#E5EBF2] pb-1.5 text-[11px] font-bold text-[#91A6C2]">
                   <span>
                     {type === "Consultation Fees"
                       ? "Fee Description"
@@ -11590,7 +11590,34 @@ const Invoice = () => {
                   )}
 
                   <span className="text-right">Amount</span>
-                </div>
+                </div> */}
+                
+<div
+  className={`grid items-center border-b border-[#E5EBF2] pb-1.5 text-[11px] font-bold text-[#91A6C2] ${
+    type === "Consultation Fees"
+      ? "grid-cols-[1fr_92px]"
+      : "grid-cols-[1fr_62px_88px_72px_72px_92px]"
+  }`}
+>
+  <span>
+    {type === "Consultation Fees"
+      ? "Fee Description"
+      : type === "Panchkarma & Therapies"
+        ? "Therapy Name"
+        : "Medicine Name"}
+  </span>
+
+  {type !== "Consultation Fees" && (
+    <>
+      <span className="text-center">Qty</span>
+      <span className="text-right">MRP</span>
+      <span className="text-right">Disc %</span>
+      <span className="text-right">GST %</span>
+    </>
+  )}
+
+  <span className="text-right">Amount</span>
+</div>
 
                 {sectionItems.map((item, idx) => (
                   <div
@@ -11723,10 +11750,12 @@ const Invoice = () => {
                       </p>
 
                       <p className="mt-1 text-[15px] font-extrabold text-[#172238]">
+                        
                         {previewData.patientName}
                       </p>
 
                       <p className="mt-1 text-[13px] text-[#667A96]">
+                        
                         {previewData.mobileNo
                           ? `+91 ${previewData.mobileNo}`
                           : ""}
@@ -11741,12 +11770,12 @@ const Invoice = () => {
                           <span className="font-bold text-[#30415D]">Address: </span>
                           {printablePatientAddress || "—"}
                         </p>
-                        {previewData.patientLastVisitDate && (
+                        {/* {previewData.patientLastVisitDate && (
                           <p>
                             <span className="font-bold text-[#30415D]">Previous Visit: </span>
                             {formatDate(previewData.patientLastVisitDate)}
                           </p>
-                        )}
+                        )} */}
                       </div>
                     </div>
 
@@ -11858,12 +11887,12 @@ const Invoice = () => {
                     CLOSE PREVIEW
                   </button>
 
-                  <button
+                  {/* <button
                     onClick={handleShareWhatsApp}
                     className="flex-1 rounded-xl bg-green-600 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg hover:bg-green-700"
                   >
                     Share on WhatsApp
-                  </button>
+                  </button> */}
 
                   <button
                     onClick={handlePrintInvoice}
