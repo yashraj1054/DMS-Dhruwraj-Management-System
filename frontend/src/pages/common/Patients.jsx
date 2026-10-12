@@ -680,7 +680,7 @@ export default function Patients() {
                 <Select
                   name="gender"
                   label="Gender"
-                  options={["M", "F", "Other"]}
+                  options={["Male", "Female", "Others"]}
                   form={form}
                   onChange={handleChange}
                   disabled={isReadOnly}
@@ -769,6 +769,14 @@ export default function Patients() {
                   name="maritalStatus"
                   label="Marital Status"
                   options={["Single", "Married", "Divorced", "Others"]}
+                  form={form}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
+                <Select
+                  name="referredBy"
+                  label="Referred By / Found Us"
+                  options={["Doctor", "Friend", "Advertisement", "Others"]}
                   form={form}
                   onChange={handleChange}
                   disabled={isReadOnly}

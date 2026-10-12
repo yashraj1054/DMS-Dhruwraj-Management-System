@@ -21,12 +21,17 @@ router.post(
     try {
       const clinic = await Clinic.findById(req.body.clinic);
 
+      console.log("PATIENT ROUTE VERSION: SIX DIGITS");
+      console.log("CLINIC:", req.body.clinic);
+
       const count = await Patient.countDocuments({
         clinic: req.body.clinic,
       });
 
       const patientId =
-        `${clinic.patientPrefix}${String(count + 1).padStart(3, "0")}`;
+        `${clinic.patientPrefix}${String(count + 1).padStart(6, "0")}`;
+
+        console.log("GENERATED PATIENT ID:", patientId);
 
       const newPatient = new Patient({
         ...req.body,

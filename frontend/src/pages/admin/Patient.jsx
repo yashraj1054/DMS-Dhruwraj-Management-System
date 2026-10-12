@@ -59,7 +59,7 @@ export default function Patient() {
       const count = patients.filter(
         (p) => (p.clinic?._id || p.clinic) === clinicId,
       ).length;
-      const newId = `${clinic.patientPrefix}${String(count + 1).padStart(3, "0")}`;
+      const newId = `${clinic.patientPrefix}${String(count + 1).padStart(6, "0")}`;
       setGeneratedId(newId);
     }
   };
