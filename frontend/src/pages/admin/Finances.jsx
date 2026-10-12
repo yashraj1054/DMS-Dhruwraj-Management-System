@@ -2414,12 +2414,12 @@ export default function Finances() {
   // ===================================================
 
   return (
-    <div className="p-4 md:p-8 min-h-screen space-y-6">
+    <div className="w-full min-h-screen  space-y-6">
       {/* HEADER */}
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
         <div>
-          <h2 className="text-xl font-semibold">Finances</h2>
+          <h2 className="text-xl font-semibold text-slate-800">Finances</h2>
 
           <p className="text-sm text-slate-400">Manage Finances</p>
         </div>
@@ -2523,7 +2523,7 @@ export default function Finances() {
         <div className="md:col-span-3">
           <button
             onClick={() => setShowExpenseModal(true)}
-            className="w-full bg-teal-600 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-teal-700 transition flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-2.5 rounded-xl text-sm font-bold hover:scale-[1.02] transition flex items-center justify-center gap-2 cursor-pointer"
           >
             <Plus size={18} />
             Add Expense

@@ -1432,24 +1432,21 @@ RESET PASSWORD
   );
 
   return (
-    <div className="min-h-screen ">
-      <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 py-4 sm:py-6 space-y-6">
+    <div className="w-full min-h-screen ">
+      <div >
         {/* HEADER */}
 
-        <div className="bg-white/80 backdrop-blur-xl border border-white shadow-sm rounded-3xl p-4 sm:p-6">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+        <div className="md:items-center md:justify-between gap-3 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 ">
             <div>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-teal-500/20">
-                  <User className="text-white w-6 h-6" />
-                </div>
 
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">
+                  <h2 className="text-xl font-bold text-slate-800">
                     Staff Management
                   </h2>
 
-                  <p className="text-sm text-slate-500 mt-1">
+                  <p className="text-sm text-slate-400">
                     Manage employees, payroll & targets
                   </p>
                 </div>
@@ -1474,7 +1471,7 @@ RESET PASSWORD
 
               <button
                 onClick={openAddModal}
-                className="h-12 px-6 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-bold shadow-lg shadow-teal-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                className="h-12 px-6 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-bold shadow-lg shadow-teal-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Plus className="w-5 h-5" />
                 Add Staff

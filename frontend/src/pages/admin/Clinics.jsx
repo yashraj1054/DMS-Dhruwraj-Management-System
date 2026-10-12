@@ -425,12 +425,12 @@ export default function Clinics() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-8">
+    <div className="w-full min-h-screen space-y-6">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Clinics</h2>
-          <p className="text-slate-500 mt-1">Manage your healthcare network and prefixes.</p>
+          <h2 className="text-xl font-bold text-slate-800">Clinics</h2>
+          <p className="text-slate-400 text-sm">Manage your healthcare network and prefixes.</p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
@@ -446,8 +446,8 @@ export default function Clinics() {
 
           <button
             onClick={openAddModal}
-            className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg shadow-teal-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
-          >
+            className="h-12 px-6 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-bold shadow-lg shadow-teal-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              >
             <Plus className="w-5 h-5" />
             Add Clinic
           </button>

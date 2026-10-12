@@ -97,7 +97,7 @@ export default function ConfirmPassword({ onConfirm, onClose }) {
         <div className="bg-slate-50 p-6 flex flex-col items-center text-center relative">
           <button 
             onClick={onClose} 
-            className="absolute top-4 right-4 p-1.5 hover:bg-white rounded-full text-slate-400 hover:text-slate-900 transition-colors shadow-sm border border-transparent hover:border-slate-100"
+            className="absolute top-4 right-4 p-1.5 hover:bg-white rounded-full text-slate-400 hover:text-slate-900 transition-colors shadow-sm border border-transparent hover:border-slate-100 cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -142,7 +142,7 @@ export default function ConfirmPassword({ onConfirm, onClose }) {
           <div className="flex flex-col gap-3">
             <button
               type="submit"
-              className="w-full bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-2xl shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+              className="w-full bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-2xl shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
             >
               Confirm & Execute
             </button>
@@ -150,7 +150,7 @@ export default function ConfirmPassword({ onConfirm, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="w-full bg-slate-100 text-slate-500 font-bold py-3 rounded-2xl hover:text-slate-900 transition-colors text-sm"
+              className="w-full bg-slate-100 text-slate-500 font-bold py-3 rounded-2xl hover:text-slate-900 transition-colors text-sm cursor-pointer"
             >
               Cancel Request
             </button>

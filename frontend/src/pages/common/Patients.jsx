@@ -868,21 +868,22 @@ export default function Patients() {
 
   return (
 
-    <div className="min-h-screen bg-slate-50/50 p-4 md:p-8">
+    <div className="w-full min-h-screen">
 
       {/* Header Section */}
 
-      <div className="bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl p-6 mb-8">
+      <div className="md:items-center md:justify-between gap-3 mb-6">
 
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 ">
+
 
           <div>
 
-            <h1 className="text-4xl font-bold text-slate-800">Patients</h1>
+            <h2 className="text-xl font-bold text-slate-800">Patients</h2>
 
 
 
-            <p className="text-slate-500 mt-1 italic">
+            <p className="text-sm text-slate-400">
 
               Manage clinic patient records professionally
 
@@ -906,7 +907,7 @@ export default function Patients() {
 
                 onChange={(e) => setSearch(e.target.value)}
 
-                className="w-full sm:w-72 pl-11 pr-4 py-3.5 bg-slate-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all font-semibold text-sm"
+                className="w-full h-12 bg-slate-50 border border-slate-200 rounded-2xl pl-11 pr-4 text-sm font-medium focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 focus:bg-white outline-none transition-all"
 
               />
 
@@ -916,9 +917,8 @@ export default function Patients() {
 
               onClick={() => setOpen(true)}
 
-              className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3.5 rounded-2xl font-bold shadow-lg shadow-slate-200 transition-all active:scale-95"
-
-            >
+              className="h-12 px-6 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-bold shadow-lg shadow-teal-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
 
               <Plus className="w-5 h-5" />
 
@@ -1014,7 +1014,7 @@ export default function Patients() {
 
                 onClick={() => editPatient(p)}
 
-                className="flex-1 inline-flex items-center justify-center gap-2 py-3 bg-slate-50 hover:bg-teal-50 text-slate-700 hover:text-teal-700 rounded-xl text-sm font-bold transition-colors"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-3 bg-slate-50 hover:bg-teal-50 text-slate-700 hover:text-teal-700 rounded-xl text-sm font-bold transition-colors cursor-pointer"
 
               >
 
@@ -1032,7 +1032,7 @@ export default function Patients() {
 
                   onClick={() => setDeleteConfirm(p._id)}
 
-                  className="w-12 flex items-center justify-center bg-white border border-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-500 rounded-xl transition-all"
+                  className="w-12 flex items-center justify-center bg-white border border-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-500 rounded-xl transition-all cursor-pointer"
 
                 >
 
@@ -1092,7 +1092,7 @@ export default function Patients() {
 
                 onClick={handleClose}
 
-                className="p-2 hover:bg-white rounded-full shadow-sm transition-all"
+                className="p-2 hover:bg-white rounded-full shadow-sm transition-all cursor-pointer"
 
               >
 
@@ -1483,7 +1483,7 @@ export default function Patients() {
                       "Youtube",
                       "Website",
                       "Google Search",
-                      "Just Dail",
+                      "Just Dial",
                       "Hoardings/Banner",
                       "Pamphlets",
                     ]}
@@ -1550,7 +1550,7 @@ export default function Patients() {
 
                 {!isReadOnly ? (
 
-                  <button className="w-full bg-teal-600 hover:bg-teal-700 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-teal-100 transition-all flex items-center justify-center gap-2">
+                  <button className="w-full bg-teal-600 hover:bg-teal-700 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-teal-100 transition-all flex items-center justify-center gap-2 cursor-pointer">
 
                     <ChevronRight className="w-5 h-5" />
 
@@ -1614,7 +1614,7 @@ export default function Patients() {
 
                 onClick={() => setDeleteConfirm(null)}
 
-                className="flex-1 px-6 py-3.5 border border-slate-200 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all"
+                className="flex-1 px-6 py-3.5 border border-slate-200 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all cursor-pointer"
 
               >
 
@@ -1626,7 +1626,7 @@ export default function Patients() {
 
                 onClick={confirmDelete}
 
-                className="flex-1 px-6 py-3.5 bg-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-rose-200 hover:bg-rose-600 transition-all"
+                className="flex-1 px-6 py-3.5 bg-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-rose-200 hover:bg-rose-600 transition-all cursor-pointer"
 
               >
 

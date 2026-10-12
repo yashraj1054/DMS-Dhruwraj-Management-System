@@ -9883,28 +9883,8 @@ const Invoice = () => {
                 });
                 setShowModal(true);
               }}
-              className="
-
-          bg-teal-600
-
-          hover:bg-teal-700
-
-          text-white
-
-          font-bold
-
-          px-6
-
-          py-3
-
-          rounded-xl
-
-          shadow-md
-
-          transition
-
-        "
-            >
+              className="h-12 px-6 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-bold shadow-lg shadow-teal-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
               + Generate Bill
             </button>
           </div>
@@ -10235,7 +10215,7 @@ const Invoice = () => {
                         setLastVisitWarning(null);
                       }}
                       disabled={!selectedClinic || patientsLoading || patients.length === 0}
-                      className={`rounded-lg px-3 py-2 text-xs font-bold border ${!manualPatientEntry ? "bg-teal-600 text-white border-teal-600" : "bg-white text-slate-600 border-slate-200"} disabled:opacity-40`}
+                      className={`rounded-lg px-3 py-2 text-xs font-bold border ${!manualPatientEntry ? "bg-teal-600 text-white border-teal-600" : "bg-white text-slate-600 border-slate-200"} disabled:opacity-40 cursor-pointer`}
                     >
                       Registered
                     </button>
@@ -10248,7 +10228,7 @@ const Invoice = () => {
                         setLastVisitWarning(null);
                       }}
                       disabled={!selectedClinic}
-                      className={`rounded-lg px-3 py-2 text-xs font-bold border ${manualPatientEntry ? "bg-teal-600 text-white border-teal-600" : "bg-white text-slate-600 border-slate-200"} disabled:opacity-40`}
+                      className={`rounded-lg px-3 py-2 text-xs font-bold border ${manualPatientEntry ? "bg-teal-600 text-white border-teal-600" : "bg-white text-slate-600 border-slate-200"} disabled:opacity-40 cursor-pointer`}
                     >
                       Enter Manually
                     </button>
@@ -10394,7 +10374,7 @@ const Invoice = () => {
                     );
                     setFormData((prev) => ({ ...prev, consultationFee: "" }));
                   }}
-                  className="bg-slate-800 text-white px-6 py-3 h-[52px] rounded-xl font-bold"
+                  className="bg-slate-800 text-white px-6 py-3 h-[52px] rounded-xl font-bold cursor-pointer"
                 >
                   Add Fee
                 </button>
@@ -10463,7 +10443,7 @@ const Invoice = () => {
 
                 <button
                   onClick={() => addToCart(activeTherapy, "Therapy")}
-                  className="w-full bg-slate-800 text-white py-3 rounded-xl font-bold shadow-md"
+                  className="w-full bg-slate-800 text-white py-3 rounded-xl font-bold shadow-md cursor-pointer"
                 >
                   Add Therapy to Cart
                 </button>
@@ -10604,7 +10584,7 @@ const Invoice = () => {
 
                     addToCart(activeMedicine, "Medicine");
                   }}
-                  className="w-full bg-slate-800 text-white py-3 rounded-xl font-bold hover:bg-black shadow-lg"
+                  className="w-full bg-slate-800 text-white py-3 rounded-xl font-bold hover:bg-black shadow-lg cursor-pointer"
                 >
                   Add Medicine to Cart
                 </button>
@@ -10633,7 +10613,7 @@ const Invoice = () => {
                       key={value}
                       type="button"
                       onClick={() => setAyurvedicType(value)}
-                      className={`p-4 rounded-xl border text-sm font-bold transition ${
+                      className={`p-4 rounded-xl border text-sm font-bold transition cursor-pointer ${
                         ayurvedicType === value
                           ? "bg-teal-600 text-white border-teal-600 shadow-md"
                           : "bg-white text-slate-600 border-slate-200 hover:border-teal-400"
@@ -10781,7 +10761,7 @@ const Invoice = () => {
                     <button
                       type="button"
                       onClick={addAyurvedicTabToCart}
-                      className="w-full bg-slate-800 hover:bg-black text-white py-3 rounded-xl font-bold shadow-md"
+                      className="w-full bg-slate-800 hover:bg-black text-white py-3 rounded-xl font-bold shadow-md cursor-pointer"
                     >
                       Add Ayurvedic Tab to Cart
                     </button>
@@ -10809,7 +10789,7 @@ const Invoice = () => {
                             ayurvedicChuran.bhasams.length >= MAX_BHASAM
                           }
                           onClick={addBhasam}
-                          className="text-xs font-bold text-teal-600 disabled:text-slate-300"
+                          className="text-xs font-bold text-teal-600 disabled:text-slate-300 cursor-pointer"
                         >
                           + Add Bhasam
                         </button>
@@ -10968,7 +10948,7 @@ const Invoice = () => {
                             ayurvedicChuran.churans.length >= MAX_CHURAN
                           }
                           onClick={addChuran}
-                          className="text-xs font-bold text-teal-600 disabled:text-slate-300"
+                          className="text-xs font-bold text-teal-600 disabled:text-slate-300 cursor-pointer"
                         >
                           + Add Churan
                         </button>
@@ -11166,7 +11146,7 @@ const Invoice = () => {
                     <button
                       type="button"
                       onClick={addAyurvedicChuranToCart}
-                      className="w-full bg-slate-800 hover:bg-black text-white py-3 rounded-xl font-bold shadow-md"
+                      className="w-full bg-slate-800 hover:bg-black text-white py-3 rounded-xl font-bold shadow-md cursor-pointer"
                     >
                       Add Ayurvedic Churan to Cart
                     </button>
@@ -11310,7 +11290,7 @@ const Invoice = () => {
                     <button
                       type="button"
                       onClick={addAyurvedicOilToCart}
-                      className="w-full bg-slate-800 hover:bg-black text-white py-3 rounded-xl font-bold shadow-md"
+                      className="w-full bg-slate-800 hover:bg-black text-white py-3 rounded-xl font-bold shadow-md cursor-pointer"
                     >
                       Add Ayurvedic Oil to Cart
                     </button>
