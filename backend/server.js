@@ -161,6 +161,7 @@ app.use(
   cors({
     origin: [
       "https://dms-frontend-gamma.vercel.app",
+      "https://erp.dhruwraj.com",
       "http://localhost:5173",
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],

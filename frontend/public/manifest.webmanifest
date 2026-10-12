@@ -1,0 +1,27 @@
+
+{
+  "id": "/",
+  "name": "Dhruwraj ERP",
+  "short_name": "Dhruwraj ERP",
+  "description": "Dhruwraj Healthcare Management System",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#166534",
+  "icons": [
+    {
+      "src": "/dhruwraj-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/dhruwraj-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+
+  ]
+}
