@@ -481,6 +481,18 @@ export default function Patients() {
     setOpen(true);
   };
 
+    const confirmDelete = async () => {
+    if (!deleteConfirm) return;
+    try {
+      await axios.delete(`${API_BASE}/patients/${deleteConfirm}`, config);
+      fetchPatients();
+      setDeleteConfirm(null);
+    } catch (err) {
+      console.error(err);
+      alert("Could not delete patient.");
+    }
+  };
+
   const filteredPatients = patients.filter(
     (p) =>
       p.name?.toLowerCase().includes(search.toLowerCase()) ||

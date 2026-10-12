@@ -1268,37 +1268,106 @@ export default function Staff() {
   SAVE
   */
 
-  const saveStaff = async (e) => {
-    e.preventDefault();
+  // const saveStaff = async (e) => {
+  //   e.preventDefault();
 
-    try {
-      const data = new FormData();
+  //   try {
+  //     const data = new FormData();
 
-      Object.keys(form).forEach((k) => {
-        if (form[k] !== null) {
-          data.append(k, form[k]);
-        }
-      });
+  //     Object.keys(form).forEach((k) => {
+  //       if (form[k] !== null) {
+  //         data.append(k, form[k]);
+  //       }
+  //     });
 
-      if (editingId) {
-        await axios.put(
-          `https://dms-backend-amber.vercel.app/api/staff/${editingId}`,
-          data,
-        );
-      } else {
-        await axios.post(
-          "https://dms-backend-amber.vercel.app/api/staff",
-          data,
-        );
-      }
+  //     if (editingId) {
+  //       await axios.put(
+  //         `https://dms-backend-amber.vercel.app/api/staff/${editingId}`,
+  //         data,
+  //       );
+  //     } else {
+  //       await axios.post(
+  //         "https://dms-backend-amber.vercel.app/api/staff",
+  //         data,
+  //       );
+  //     }
 
-      setShowModal(false);
+  //     setShowModal(false);
 
-      fetchData();
-    } catch (err) {
-      console.log(err);
+  //     fetchData();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+
+const saveStaff = async (e) => {
+  e.preventDefault();
+
+  try {
+    if (!form.name?.trim()) {
+      alert("Please enter staff name.");
+      return;
     }
-  };
+
+    if (!form.phone?.trim()) {
+      alert("Please enter staff phone number.");
+      return;
+    }
+
+    if (!form.clinic) {
+      alert("Please select a clinic.");
+      return;
+    }
+
+    const data = new FormData();
+
+    Object.entries(form).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        data.append(key, value);
+      }
+    });
+
+    // Important: generatedId is separate from form state.
+    // Send it explicitly if your backend expects staffId.
+    if (generatedId) {
+      data.set("staffId", generatedId);
+    }
+
+    const url = editingId
+      ? `https://dms-backend-amber.vercel.app/api/staff/${editingId}`
+      : "https://dms-backend-amber.vercel.app/api/staff";
+
+    const response = editingId
+      ? await axios.put(url, data)
+      : await axios.post(url, data);
+
+    console.log("Staff saved successfully:", response.data);
+
+    alert(
+      editingId
+        ? "Staff updated successfully!"
+        : "Staff registered successfully!"
+    );
+
+    setShowModal(false);
+    await fetchData();
+  } catch (err) {
+    console.error(
+      "Staff save failed:",
+      err.response?.status,
+      err.response?.data || err.message
+    );
+
+    const message =
+      err.response?.data?.message ||
+      err.response?.data?.error ||
+      "Unable to save staff. Check the backend logs.";
+
+    alert(message);
+  }
+};
+
 
   /*
   DELETE
