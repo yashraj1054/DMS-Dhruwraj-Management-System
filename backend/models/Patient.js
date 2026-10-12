@@ -76,6 +76,12 @@ const patientSchema = new mongoose.Schema(
     weight: String,
     maritalStatus: String,
     referredBy: String,
+    referredByName: {  type: String ,trim: true,
+},
+    advertisementSource: {
+  type: String,
+  trim: true,
+},
     medicineId: String,
 
     clinic: {

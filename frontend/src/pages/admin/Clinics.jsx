@@ -446,7 +446,7 @@ export default function Clinics() {
 
           <button
             onClick={openAddModal}
-            className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg shadow-teal-600/20 transition-all flex items-center justify-center gap-2"
+            className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg shadow-teal-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Plus className="w-5 h-5" />
             Add Clinic
@@ -488,13 +488,13 @@ export default function Clinics() {
             <div className="flex gap-3 mt-auto">
               <button
                 onClick={() => openEditModal(c)}
-                className="flex-1 flex items-center justify-center gap-2 bg-slate-50 text-slate-700 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-100 transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 bg-slate-50 text-slate-700 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-100 transition-colors cursor-pointer"
               >
                 <Edit2 className="w-4 h-4" /> Edit
               </button>
               <button
                 onClick={() => askDelete(c)}
-                className="flex-1 flex items-center justify-center gap-2 bg-rose-50 text-rose-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-rose-100 transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 bg-rose-50 text-rose-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-rose-100 transition-colors cursor-pointer"
               >
                 <Trash2 className="w-4 h-4" /> Delete
               </button>
@@ -526,7 +526,7 @@ export default function Clinics() {
                </div>
             </div>
 
-            <button className="col-span-full bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-2xl shadow-xl transition-all active:scale-[0.98] mt-4">
+            <button className="col-span-full bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-2xl shadow-xl transition-all active:scale-[0.98] mt-4 cursor-pointer">
               {editingId ? "Save Changes" : "Create Clinic"}
             </button>
           </form>

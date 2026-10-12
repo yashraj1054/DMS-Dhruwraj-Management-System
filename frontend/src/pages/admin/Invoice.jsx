@@ -10154,7 +10154,7 @@ const Invoice = () => {
 
               <button
                 onClick={() => setShowModal(false)}
-                className="text-slate-400 hover:text-black text-xl"
+                className="text-slate-400 hover:text-black text-xl cursor-pointer"
               >
                 ✕
               </button>
@@ -10923,7 +10923,7 @@ const Invoice = () => {
                               <button
                                 type="button"
                                 onClick={() => removeBhasam(item.id)}
-                                className="text-red-400 font-bold py-3"
+                                className="text-red-400 font-bold py-3 cursor-pointer"
                               >
                                 ✕
                               </button>
@@ -11082,7 +11082,7 @@ const Invoice = () => {
                               <button
                                 type="button"
                                 onClick={() => removeChuran(item.id)}
-                                className="text-red-400 font-bold py-3"
+                                className="text-red-400 font-bold py-3 cursor-pointer"
                               >
                                 ✕
                               </button>
@@ -11361,7 +11361,7 @@ const Invoice = () => {
                             onClick={() =>
                               setCart(cart.filter((_, i) => i !== index))
                             }
-                            className="text-red-400 font-bold"
+                            className="text-red-400 font-bold cursor-pointer"
                           >
                             ✕
                           </button>
@@ -11395,7 +11395,7 @@ const Invoice = () => {
 
               <button
                 onClick={handleGenerateBill}
-                className="bg-teal-600 hover:bg-teal-700 text-white px-10 py-3 rounded-xl flex-[2] font-black uppercase text-sm shadow-lg"
+                className="bg-teal-600 hover:bg-teal-700 text-white px-10 py-3 rounded-xl flex-[2] font-black uppercase text-sm shadow-lg cursor-pointer"
               >
                 Generate Final Invoice
               </button>
