@@ -682,27 +682,93 @@ export default function Patients() {
 
 
 
-  const generatePatientId = (clinicId) => {
+  // const generatePatientId = (clinicId) => {
 
-    if (!clinicId) return;
+  //   if (!clinicId) return;
 
-    const clinic = clinics.find((c) => c._id === clinicId);
+  //   const clinic = clinics.find((c) => c._id === clinicId);
 
-    if (clinic) {
+  //   if (clinic) {
 
-      const count = patients.filter(
+  //     const count = patients.filter(
 
-        (p) => (p.clinic?._id || p.clinic) === clinicId,
+  //       (p) => (p.clinic?._id || p.clinic) === clinicId,
 
-      ).length;
+  //     ).length;
 
-      const newId = `${clinic.patientPrefix}${String(count + 1).padStart(6, "0")}`;
+  //     const newId = `${clinic.patientPrefix}${String(count + 1).padStart(6, "0")}`;
 
-      setGeneratedId(newId);
+  //     setGeneratedId(newId);
 
+  //   }
+
+  // };
+
+
+const generatePatientId = (clinicId) => {
+  if (!clinicId) {
+    setGeneratedId("");
+    return;
+  }
+
+  const clinic = clinics.find(
+    (c) => String(c._id) === String(clinicId)
+  );
+
+  if (!clinic) {
+    setGeneratedId("");
+    return;
+  }
+
+  const prefix = clinic.patientPrefix || "";
+
+  // Escape special characters in the clinic prefix
+  const escapedPrefix = prefix.replace(
+    /[.*+?^${}()|[\]\\]/g,
+    "\\$&"
+  );
+
+  // Match IDs like 000041, 000041A, 000041B
+  const idPattern = new RegExp(
+    `^${escapedPrefix}(\\d{6})[A-Z]*$`
+  );
+
+  let maxNumber = 0;
+
+  const clinicPatients = patients.filter((p) => {
+    const patientClinicId = p.clinic?._id || p.clinic;
+    return String(patientClinicId) === String(clinicId);
+  });
+
+  clinicPatients.forEach((patient) => {
+    const match = String(patient.patientId || "").match(
+      idPattern
+    );
+
+    if (match) {
+      maxNumber = Math.max(maxNumber, Number(match[1]));
     }
+  });
 
-  };
+  // Start after the highest numeric portion
+  let nextNumber = maxNumber + 1;
+  let nextId = "";
+
+  // Never preview an ID already assigned to a patient
+  while (true) {
+    nextId = `${prefix}${String(nextNumber).padStart(6, "0")}`;
+
+    const alreadyExists = clinicPatients.some(
+      (p) => p.patientId === nextId
+    );
+
+    if (!alreadyExists) break;
+
+    nextNumber++;
+  }
+
+  setGeneratedId(nextId);
+};
 
   const calculateAge = (dob) => {
   if (!dob) return "";
