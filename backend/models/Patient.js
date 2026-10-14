@@ -61,6 +61,7 @@ const patientSchema = new mongoose.Schema(
     patientId: String,
     name: String,
     phone: String,
+    phone2: String,
     email: String,
     gender: String,
     dob: String,

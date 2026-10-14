@@ -49,7 +49,7 @@ const inputClass =
   "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
 const buttonPrimary =
-  "inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50";
+  "inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-2.5 px-4 text-sm font-bold hover:scale-[1.02] transition cursor-pointer";
 
 const buttonSecondary =
   "inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50";
@@ -437,18 +437,14 @@ export default function CompanyLedger() {
   const companyLedgerCount = selectedCompany?.ledgers?.length || 0;
 
   return (
-    <div className="min-h-screen bg-slate-50 p-3 sm:p-6">
+    <div className="min-h-screen w-full">
       <div className="mx-auto max-w-7xl space-y-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="flex items-center gap-2 text-sm text-slate-500">
-              <Building2 size={17} />
-              Admin / Company Ledger
-            </div>
-            <h1 className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">
+            <h1 className="text-xl font-semibold text-slate-800">
               Company Ledger
             </h1>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="text-sm text-slate-400">
               Manage supplier purchases, payment history and outstanding balances.
             </p>
           </div>
@@ -504,7 +500,7 @@ export default function CompanyLedger() {
 
             {loading ? (
               <div className="flex justify-center py-12">
-                <LoaderCircle className="animate-spin text-blue-600" />
+                <LoaderCircle className="animate-spin text-teal-600" />
               </div>
             ) : visibleCompanies.length === 0 ? (
               <div className="rounded-xl border border-dashed border-slate-300 py-12 text-center">
@@ -522,11 +518,11 @@ export default function CompanyLedger() {
                   <button
                     key={company._id}
                     onClick={() => setSelectedCompanyId(company._id)}
-                    className="rounded-2xl border border-slate-200 p-4 text-left transition hover:border-blue-300 hover:bg-blue-50/40"
+                    className="rounded-2xl border border-slate-200 p-4 text-left transition hover:border-teal-300 hover:bg-teal-50/40"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex min-w-0 items-center gap-3">
-                        <div className="rounded-xl bg-blue-50 p-3 text-blue-600">
+                        <div className="rounded-xl bg-blue-50 p-3 text-teal-600">
                           <Building2 size={22} />
                         </div>
                         <div className="min-w-0">
@@ -534,7 +530,7 @@ export default function CompanyLedger() {
                             {company.companyName}
                           </h3>
                           <p className="mt-1 text-sm text-slate-500">
-                            MR: {company.mrName}
+                            MR : {company.mrName}
                           </p>
                         </div>
                       </div>
@@ -542,11 +538,11 @@ export default function CompanyLedger() {
                     </div>
                     <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t pt-3 text-sm">
                       <span className="text-slate-500">
-                        {company.mrMobile}
+                        Contact : {company.mrMobile}
                       </span>
-                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
+                      {/* <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
                         {company.discountPercentage || 0}% discount
-                      </span>
+                      </span> */}
                     </div>
                   </button>
                 ))}
