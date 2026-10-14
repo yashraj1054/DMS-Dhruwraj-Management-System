@@ -2394,16 +2394,19 @@ export default function CompanyLedger() {
                         onChange={(e) => updateProduct(index, "quantity", e.target.value)}
                       />
                     </Field>
-                    <Field label="Invoice Number">
+                    <Field label="Invoice Number *">
                       <input
+                        required
                         className={inputClass}
                         value={product.invoiceNumber}
                         onChange={(e) => updateProduct(index, "invoiceNumber", e.target.value)}
                       />
                     </Field>
-                    <Field label="Batch Number">
+                    <Field label="Batch Number *">
                       <input
+                      required
                         className={inputClass}
+                        
                         value={product.batchNumber}
                         onChange={(e) => updateProduct(index, "batchNumber", e.target.value)}
                       />
@@ -2419,7 +2422,7 @@ export default function CompanyLedger() {
                         onChange={(e) => updateProduct(index, "mrp", e.target.value)}
                       />
                     </Field>
-                    <Field label="Company Rate per Item (₹) *">
+                    <Field label="Purchase Rate (₹) *">
                       <input
                         required
                         type="number"
@@ -2438,7 +2441,7 @@ export default function CompanyLedger() {
                         value={getCategoryDiscount(product.category).toFixed(2)}
                       />
                     </Field>
-                    <Field label="Purchase Rate before GST (₹)">
+                    {/* <Field label="Purchase Rate before GST (₹)">
                       <input
                         readOnly
                         className={`${inputClass} bg-slate-50`}
@@ -2458,7 +2461,7 @@ export default function CompanyLedger() {
                         className={`${inputClass} bg-emerald-50 font-semibold`}
                         value={getPurchaseRate(product.companyRate, product.category).toFixed(2)}
                       />
-                    </Field>
+                    </Field> */}
                   </div>
                   <p className="mt-3 text-right text-sm text-slate-600">
                     Line total:{" "}
@@ -2615,15 +2618,15 @@ export default function CompanyLedger() {
                 <tr>
                   <th className="px-3 py-2">Product</th>
                   <th className="px-3 py-2">Qty</th>
-                  <th className="px-3 py-2">Invoice</th>
-                  <th className="px-3 py-2">Batch</th>
+                  <th className="px-3 py-2">Invoice No.</th>
+                  <th className="px-3 py-2">Batch No.</th>
                   <th className="px-3 py-2">MRP</th>
-                  <th className="px-3 py-2">Company rate</th>
+                  <th className="px-3 py-2">Purchase Rate</th>
                   <th className="px-3 py-2">Discount</th>
-                  <th className="px-3 py-2">Purchase rate before GST</th>
-                  <th className="px-3 py-2">GST</th>
-                  <th className="px-3 py-2">Final purchase rate</th>
-                  <th className="px-3 py-2">Line total</th>
+                  <th className="px-3 py-2">Total Purchase Rate Before GST</th>
+                  <th className="px-3 py-2">Total GST</th>
+                  {/* <th className="px-3 py-2">Total Purchase Rate After GST</th> */}
+                  <th className="px-3 py-2">Total Price</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -2636,9 +2639,9 @@ export default function CompanyLedger() {
                     <td className="px-3 py-3">{money(product.mrp)}</td>
                     <td className="px-3 py-3">{money(product.companyRate)}</td>
                     <td className="px-3 py-3">{Number(product.discountPercentage || 0)}%</td>
-                    <td className="px-3 py-3">{money(product.basePurchaseRate ?? product.purchaseRate)}</td>
-                    <td className="px-3 py-3">{money(product.gstAmount || 0)}</td>
-                    <td className="px-3 py-3">{money(product.purchaseRate)}</td>
+                    <td className="px-3 py-3">{money(Number(product.basePurchaseRate ?? product.purchaseRate)*Number(product.quantity))}</td>
+                    <td className="px-3 py-3">{money(Number(product.gstAmount)*Number(product.quantity) || 0)}</td>
+                    {/* <td className="px-3 py-3">{money(product.purchaseRate)}</td> */}
                     <td className="px-3 py-3 font-semibold">
                       {money(Number(product.quantity) * Number(product.purchaseRate))}
                     </td>
