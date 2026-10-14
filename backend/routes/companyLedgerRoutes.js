@@ -518,6 +518,9 @@ const validateProducts = (products) => {
     if (!Number.isFinite(Number(product.mrp)) || Number(product.mrp) < 0) {
       throw new Error("MRP cannot be negative.");
     }
+    if (!Number.isFinite(Number(product.companyRate)) || Number(product.companyRate) < 0) {
+      throw new Error("Company rate is required and cannot be negative.");
+    }
   }
 };
 
@@ -531,7 +534,9 @@ const normalizeProducts = (products, categoryDiscounts = [], legacyDiscount = 0)
       ? Number(config.discountPercentage || 0)
       : Number(legacyDiscount || 0);
     const mrp = Number(product.mrp);
-    const basePurchaseRate = Number((mrp * (1 - discountPercentage / 100)).toFixed(2));
+    // Discount applies to the manually entered company rate, not printed MRP.
+    const companyRate = Number(product.companyRate);
+    const basePurchaseRate = Number((companyRate * (1 - discountPercentage / 100)).toFixed(2));
     const gstPercentage = 5;
     const gstAmount = Number((basePurchaseRate * gstPercentage / 100).toFixed(2));
     const purchaseRate = Number((basePurchaseRate + gstAmount).toFixed(2));
@@ -542,6 +547,7 @@ const normalizeProducts = (products, categoryDiscounts = [], legacyDiscount = 0)
       invoiceNumber: String(product.invoiceNumber || "").trim(),
       batchNumber: String(product.batchNumber || "").trim(),
       mrp,
+      companyRate,
       basePurchaseRate,
       gstPercentage,
       gstAmount,

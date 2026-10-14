@@ -1259,7 +1259,6 @@
 //   );
 // }
 
-
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import {
@@ -1287,9 +1286,11 @@ const money = (value) =>
   }).format(Number(value || 0));
 const today = () => new Date().toISOString().slice(0, 10);
 const FIXED_PRODUCT_CATEGORIES = [
-  "Ayurvedic Oils",
-  "Ayurvedic Tabs",
-  "Ayurvedic Churans",
+  "Oils",
+  "Tabs",
+  "Kwath",
+  "Kashayam",
+  "Churans",
   "Bhasams",
   "Classical Medicines",
   "OTC Medicines",
@@ -1311,6 +1312,7 @@ const emptyProduct = () => ({
   invoiceNumber: "",
   batchNumber: "",
   mrp: "",
+  companyRate: "",
   purchaseRate: "",
 });
 const inputClass =
@@ -1574,17 +1576,17 @@ export default function CompanyLedger() {
     return Number(selectedCompany?.discountPercentage || 0);
   };
 
-  const getBasePurchaseRate = (mrp, category) => {
-    const price = Number(mrp || 0);
-    return Number((price * (1 - getCategoryDiscount(category) / 100)).toFixed(2));
+  const getBasePurchaseRate = (companyRate, category) => {
+    const rate = Number(companyRate || 0);
+    return Number((rate * (1 - getCategoryDiscount(category) / 100)).toFixed(2));
   };
 
-  const getGSTAmount = (mrp, category) =>
-    Number((getBasePurchaseRate(mrp, category) * 0.05).toFixed(2));
+  const getGSTAmount = (companyRate, category) =>
+    Number((getBasePurchaseRate(companyRate, category) * 0.05).toFixed(2));
 
-  // Final purchase rate includes the fixed 5% GST.
-  const getPurchaseRate = (mrp, category) =>
-    Number((getBasePurchaseRate(mrp, category) + getGSTAmount(mrp, category)).toFixed(2));
+  // Final per-item purchase rate includes the fixed 5% GST.
+  const getPurchaseRate = (companyRate, category) =>
+    Number((getBasePurchaseRate(companyRate, category) + getGSTAmount(companyRate, category)).toFixed(2));
 
   const overdueReminders = companies.flatMap((company) =>
     (company.ledgers || [])
@@ -1622,13 +1624,15 @@ export default function CompanyLedger() {
       )
     );
   };
-  const purchaseTotal = products.reduce(
-    (sum, product) =>
-      sum +
-      Number(product.quantity || 0) *
-        getPurchaseRate(product.mrp, product.category),
+  const totalPurchaseBeforeGST = products.reduce(
+    (sum, product) => sum + Number(product.quantity || 0) * getBasePurchaseRate(product.companyRate, product.category),
     0
   );
+  const totalGST = products.reduce(
+    (sum, product) => sum + Number(product.quantity || 0) * getGSTAmount(product.companyRate, product.category),
+    0
+  );
+  const purchaseTotal = Number((totalPurchaseBeforeGST + totalGST).toFixed(2));
   const saveLedger = async (event) => {
     event.preventDefault();
     if (!selectedCompanyId) return;
@@ -1642,10 +1646,11 @@ export default function CompanyLedger() {
           ...product,
           quantity: Number(product.quantity),
           mrp: Number(product.mrp),
-          basePurchaseRate: getBasePurchaseRate(product.mrp, product.category),
+          companyRate: Number(product.companyRate),
+          basePurchaseRate: getBasePurchaseRate(product.companyRate, product.category),
           gstPercentage: 5,
-          gstAmount: getGSTAmount(product.mrp, product.category),
-          purchaseRate: getPurchaseRate(product.mrp, product.category),
+          gstAmount: getGSTAmount(product.companyRate, product.category),
+          purchaseRate: getPurchaseRate(product.companyRate, product.category),
           discountPercentage: getCategoryDiscount(product.category),
         })),
         note: ledgerNote,
@@ -2414,32 +2419,51 @@ export default function CompanyLedger() {
                         onChange={(e) => updateProduct(index, "mrp", e.target.value)}
                       />
                     </Field>
+                    <Field label="Company Rate per Item (₹) *">
+                      <input
+                        required
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        className={inputClass}
+                        value={product.companyRate}
+                        onChange={(e) => updateProduct(index, "companyRate", e.target.value)}
+                        placeholder="Rate offered by company"
+                      />
+                    </Field>
+                    <Field label="Applied Discount (%)">
+                      <input
+                        readOnly
+                        className={`${inputClass} bg-slate-50`}
+                        value={getCategoryDiscount(product.category).toFixed(2)}
+                      />
+                    </Field>
                     <Field label="Purchase Rate before GST (₹)">
                       <input
                         readOnly
                         className={`${inputClass} bg-slate-50`}
-                        value={getBasePurchaseRate(product.mrp, product.category).toFixed(2)}
+                        value={getBasePurchaseRate(product.companyRate, product.category).toFixed(2)}
                       />
                     </Field>
-                    <Field label="GST 5% (₹)">
+                    <Field label="GST 5% per Item (₹)">
                       <input
                         readOnly
                         className={`${inputClass} bg-slate-50`}
-                        value={getGSTAmount(product.mrp, product.category).toFixed(2)}
+                        value={getGSTAmount(product.companyRate, product.category).toFixed(2)}
                       />
                     </Field>
                     <Field label="Final Purchase Rate incl. GST (₹)">
                       <input
                         readOnly
                         className={`${inputClass} bg-emerald-50 font-semibold`}
-                        value={getPurchaseRate(product.mrp, product.category).toFixed(2)}
+                        value={getPurchaseRate(product.companyRate, product.category).toFixed(2)}
                       />
                     </Field>
                   </div>
                   <p className="mt-3 text-right text-sm text-slate-600">
                     Line total:{" "}
                     <strong>
-                      {money(Number(product.quantity || 0) * getPurchaseRate(product.mrp, product.category))}
+                      {money(Number(product.quantity || 0) * getPurchaseRate(product.companyRate, product.category))}
                     </strong>
                   </p>
                 </div>
@@ -2454,10 +2478,22 @@ export default function CompanyLedger() {
                 placeholder="Optional purchase notes"
               />
             </Field>
-            <div className="rounded-xl bg-blue-50 p-4 text-right">
-              <p className="text-sm text-blue-800">Total purchase amount</p>
-              <p className="mt-1 text-2xl font-bold text-blue-900">{money(purchaseTotal)}</p>
-              <p className="mt-1 text-xs text-blue-700">
+            <div className="rounded-xl bg-blue-50 p-4">
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div>
+                  <p className="text-sm text-blue-800">Total purchase before GST</p>
+                  <p className="mt-1 text-xl font-bold text-blue-900">{money(totalPurchaseBeforeGST)}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-blue-800">Total GST (5%)</p>
+                  <p className="mt-1 text-xl font-bold text-blue-900">{money(totalGST)}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-blue-800">Final purchase total</p>
+                  <p className="mt-1 text-2xl font-bold text-blue-900">{money(purchaseTotal)}</p>
+                </div>
+              </div>
+              <p className="mt-3 text-xs text-blue-700">
                 Payments can be added after the ledger is saved.
               </p>
             </div>
@@ -2582,7 +2618,11 @@ export default function CompanyLedger() {
                   <th className="px-3 py-2">Invoice</th>
                   <th className="px-3 py-2">Batch</th>
                   <th className="px-3 py-2">MRP</th>
-                  <th className="px-3 py-2">Purchase rate</th>
+                  <th className="px-3 py-2">Company rate</th>
+                  <th className="px-3 py-2">Discount</th>
+                  <th className="px-3 py-2">Purchase rate before GST</th>
+                  <th className="px-3 py-2">GST</th>
+                  <th className="px-3 py-2">Final purchase rate</th>
                   <th className="px-3 py-2">Line total</th>
                 </tr>
               </thead>
@@ -2594,6 +2634,10 @@ export default function CompanyLedger() {
                     <td className="px-3 py-3">{product.invoiceNumber || "—"}</td>
                     <td className="px-3 py-3">{product.batchNumber || "—"}</td>
                     <td className="px-3 py-3">{money(product.mrp)}</td>
+                    <td className="px-3 py-3">{money(product.companyRate)}</td>
+                    <td className="px-3 py-3">{Number(product.discountPercentage || 0)}%</td>
+                    <td className="px-3 py-3">{money(product.basePurchaseRate ?? product.purchaseRate)}</td>
+                    <td className="px-3 py-3">{money(product.gstAmount || 0)}</td>
                     <td className="px-3 py-3">{money(product.purchaseRate)}</td>
                     <td className="px-3 py-3 font-semibold">
                       {money(Number(product.quantity) * Number(product.purchaseRate))}

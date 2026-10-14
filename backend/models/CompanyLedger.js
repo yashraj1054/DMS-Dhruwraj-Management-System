@@ -152,7 +152,6 @@
 //   companyLedgerSchema
 // );
 
-
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
@@ -163,6 +162,8 @@ const productSchema = new mongoose.Schema(
     invoiceNumber: { type: String, trim: true, default: "" },
     batchNumber: { type: String, trim: true, default: "" },
     mrp: { type: Number, required: true, min: 0 },
+    // Company rate is the rate offered to retailers before company discount.
+    companyRate: { type: Number, required: true, min: 0, default: 0 },
     basePurchaseRate: { type: Number, required: true, min: 0, default: 0 },
     gstPercentage: { type: Number, min: 0, max: 100, default: 5 },
     gstAmount: { type: Number, min: 0, default: 0 },
