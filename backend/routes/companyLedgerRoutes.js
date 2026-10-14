@@ -2026,10 +2026,14 @@ const getNextLedgerId = async () => {
         },
       },
     ],
-    { upsert: true, new: true, setDefaultsOnInsert: false }
+    { upsert: true,
+       new: true, 
+       setDefaultsOnInsert: false,
+       updatePipeline: true,
+       }
   );
 
-  return `CL-${String(counter.seq).padStart(6, "0")}`;
+  return `DHCL-${String(counter.seq).padStart(6, "0")}`;
 };
 
 // GET all companies belonging to the logged-in admin.
