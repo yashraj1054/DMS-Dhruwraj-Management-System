@@ -1358,7 +1358,7 @@ function SummaryCard({ label, value, icon: Icon }) {
     <div className="rounded-2xl border border-slate-200 bg-white p-4">
       <div className="flex items-center justify-between gap-3">
         <span className="text-sm text-slate-500">{label}</span>
-        <Icon size={19} className="text-blue-600" />
+        <Icon size={19} className="text-teal-600" />
       </div>
       <p className="mt-2 break-words text-xl font-bold text-slate-900">
         {value}
@@ -1879,7 +1879,7 @@ export default function CompanyLedger() {
             <section className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-start gap-3">
-                  <div className="rounded-xl bg-blue-50 p-3 text-blue-600">
+                  <div className="rounded-xl bg-blue-50 p-3 text-teal-600">
                     <Building2 size={25} />
                   </div>
                   <div>
