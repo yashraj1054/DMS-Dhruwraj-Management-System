@@ -10,6 +10,7 @@ import {
   LogOut,
   FileText,
   BookText,
+  BookOpen
 } from "lucide-react";
 
 export default function Sidebar({ open, setOpen }) {
@@ -73,6 +74,11 @@ export default function Sidebar({ open, setOpen }) {
       name: "Finances",
       path: "/admin/finances",
       icon: Wallet,
+    },
+    {
+      name: "Company Ledger",
+      path: "/admin/company-ledger",
+      icon: BookOpen,
     },
   ];
 

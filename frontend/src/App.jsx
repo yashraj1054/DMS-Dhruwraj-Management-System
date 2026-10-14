@@ -27,6 +27,8 @@ import PublicDietChart from "./pages/PublicDietChart";
 import PublicHowToTake from "./pages/PublicHowToTake";
 import PublicPrescription from "./pages/PublicPrescription";
 
+import CompanyLedger from "./pages/admin/CompanyLedger";
+
 // import InventoryLedger from "./pages/admin/InventoryLedger";
 
 // simple test pages for now
@@ -120,6 +122,7 @@ function App() {
           <Route path="inventory" element={<Inventory />} />
           <Route path="invoice" element={<Invoice />} />
           <Route path="/admin/finances" element={<Finances />} />
+          <Route path="company-ledger" element={<CompanyLedger />} />
           {/* <Route path="inventory-ledger" element={<InventoryLedger />} /> */}
         </Route>
 
