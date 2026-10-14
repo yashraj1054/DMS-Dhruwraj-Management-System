@@ -1010,6 +1010,9 @@ const generatePatientId = (clinicId) => {
   name="occupation"
   label="Occupation"
   options={[
+    "Buisness",
+    "Self-Employed",
+    "Retired",
     "Private Job",
     "Gov. Service",
     "Housewife",
