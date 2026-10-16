@@ -2,6 +2,10 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
+      "source": "/payment-reciept/:token",
+      "destination": "https://dms-backend-amber.vercel.app/api/company-ledger/public/receipt/:token"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
