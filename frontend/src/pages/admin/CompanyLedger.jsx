@@ -5101,7 +5101,9 @@ const printPaymentReceipt = ({ company, ledger, payment }) => {
     ${payment?.method === "UPI" ? `<tr><td>UPI Transaction No.</td><td>${safe(payment?.transactionNumber)}</td></tr>` : ""}
     ${payment?.note ? `<tr><td>Note</td><td>${safe(payment.note)}</td></tr>` : ""}
   </table>
-  <p>I acknowledge that the amount stated above has been received by DHRUWRAJ HEALTHCARE.</p>
+  <p>
+  I acknowledge that the amount stated above has been received.
+ </p> 
   <div class="signatures">
     <div class="sign">MR Signature / Name</div>
     <div class="sign">Received By (DHRUWRAJ HEALTHCARE)</div>
@@ -6564,10 +6566,12 @@ export default function CompanyLedger() {
                 </div>
               </div>
             )}
-            <p className="mt-4 text-sm">I acknowledge that the amount stated above has been received by DHRUWRAJ HEALTHCARE.</p>
+            <p>
+  I acknowledge that the amount stated above has been received.
+</p>
             <div className="mt-16 grid grid-cols-2 gap-8 text-center text-xs">
               <div className="border-t border-slate-800 pt-2">MR Signature / Name</div>
-              <div className="border-t border-slate-800 pt-2">Received By</div>
+              <div className="border-t border-slate-800 pt-2">Given By</div>
             </div>
             <p className="mt-5 text-center text-[11px] text-slate-500">Physical signature confirms acknowledgement. Keep signed receipt for monthly reconciliation.</p>
           </div>

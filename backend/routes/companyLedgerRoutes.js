@@ -1757,7 +1757,6 @@
 
 // module.exports = router;
 
-
 const router = require("express").Router();
 
 const mongoose = require("mongoose");
@@ -2536,6 +2535,8 @@ router.post(
 
             receiptNumber,
 
+            receiptToken,
+
             amount: amountNumber,
 
             paymentDate,
@@ -2678,3 +2679,4 @@ router.get("/companies/:companyId/ledgers", async (req, res) => {
 });
 
 module.exports = router;
+
