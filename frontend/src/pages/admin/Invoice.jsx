@@ -9615,22 +9615,65 @@ const Invoice = () => {
     setTimeout(startPrint, 2000);
   };
 
-  const handleShareWhatsApp = () => {
-    if (!previewData) return;
-    const invoiceUrl = previewData._id
-      ? `https://dms-backend-amber.vercel.app/api/bills/public/${previewData._id}`
-      : "";
-    const message = [
-      "*Dhruwraj Ayurveda & Panchkarma*",
-      `Invoice: ${previewData.invoiceId || "—"}`,
-      `Patient: ${previewData.patientName || "—"}`,
-      `Amount: ₹${Number(previewData.totalAmount || 0).toFixed(2)}`,
-      `Payment: ${String(previewData.paymentMethod || "Cash").replace(/\s*Payment\s*/i, "").trim()}`,
-      invoiceUrl ? `Invoice details: ${invoiceUrl}` : "",
-      "Thank you for visiting us.",
-    ].filter(Boolean).join("\n");
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
-  };
+  // const handleShareWhatsApp = () => {
+  //   if (!previewData) return;
+  //   const invoiceUrl = previewData._id
+  //     ? `https://dms-backend-amber.vercel.app/api/bills/public/${previewData._id}`
+  //     : "";
+  //   const message = [
+  //     "*Dhruwraj Ayurveda & Panchkarma*",
+  //     `Invoice: ${previewData.invoiceId || "—"}`,
+  //     `Patient: ${previewData.patientName || "—"}`,
+  //     `Amount: ₹${Number(previewData.totalAmount || 0).toFixed(2)}`,
+  //     `Payment: ${String(previewData.paymentMethod || "Cash").replace(/\s*Payment\s*/i, "").trim()}`,
+  //     invoiceUrl ? `Invoice details: ${invoiceUrl}` : "",
+  //     "Thank you for visiting us.",
+  //   ].filter(Boolean).join("\n");
+  //   window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+  // };
+
+
+const handleShareWhatsApp = (recipientMobile) => {
+  if (!previewData) return;
+
+  // Frontend invoice page, NOT backend API
+  const invoiceUrl = previewData._id
+    ? `http://localhost:5173/invoice/${previewData._id}`
+    : "";
+
+  const message = [
+    "*Dhruwraj Ayurveda & Panchkarma*",
+    "",
+    `Invoice: ${previewData.invoiceId || "—"}`,
+    `Patient: ${previewData.patientName || "—"}`,
+    `Patient ID: ${previewData.patientCode || "—"}`,
+    `Amount: ₹${Number(previewData.totalAmount || 0).toFixed(2)}`,
+    `Payment: ${String(
+      previewData.paymentMethod || "Cash"
+    ).replace(/\s*Payment\s*/i, "").trim()}`,
+    "",
+    invoiceUrl ? `Invoice details: ${invoiceUrl}` : "",
+    "",
+    "Thank you for visiting us.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  // WhatsApp requires country code, e.g. 919876543210
+  const digits = String(recipientMobile || "").replace(/\D/g, "");
+
+  const phone = digits
+    ? digits.length === 10
+      ? `91${digits}`
+      : digits
+    : "";
+
+  const whatsappUrl = phone
+    ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+    : `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+  window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+};
 
   const handleGenerateBill = async () => {
     if (!selectedClinic) {
@@ -11689,6 +11732,11 @@ const Invoice = () => {
                         <p className="mt-2 text-[14px] text-[#71839D]">
                           {clinic.location || "Vikas Nagar"}
                           {clinic.city ? `, ${clinic.city}` : ", Kanpur"}
+                          
+                        </p>
+                        
+                        <p className="mt-1 text-[12px] font-bold tracking-wide text-[#008B83]">
+                          Phone: {clinic.phone || "Phone"}
                         </p>
 
                           {/* GSTIN Commented HERE
@@ -11867,12 +11915,12 @@ const Invoice = () => {
                     CLOSE PREVIEW
                   </button>
 
-                  {/* <button
+                  <button
                     onClick={handleShareWhatsApp}
                     className="flex-1 rounded-xl bg-green-600 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg hover:bg-green-700"
                   >
                     Share on WhatsApp
-                  </button> */}
+                  </button>
 
                   <button
                     onClick={handlePrintInvoice}
