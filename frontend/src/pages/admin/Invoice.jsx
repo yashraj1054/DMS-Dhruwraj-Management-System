@@ -8858,7 +8858,7 @@ const Invoice = () => {
     churans: [],
   });
 
-  const MAX_BHASAM = 2;
+  const MAX_BHASAM = 3;
   const MAX_CHURAN = 3;
 
   // Ayurvedic products are loaded from the same clinic inventory used by regular medicines.
@@ -9203,7 +9203,7 @@ const Invoice = () => {
 
   const addBhasam = () => {
     if (ayurvedicChuran.bhasams.length >= MAX_BHASAM) {
-      alert("Maximum 2 Bhasams can be added.");
+      alert("Maximum 3 Bhasams can be added.");
       return;
     }
 
@@ -10822,7 +10822,7 @@ const handleShareWhatsApp = (recipientMobile) => {
                             Bhasam
                           </p>
                           <p className="text-[9px] text-slate-400">
-                            Maximum 2 Bhasams
+                            Maximum 3 Bhasams
                           </p>
                         </div>
 
